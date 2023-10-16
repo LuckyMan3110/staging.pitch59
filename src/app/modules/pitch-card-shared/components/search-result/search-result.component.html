@@ -1,0 +1,306 @@
+<div
+    class="banner-search-wrap container"
+    [ngClass]="{ 'welcome-banner-container': multipleUsage }"
+>
+  <div class="col-12 md:col-10 lg:col-8 no-padding margin-centered">
+    <app-search-tabs></app-search-tabs>
+  </div>
+
+  <div
+      class="col-12 md:col-10 lg:col-8 search-block margin-centered pb-5"
+      #searchBlock
+  >
+    <div class="search-wrapper" [ngClass]="{ blur: isShowBlur }">
+      <div class="col-12 no-padding">
+        <div class="grid no-margins">
+          <div class="col-12 no-padding">
+            <div class="grid search-box no-margins">
+              <div
+                  class="searchfield-dropdown-wrapper col-6 no-padding"
+                  [ngStyle]="{ width: isDesktop ? '80%' : '' }"
+              >
+                <div class="dropdown" #searchInput>
+                  <p-autoComplete
+                      [(ngModel)]="selectedBusiness"
+                      [ngModelOptions]="{ standalone: true }"
+                      styleClass="mi-autocomplete"
+                      minLength="3"
+                      [suggestions]="suggestedBusinesses"
+                      delay="500"
+                      (completeMethod)="
+                                            searchBusinesses($event)
+                                        "
+                      field="displayName"
+                      inputStyleClass="rounded"
+                      placeholder="{{
+                                            getSearchPlaceholderText()
+                                        }}"
+                      [style]="{ width: '100%' }"
+                      [disabled]="isShowBlur"
+                      (onSelect)="pitch()"
+                      (onHide)="hideKeyboard()"
+                      (onBlur)="hideKeyboard()"
+                  >
+                    <ng-template
+                        let-selectedBusiness
+                        pTemplate="item"
+                    >
+                      <div
+                          class="p-helper-clearfix"
+                          *ngIf="
+                                                    selectedBusiness.showHorizontalLine
+                                                "
+                      >
+                        <hr/>
+                      </div>
+                      <div
+                          class="p-helper-clearfix"
+                          *ngIf="
+                                                    !selectedBusiness.showHorizontalLine
+                                                "
+                      >
+                        <div
+                            class="color-black"
+                            *ngIf="
+                                                        selectedBusiness.classification !==
+                                                        3
+                                                    "
+                        >
+                          {{
+                          selectedBusiness.displayName
+                          }}
+                        </div>
+                        <div
+                            class="color-grey"
+                            *ngIf="
+                                                        selectedBusiness.classification ===
+                                                        3
+                                                    "
+                        >
+                          {{
+                          selectedBusiness.displayName
+                          }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-autoComplete>
+                </div>
+              </div>
+
+              <div
+                  class="filters-wrap"
+                  #filterElement
+                  [ngClass]="{ disable: isShowBlur }"
+              >
+                                <span
+                                    class="pi pi-search search search-icon pointer"
+                                    (click)="!isShowBlur ? pitch() : null"
+                                    [ngClass]="{
+                                        green:
+                                            mainSearchType ===
+                                            searchTypes.Businesses,
+                                        'resume-red':
+                                            mainSearchType ===
+                                            searchTypes.Resumes,
+                                        'green-job':
+                                            mainSearchType === searchTypes.Jobs,
+                                        gold:
+                                            mainSearchType ===
+                                            searchTypes.Nonprofit
+                                    }"
+                                >
+                                </span>
+
+                <div
+                    class="filter-block text-center pointer"
+                    [ngClass]="{
+                                        green:
+                                            mainSearchType ===
+                                            searchTypes.Businesses,
+                                        'resume-red':
+                                            mainSearchType ===
+                                            searchTypes.Resumes,
+                                        'green-job':
+                                            mainSearchType === searchTypes.Jobs,
+                                        gold:
+                                            mainSearchType ===
+                                            searchTypes.Nonprofit
+                                    }"
+                    #filterBlock
+                    (click)="handleFilters($event)"
+                >
+                                    <span class="pi pi-filter">
+                                        <span
+                                            class="filters-flag pi"
+                                            *ngIf="
+                                                searchService?.hasFilters &&
+                                                searchService.currentFilterState !==
+                                                    FilterStates.None
+                                            "
+                                            [ngClass]="{
+                                                'circle-draft':
+                                                    searchService.currentFilterState ===
+                                                    FilterStates.Draft,
+                                                'bg-green':
+                                                    mainSearchType ===
+                                                        searchTypes.Businesses &&
+                                                    searchService.currentFilterState ===
+                                                        FilterStates.Applied,
+                                                'bg-resume-red':
+                                                    mainSearchType ===
+                                                        searchTypes.Resumes &&
+                                                    searchService.currentFilterState ===
+                                                        FilterStates.Applied,
+                                                'bg-job':
+                                                    mainSearchType ===
+                                                        searchTypes.Jobs &&
+                                                    searchService.currentFilterState ===
+                                                        FilterStates.Applied,
+                                                'bg-nonprofit':
+                                                    mainSearchType ===
+                                                        searchTypes.Nonprofit &&
+                                                    searchService.currentFilterState ===
+                                                        FilterStates.Applied
+                                            }"
+                                        >
+                                        </span>
+                                    </span>
+                  <span class="link" *ngIf="!mobileMode"
+                  >Filters</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p-overlayPanel
+        #filterPanel
+        [styleClass]="'filter-openpannel'"
+        [autoZIndex]="false"
+        [dismissable]="true"
+        [appendTo]="searchBlock"
+        [style]="{ borderRadius: '6px' }"
+        [showCloseIcon]="false"
+        (onShow)="isPanelShow = true"
+        (onHide)="isPanelShow = false"
+    >
+      <ng-template pTemplate>
+        <div class="header mt-10">
+          <h2 class="no-margins">Filters</h2>
+        </div>
+        <div class="body mt-15" *ngIf="mainSearchType !== null">
+          <app-search-filters
+              [searchType]="mainSearchType"
+              (appliedFilters)="getAppliedFilters($event)"
+          >
+          </app-search-filters>
+        </div>
+      </ng-template>
+    </p-overlayPanel>
+  </div>
+
+  <div
+      id="{{ !uniqueId ? 'search-swiper' : 'search-swiper-' + uniqueId }}"
+      class="search-swiper"
+      *ngIf="!alias"
+      [ngClass]="{ 'p-0': multipleUsage }"
+      [ngStyle]="{ marginBottom: setMobileMargin() }"
+  >
+    <div
+        *ngIf="
+                businessListLoaded &&
+                businessDetailsList.length &&
+                (selectedBusiness?.length || selectedBusiness?.id)
+            "
+        class="col-12 search-counter absolute left-0 right-0 mr-auto ml-auto"
+        #searchCounter
+    >
+      Showing {{ currentIdx }} of {{ totalRecords }}
+    </div>
+
+    <app-swiper
+        styleClass="swiper-container"
+        *ngIf="businessListLoaded"
+        [value]="businessDetailsList"
+        [containerSize]="360"
+        [numVisible]="businessDetailsList?.length === 1 ? 1 : 5"
+        [circular]="businessDetailsList?.length !== 1"
+        [transitionDuration]="500"
+        [autoplayInterval]="0"
+        (containerSizeChanged)="onContainerSizeChanged($event)"
+        (indexChange)="indexChange($event)"
+        [responsiveOptions]="responsiveOptions"
+    >
+      <p-header>
+        <h3 class="welcome-title"></h3>
+      </p-header>
+      <ng-template let-item pTemplate="item">
+        <app-search-result-thumbnail
+            [blur]="isShowBlur"
+            [scale]="scaleFactor"
+            (companyImages)="companyImages($event)"
+            [uniqueId]="uniqueId"
+            [businessDetails]="item?.business"
+            [index]="businessDetailsList | indexOf : item.value"
+        >
+        </app-search-result-thumbnail>
+      </ng-template>
+    </app-swiper>
+    <swiper
+        class="swiper-container"
+        *ngIf="
+                isBrowser && businessListLoaded && !businessDetailsList.length
+            "
+        [config]="config3"
+        (resize)="onResize()"
+        (init)="onInit()"
+        fxFlex="auto"
+    >
+      <div class="swiper-slide">
+        <app-search-result-thumbnail
+            [blur]="isShowBlur"
+            [comingSoon]="true"
+            [businessDetails]="{
+                        businessType: getCardTypeBasedOnSearchType()
+                    }"
+        >
+        </app-search-result-thumbnail>
+      </div>
+    </swiper>
+
+    <div *ngIf="multipleUsage" class="triangle-arrow-prev"></div>
+    <div *ngIf="multipleUsage" class="triangle-arrow-next"></div>
+  </div>
+
+  <div
+      id="search-card"
+      class="search-card"
+      *ngIf="this.isBrowser && alias"
+      [ngStyle]="{ visibilitiy: aliasLoaded ? 'visible' : 'none' }"
+  >
+    <div id="card-alias" class="card-alias">
+      <app-search-result-thumbnail
+          #businessCard
+          [blur]="isShowBlur"
+          *ngIf="businessDetails"
+          class="single-alias-card"
+          (companyImages)="companyImages($event)"
+          [businessDetails]="businessDetails"
+          [contacted]="contactBtnClickedBusinessId"
+      >
+      </app-search-result-thumbnail>
+      <app-search-result-thumbnail
+          [blur]="isShowBlur"
+          *ngIf="!businessDetails && aliasLoaded"
+          [comingSoon]="true"
+      >
+      </app-search-result-thumbnail>
+    </div>
+  </div>
+</div>
+<app-pitchcard-modals-wrapper
+    [uniqueId]="uniqueId"
+></app-pitchcard-modals-wrapper>

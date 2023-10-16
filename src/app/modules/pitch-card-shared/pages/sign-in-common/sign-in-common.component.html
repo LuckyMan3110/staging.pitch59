@@ -1,0 +1,105 @@
+<div class="sign-up-box">
+  <div class="col-12 logo text-center">
+    <img
+        src="assets/images/logo/pitch59-logo-gray.svg"
+        alt="{{ 'lbl_img_alt_logo' | translate }}"
+    />
+  </div>
+  <div class="col-12 heading text-center" translate>label_sign_in</div>
+  <form
+      class="input-container-sgnUpPop form-field col-12"
+      [formGroup]="signInForm"
+      (ngSubmit)="doSignIn()"
+  >
+    <div class="form-field">
+            <span class="form-control p-float-label">
+                <input
+                    formControlName="emailId"
+                    class="new-input-blue h-4 full-width"
+                    type="text"
+                    pInputText
+                    appNoWhiteSpace
+                />
+                <label for="emailId" translate>label_email_address</label>
+            </span>
+      <div class="form-errors" *ngIf="submitted && f.emailId.errors">
+        <div
+            *ngIf="signInForm.controls.emailId.errors.required"
+            translate
+        >
+          err_required_emailId
+        </div>
+        <div
+            *ngIf="signInForm.controls.emailId.errors.pattern"
+            translate
+        >
+          err_invalid_emailId
+        </div>
+      </div>
+    </div>
+    <div class="form-field">
+            <span class="form-control p-float-label">
+                <div
+                    class="sprite eye pos-eye"
+                    *ngIf="showpassword"
+                    (click)="togglePassword()"
+                ></div>
+                <div
+                    class="sprite close-eye pos-eye"
+                    *ngIf="!showpassword"
+                    (click)="togglePassword()"
+                ></div>
+                <input
+                    class="new-input-blue h-4 full-width"
+                    id="password"
+                    type="password"
+                    pInputText
+                    appNoWhiteSpace
+                    formControlName="password"
+                />
+                <label for="password" translate>label_password</label>
+            </span>
+      <div class="form-errors" *ngIf="submitted && f.password.errors">
+        <div
+            *ngIf="signInForm.controls.password.errors.required"
+            translate
+        >
+          err_required_password
+        </div>
+        <div
+            *ngIf="
+                        !signInForm.controls.password.errors.required &&
+                        (signInForm.controls.password.dirty ||
+                            signInForm.controls.password.touched)
+                    "
+            translate
+        >
+          err_invalid_password_length
+        </div>
+      </div>
+    </div>
+    <div class="col-12 text-center para">
+            <span (click)="forgotPassword()" class="link"
+            >Forgot password?</span
+            >
+    </div>
+    <div class="col-12 text-center para sign-up-wrapper" translate>
+      Need an account?
+      <span (click)="redirectOrOpenSignUpPopup()" class="link" translate
+      >&nbsp;lbl_signup</span
+      >
+    </div>
+    <div class="col-12 form-errors">
+      {{ errorMessage }}
+    </div>
+    <div class="col-12 text-center">
+      <button
+          class="new-style-green-button-m"
+          [disabled]="loading"
+          translate
+      >
+        label_sign_in
+      </button>
+    </div>
+  </form>
+</div>

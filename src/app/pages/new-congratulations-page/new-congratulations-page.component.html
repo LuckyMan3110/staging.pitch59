@@ -1,0 +1,57 @@
+<div [ngClass]="{ 'full-height-wrap': !isModal }">
+  <div class="page-container col-12 container">
+    <div class="main-section">
+      <div class="header-section text-center">
+        <h1 class="no-margins">Congratulations, you did it!</h1>
+        <p class="description no-margins">
+          Your PitchCard is now in your app and will be activated upon
+          approval.
+        </p>
+      </div>
+
+      <div class="body-section grid no-margins">
+        <div
+            class="step-section"
+            *ngFor="let step of steps; let i = index"
+        >
+          <div class="step-section-img">
+            <img src="{{ step.imgSrc }}" alt="{{ step.title }}"/>
+          </div>
+          <div class="step-section-title">
+            <h2 class="no-margins">Step {{ i + 1 }}</h2>
+          </div>
+
+          <div class="step-section-desc">
+            <h3>{{ step.title }}</h3>
+            <p class="no-margins">
+              {{ step.description }}
+              <a
+                  href="{{ step.link.path }}"
+                  target="_blank"
+                  class="green"
+              >{{ step.link.title }}</a
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div
+          class="footer-section grid align-items-baseline justify-content-between"
+          [formGroup]="form"
+      >
+        <div
+            class="lg:col-3 md:col-4 col-12 no-padding"
+            *ngIf="!isModal"
+        >
+          <button
+              class="button-simple shock-pink sm-35 uppercase full-width"
+              (click)="navigateTo('/account/my-pitchcards')"
+          >
+            My PitchCards
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
+</div>

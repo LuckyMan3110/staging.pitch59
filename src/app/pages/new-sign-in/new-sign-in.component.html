@@ -1,0 +1,138 @@
+<div class="container">
+  <div class="create-container container">
+    <div class="wrapper-section">
+      <div class="main-section">
+        <div class="pitchcard-view-section">
+          <div
+              class="pitchcard-view-item"
+              #pitchCardWrapper
+              style="visibility: hidden"
+          >
+            <app-search-result-thumbnail
+                [businessDetails]="businessDetails"
+                #businessCard
+                [scale]="scaleFactor"
+                (companyImages)="handlePitchCardTitleClick($event)"
+            >
+            </app-search-result-thumbnail>
+          </div>
+        </div>
+        <div class="main-form">
+          <div class="sign-in">
+            <h1>
+              {{
+              !isRedirectedFromCardsPackages
+                  ? 'Welcome back!'
+                  : 'Please log in to create a PitchCard'
+              }}
+            </h1>
+            <h2>
+              {{
+              !isRedirectedFromCardsPackages
+                  ? 'Enter details below'
+                  : 'If you don’t have a Pitch59 account, please click Sign Up.'
+              }}
+            </h2>
+            <form [formGroup]="signInForm" (ngSubmit)="doSignin()">
+                            <span class="p-float-label">
+                                <input
+                                    class="new-input-blue"
+                                    id="email"
+                                    type="text"
+                                    size="30"
+                                    pInputText
+                                    autocomplete="email"
+                                    formControlName="emailId"
+                                />
+                                <label for="email" translate
+                                >label_email_address</label
+                                >
+                            </span>
+              <div
+                  class="error-sign"
+                  *ngIf="
+                                    submitted &&
+                                    signInForm.controls.emailId.errors?.required
+                                "
+                  translate
+              >
+                err_required_emailId
+              </div>
+              <div
+                  class="error-sign"
+                  *ngIf="
+                                    submitted &&
+                                    signInForm.controls.emailId.errors?.pattern
+                                "
+                  translate
+              >
+                err_invalid_emailId
+              </div>
+              <span class="p-float-label">
+                                <input
+                                    class="new-input-blue"
+                                    type="password"
+                                    id="password"
+                                    pPassword
+                                    [feedback]="false"
+                                    formControlName="password"
+                                    minlength="3"
+                                    pInputText
+                                />
+                                <label for="float-input" translate
+                                >label_password</label
+                                >
+                                <div
+                                    class="sprite eye"
+                                    *ngIf="showpassword"
+                                    (click)="togglePassword()"
+                                ></div>
+                                <div
+                                    class="sprite close-eye"
+                                    *ngIf="!showpassword"
+                                    (click)="togglePassword()"
+                                ></div>
+                            </span>
+              <div
+                  class="error-sign"
+                  *ngIf="
+                                    submitted &&
+                                    signInForm.controls.password.errors
+                                        ?.required
+                                "
+                  translate
+              >
+                err_required_password
+              </div>
+              <div
+                  class="error-sign"
+                  *ngIf="submitted && errorMessage"
+              >
+                {{ errorMessage }}
+              </div>
+
+              <button
+                  class="button-simple lg-50 shock-pink uppercase"
+                  [disabled]="loading"
+                  translate
+              >
+                label_sign_in
+              </button>
+            </form>
+            <div class="acc-question">
+              Need an account?
+              <span class="sign-up-link" (click)="openSignUp()"
+              >Sign Up</span
+              >
+            </div>
+            <div class="acc-question">
+                            <span (click)="forgotPassword()"
+                            >Forgot password?</span
+                            >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

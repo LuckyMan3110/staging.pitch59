@@ -1,0 +1,329 @@
+<div class="main-wrap">
+  <p-dialog
+      [(visible)]="showAdminsModal"
+      [blockScroll]="false"
+      [draggable]="false"
+      [modal]="true"
+      [resizable]="false"
+      [transitionOptions]="'0ms'"
+      [dismissableMask]="false"
+      [style]="{
+            minWidth: '300px',
+            maxWidth: '620px',
+            width: '59%',
+            'border-radius': '6px',
+            margin: '0 20px'
+        }"
+      (onHide)="fetchAdminsModalData()"
+      styleClass="dialog"
+      appendTo="body"
+  >
+    <div class="modal-layout">
+      <div class="modal-header no-padding">
+        <h2 class="title no-margins">Add Administrators</h2>
+        <p class="description">
+          Admins will be able to manage your organization.
+        </p>
+      </div>
+
+      <div
+          class="modal-body"
+          *ngIf="invitedUserList?.length && employerPortal"
+      >
+        <app-assign-user-list
+            [assignedUsers]="invitedUserList"
+            [superAdminId]="
+                        employerPortal?.admin?.id
+                            ? employerPortal?.admin?.id
+                            : invitedUserList[0]?.id
+                    "
+            [errorsConfig]="adminsErrors"
+            (saveChange)="saveAdminsList($event)"
+            (deleteUsers)="setRemoveAdminsList($event)"
+        >
+        </app-assign-user-list>
+      </div>
+    </div>
+  </p-dialog>
+
+  <div class="preview-pitchcard-dialog">
+    <p-dialog
+        *ngIf="showPreviewModal"
+        [(visible)]="showPreviewModal"
+        [modal]="true"
+        [blockScroll]="true"
+        [draggable]="false"
+        [dismissableMask]="true"
+        [resizable]="false"
+        [showHeader]="true"
+        (onHide)="selectedPitchCard = null"
+        styleClass="preview-pitchcard"
+    >
+      <div class="dialog-content">
+        <app-search-result-thumbnail
+            [businessDetails]="selectedPitchCard"
+            [scale]="isMobile ? 0.8 : 1"
+            [demo]="
+                        selectedPitchCard?.status !== businessStatuses.Active
+                    "
+            [disabled]="
+                        selectedPitchCard?.status !== businessStatuses.Active
+                    "
+            (companyImages)="handlePitchCardTitleClick($event)"
+        ></app-search-result-thumbnail>
+      </div>
+    </p-dialog>
+  </div>
+
+  <div class="choose-pitchcard-dialog" *ngIf="showChoosePCTypeModal">
+    <p-dialog
+        [(visible)]="showChoosePCTypeModal"
+        [styleClass]="'choose-pitchcard-dialog'"
+        [blockScroll]="false"
+        [draggable]="false"
+        [modal]="true"
+        [resizable]="false"
+        [transitionOptions]="'0ms'"
+        [dismissableMask]="false"
+        [style]="{ minWidth: '300px', maxWidth: '750px', width: '750px' }"
+        appendTo="body"
+    >
+      <div
+          class="col-12 no-padding relative overflow-hidden"
+          style="border-radius: 8px"
+      >
+        <app-pricing-menu-layout
+            [activePitchCard]="activePitchCardType"
+            (pricingMenuConfig)="setSelectedBusinessType($event)"
+        >
+        </app-pricing-menu-layout>
+      </div>
+    </p-dialog>
+  </div>
+
+  <div class="analytics-modal">
+    <p-dialog
+        [(visible)]="showAnalyticsModal"
+        [blockScroll]="false"
+        [draggable]="false"
+        [modal]="true"
+        [resizable]="false"
+        [transitionOptions]="'0ms'"
+        [dismissableMask]="false"
+        [style]="{
+                minWidth: '300px',
+                maxWidth: '600px',
+                width: '35%',
+                'border-radius': '6px',
+                margin: '0 20px'
+            }"
+        (onHide)="resetAnalyticsData()"
+        styleClass="dialog"
+        appendTo="body"
+    >
+      <app-analytic-reports
+          *ngIf="selectedPitchCard"
+          [product]="selectedPitchCard"
+          [maxDateValue]="maxDateValue"
+      ></app-analytic-reports>
+    </p-dialog>
+  </div>
+</div>
+
+<div class="edit-modal">
+  <p-dialog
+      [(visible)]="showEditEpModal"
+      [blockScroll]="true"
+      [draggable]="false"
+      [modal]="true"
+      [closeOnEscape]="false"
+      [resizable]="false"
+      [dismissableMask]="false"
+      [style]="{
+            minWidth: '300px',
+            width: '68%',
+            maxWidth: '854px',
+            maxHeight: '92%'
+        }"
+      (onHide)="
+            clearLS(); this.employerPortal = null; this.fetchEmployerPortal()
+        "
+      styleClass="stepper-dialog"
+      appendTo="body"
+  >
+    <app-ep-layout
+        *ngIf="showEditEpModal"
+        [externalProduct]="employerPortal"
+        (closeLayout)="initCloseEditEP()"
+    >
+    </app-ep-layout>
+  </p-dialog>
+</div>
+
+<div class="autofill-modal" *ngIf="showAutofillModal">
+  <p-dialog
+      [(visible)]="showAutofillModal"
+      [blockScroll]="true"
+      [draggable]="false"
+      [modal]="true"
+      [closeOnEscape]="false"
+      [resizable]="false"
+      [dismissableMask]="false"
+      [style]="{ minWidth: '300px', width: '50%', maxWidth: '900px' }"
+      appendTo="body"
+  >
+    <div>
+      <div class="modal-header">
+        <p
+            class="description text-center mt-30"
+            style="font-size: 18px; padding: 0 5%"
+        >
+          Would you like us to autofill the information we have
+          already collected?<br/>
+          (You can change this information at any time.)
+        </p>
+      </div>
+
+      <app-progress-bar
+          class="progress-bar fake"
+          [totalSteps]="stepItems.length"
+          [filledSteps]="defaultCompletedStepsNumber"
+      ></app-progress-bar>
+      <div class="mt-20">
+        <app-stepper
+            [items]="stepItems"
+            [justView]="true"
+        ></app-stepper>
+      </div>
+
+      <div class="modal-footer mt-30 mb-30">
+        <div class="grid align-items-center justify-content-center">
+          <div class="mr-2">
+            <button
+                class="button-simple bg-darkgray full-width"
+                style="width: 115px"
+                (click)="
+                                navigateToEditBusiness(selectedPitchCard, true)
+                            "
+            >
+              NO, THANKS
+            </button>
+          </div>
+          <button
+              class="button-simple shock-pink full-width"
+              style="max-width: 115px"
+              (click)="doAutofillBusiness()"
+          >
+            YES, PLEASE
+          </button>
+        </div>
+      </div>
+    </div>
+  </p-dialog>
+</div>
+
+<div class="payment-failed-modal">
+  <p-dialog
+      [(visible)]="showPaymentFailedModal"
+      [blockScroll]="true"
+      [draggable]="false"
+      [modal]="true"
+      [closeOnEscape]="false"
+      [resizable]="false"
+      [dismissableMask]="false"
+      [style]="{ minWidth: '300px', maxWidth: '510px', width: '100%' }"
+      [closable]="true"
+  >
+    <app-payment-approve-content
+        *ngIf="requestStatus"
+        [requestStatus]="requestStatus"
+        [withMessage]="
+                requestStatus?.message &&
+                requestStatus?.code !== 200 &&
+                requestStatus?.code !== 3000
+            "
+        (closeEvent)="handleUpdateBillingInfo()"
+    ></app-payment-approve-content>
+  </p-dialog>
+</div>
+
+<div class="applicants-modal">
+  <p-dialog
+      #applicantsModal
+      [(visible)]="showApplicantsModal"
+      [blockScroll]="true"
+      [draggable]="false"
+      [modal]="true"
+      [closeOnEscape]="false"
+      [resizable]="false"
+      [dismissableMask]="false"
+      [showHeader]="false"
+      [closable]="true"
+      styleClass="dark-theme-modal"
+  >
+    <div
+        class="modal-close pointer absolute"
+        (click)="applicantsModal.close($event)"
+    >
+      Close
+    </div>
+
+    <div class="modal-body" *ngIf="applicantsData">
+      <app-applicant-viewer-layout
+          [options]="applicantsData"
+      ></app-applicant-viewer-layout>
+    </div>
+  </p-dialog>
+</div>
+
+<p-dialog
+    class="video-reviews-dialog"
+    styleClass="pitch-modal video-reviews-dialog"
+    [(visible)]="showTestimonialsModal"
+    [draggable]="false"
+    [modal]="true"
+    [style]="{
+        width: '1040px',
+        maxWidth: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: isMobile ? '0' : '',
+        transform: 'scale(1)',
+        position: 'relative'
+    }"
+    [blockScroll]="false"
+    (onHide)="fetchBusinesses()"
+>
+  <app-business-reviews
+      *ngIf="showTestimonialsModal"
+      [isOrganization]="true"
+      [business]="selectedPitchCard"
+      (showVideo)="reviewVideoInit($event)"
+  ></app-business-reviews>
+</p-dialog>
+
+<p-dialog
+    styleClass="video-player-dialog"
+    [(visible)]="showVideoPlayerDialog"
+    [modal]="true"
+    [blockScroll]="true"
+    [style]="{ width: '800px', maxWidth: '100%' }"
+    [draggable]="false"
+    [dismissableMask]="true"
+    [resizable]="false"
+    [showHeader]="true"
+    (onHide)="detachVideoFile()"
+>
+  <app-video-js-player
+      [autoplay]="true"
+      [isVideoMirrored]="isVideoMirrored"
+      [muxVideoId]="videoFileUrl"
+      *ngIf="showVideoPlayerDialog && videoFileUrl"
+      #videoPlayer
+  >
+  </app-video-js-player>
+</p-dialog>
+
+<app-pitchcard-modals-wrapper
+    [uniqueId]="uniqueId"
+></app-pitchcard-modals-wrapper>

@@ -1,0 +1,110 @@
+<div class="full-height-wrap">
+  <div class="page-container col-12">
+    <div class="layout-card main-section">
+      <div class="header-section text-center">
+        <h1 class="no-margins">Choose a PitchCard Type</h1>
+      </div>
+
+      <div class="body-section">
+        <div
+            class="package-block"
+            *ngFor="let package of cardsPackages; let i = index"
+            id="{{ package.businessType }}"
+        >
+          <div class="package-block-header">
+            <div class="package-selection radio-btn">
+              <p-radioButton
+                  name="{{ package.businessType }}"
+                  styleClass="custom-radio lg"
+                  [value]="package.businessType"
+                  [(ngModel)]="selectedBillingType"
+                  label="{{
+                                    getBusinessTypeValue(package.businessType)
+                                        | titlecase
+                                }}"
+              ></p-radioButton>
+            </div>
+            <div class="package-description">
+              {{ descriptionsList[i] }}
+            </div>
+          </div>
+
+          <div class="pitchcard-view-item pointer" *ngIf="package">
+            <app-search-result-thumbnail
+                (click)="selectedBillingType = package.businessType"
+                [businessDetails]="package"
+                [demo]="true"
+                [scale]="0.65"
+                [disabled]="true"
+            ></app-search-result-thumbnail>
+          </div>
+
+          <div class="link-info text-center">
+            <a
+                routerLink="/cards-packages/detail"
+                class="white-space-nowrap"
+            >Learn More</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-section" *ngIf="!isMobile">
+        <div class="button-next">
+          <button
+              class="next-btn button-simple add-full-text shock-pink sm-35 w-100"
+              [disabled]="!selectedBillingType"
+              (keydown)="goToBilling()"
+              (click)="goToBilling()"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-sidebar" *ngIf="isMobile">
+  <app-sidebar
+      [(visible)]="selectedBillingType"
+      [dismissible]="false"
+      [position]="'bottom'"
+      [modal]="false"
+      [style]="{
+            height: '50px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+        }"
+      [showCloseIcon]="false"
+  >
+    <div
+        class="grid justify-content-between align-items-center full-width no-margins"
+    >
+      <div
+          class="selected"
+          [ngClass]="{
+                    green:
+                        selectedBillingType === 'basic' ||
+                        selectedBillingType === 'employee',
+                    gold: selectedBillingType === 'service',
+                    'resume-red': selectedBillingType === 'resume'
+                }"
+      >
+        {{ getBusinessTypeValue(selectedBillingType) | titlecase }}
+        <span class="darkgray">PitchCard</span>
+      </div>
+
+      <div class="button-next">
+        <button
+            class="next-btn button-simple add-full-text shock-pink sm-35 w-100"
+            [disabled]="!selectedBillingType"
+            (click)="goToBilling()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </app-sidebar>
+</div>

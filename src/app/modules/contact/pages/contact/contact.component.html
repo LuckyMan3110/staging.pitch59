@@ -1,0 +1,260 @@
+<div class="full-height-wrap">
+    <div class="col-12 container contact-form">
+        <form [formGroup]="contactForm">
+            <div class="grid">
+              <div
+                  class="lg:col-10 lg:col-offset-1 md:col-10 md:col-offset-1 col-12"
+              >
+                <h1 class="title" translate>
+                  label_contact_us<span class="phone-number">
+                            (832) 412-4070</span
+                >
+                </h1>
+                <div class="grid">
+                  <div class="col-12 lg:col-5 md:col-5">
+                    <div class="col-12">
+                                <span class="p-float-label">
+                                    <input
+                                        class="new-input-blue sm full-width"
+                                        type="text"
+                                        id="firstName"
+                                        maxlength="20"
+                                        formControlName="firstName"
+                                        pInputText
+                                    />
+                                    <label for="firstName" translate
+                                    >label_first_name
+                                        <span class="asterisk">*</span>
+                                    </label>
+                                </span>
+
+                      <div
+                          class="form-errors"
+                          *ngIf="submitted && f.firstName.errors"
+                      >
+                        <div
+                            *ngIf="
+                                            contactForm.controls.firstName
+                                                .errors.required
+                                        "
+                            translate
+                        >
+                          err_required_firstname
+                        </div>
+                        <div
+                            *ngIf="
+                                            contactForm.controls.firstName
+                                                .errors.pattern
+                                        "
+                            translate
+                        >
+                          err_invalid_firstname
+                        </div>
+                      </div>
+                            </div>
+
+                            <div class="col-12">
+                                <span class="p-float-label">
+                                    <input
+                                        class="new-input-blue sm full-width"
+                                        type="text"
+                                        id="lastName"
+                                        maxlength="20"
+                                        formControlName="lastName"
+                                        pInputText
+                                        appNoWhiteSpace
+                                    />
+                                    <label for="lastName" translate
+                                    >label_last_name
+                                        <span class="asterisk">*</span>
+                                    </label>
+                                </span>
+
+                              <div
+                                  class="form-errors"
+                                  *ngIf="submitted && f.lastName.errors"
+                              >
+                                <div
+                                    *ngIf="
+                                            contactForm.controls.lastName.errors
+                                                .pattern
+                                        "
+                                    translate
+                                >
+                                  err_invalid_lastName
+                                </div>
+                              </div>
+                            </div>
+                  </div>
+
+                  <div
+                      class="lg:col-5 lg:col-offset-2 md:col-5 md:col-offset-2 col-12"
+                  >
+                    <div class="col-12">
+                                <span class="p-float-label">
+                                    <input
+                                        class="new-input-blue sm full-width"
+                                        type="text"
+                                        id="emailId"
+                                        formControlName="emailId"
+                                        pInputText
+                                        appNoWhiteSpace
+                                    />
+                                    <label for="emailId" translate
+                                    >label_email_address
+                                        <span class="asterisk">*</span>
+                                    </label>
+                                </span>
+
+                      <div
+                          class="form-errors"
+                          *ngIf="submitted && f.emailId.errors"
+                      >
+                        <div
+                            *ngIf="
+                                            contactForm.controls.emailId.errors
+                                                .required
+                                        "
+                            translate
+                        >
+                          err_required_emailId
+                        </div>
+                        <div
+                            *ngIf="
+                                            contactForm.controls.emailId.errors
+                                                .pattern
+                                        "
+                            translate
+                        >
+                          err_invalid_emailId
+                        </div>
+                      </div>
+                            </div>
+                            <div class="col-12">
+                                <span class="p-float-label">
+                                    <p-inputMask
+                                        [tabindex]="3"
+                                        [autocomplete]="'tel'"
+                                        mask="(999) 999-9999"
+                                        type="tel"
+                                        size="30"
+                                        inputmode="tel"
+                                        formControlName="contactNumber"
+                                        id="contactNumber"
+                                        [unmask]="true"
+                                        styleClass="new-input-blue sm"
+                                        (keyup)="
+                                            formatPhoneNumber(
+                                                contactForm.get('contactNumber')
+                                                    .value
+                                            )
+                                        "
+                                        (onBlur)="
+                                            formatPhoneNumber(
+                                                contactForm.get('contactNumber')
+                                                    .value
+                                            )
+                                        "
+                                    >
+                                    </p-inputMask>
+                                    <label for="contactNumber" translate
+                                    >label_mobile_number
+                                        <span class="asterisk">*</span>
+                                    </label>
+                                </span>
+
+                              <div
+                                  class="form-errors"
+                                  *ngIf="submitted && f.contactNumber.errors"
+                              >
+                                <div
+                                    *ngIf="
+                                            contactForm.controls.contactNumber
+                                                .errors.required
+                                        "
+                                    translate
+                                >
+                                  err_required_contact
+                                </div>
+                                <div
+                                    *ngIf="
+                                            contactForm.controls.contactNumber
+                                                .errors.pattern
+                                        "
+                                    translate
+                                >
+                                  err_required_contact
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-field col-12">
+                              <div class="form-label">
+                                <label for="emailId" translate
+                                >label_message
+                                  <span class="asterisk">*</span></label
+                                >
+                              </div>
+                              <div class="form-control">
+                                    <textarea
+                                        formControlName="message"
+                                        #pricingModel
+                                        [rows]="5"
+                                        [cols]="30"
+                                        maxlength="500"
+                                        class="description-area"
+                                        pInputTextarea
+                                        appNoWhiteSpace
+                                        autoResize="autoResize"
+                                        [placeholder]="
+                                            'label_message_here' | translate
+                                        "
+                                    ></textarea>
+                              </div>
+                              <div
+                                  class="form-errors"
+                                  *ngIf="submitted && f.message.errors"
+                              >
+                                <div
+                                    *ngIf="
+                                            contactForm.controls.message.errors
+                                                .required
+                                        "
+                                    translate
+                                >
+                                  err_required_message
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-12 captcha">
+                  <p-captcha
+                      siteKey="6Le6piIbAAAAAOA9_65VEot5b9w3RYrwEIa-HCV3"
+                      (onResponse)="setActiveSubmit($event)"
+                      (onExpire)="setDisableSubmit()"
+                  ></p-captcha>
+                </div>
+
+                <div class="md:col-2 col-4">
+                  <button
+                      class="button-simple shock-pink sm-35 uppercase full-width"
+                      [disabled]="isDisableSubmit()"
+                      (click)="addContactDetailSendEmail()"
+                      translate
+                  >
+                    label_submit
+                  </button>
+                </div>
+                <div
+                    *ngIf="showSuccessMessage"
+                    class="col-12 text-center contact-thank-u"
+                >
+                  <h3 translate>label_thank_u_for_contacting_us</h3>
+                </div>
+              </div>
+            </div>
+        </form>
+    </div>
+</div>

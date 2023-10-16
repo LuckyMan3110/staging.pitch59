@@ -1,0 +1,35 @@
+@import '../../../../styles/variables.scss';
+@mixin flex-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.time-picker-wrapper {
+    @include flex-centered();
+
+    .time-colon {
+        font-size: 1rem;
+        margin: 0 5px;
+    }
+
+    .placeholder {
+        .p-inputtext.p-state-default::placeholder {
+            color: #444;
+        }
+    }
+
+    .time-format {
+      @include flex-centered();
+      margin-left: 5px;
+      border-radius: 4px;
+      border: 1px solid $titleColor;
+      text-transform: uppercase;
+      width: 28px;
+      height: 28px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+}

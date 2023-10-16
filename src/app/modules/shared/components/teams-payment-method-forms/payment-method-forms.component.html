@@ -1,0 +1,423 @@
+<div class="team-main-container">
+    <div class="credit-card-layout" *ngIf="creditCardMode || !bothAvailable">
+      <div class="membership__form-wrapper card-verification">
+        <div
+            class="card-verification-process"
+            [ngClass]="{
+                    show: validatingCard || isCardInvalid,
+                    warning: isCardInvalid,
+                    success: isCardValid
+                }"
+        >
+          <div class="card-verification-message">
+            {{ cardErrorMessage || 'Validating card...' }}
+          </div>
+        </div>
+        <form [formGroup]="cardVerification">
+          <div class="form-row">
+            <div class="form-row-input">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                (onBlur)="setCvcMaxLength()"
+                                (onInput)="setCardMaxLength($event)"
+                                [style]="{ 'letter-spacing': '0.1rem' }"
+                                [tabindex]="0"
+                                [unmask]="true"
+                                #cardNumber
+                                class="new-input-blue sm full-width"
+                                formControlName="cardNumber"
+                                id="cardNumber"
+                                mask="9999 9999 9999 9999"
+                                name="cardNumber"
+                                slotChar=""
+                                [autoClear]="false"
+                                autocomplete="cc-number"
+                            ></p-inputMask>
+                            <label for="cardNumber" translate
+                            >Card Number</label
+                            >
+                        </span>
+              <div
+                  class="error-sign"
+                  *ngIf="
+                                cardVerification.controls.cardNumber.errors
+                                    ?.pattern
+                            "
+                  translate
+              >
+                Card number is invalid
+              </div>
+            </div>
+                </div>
+                <div class="form-row triple">
+                    <div class="form-row-input">
+                        <span class="p-float-label">
+                            <p-autoComplete
+                                [dropdown]="true"
+                                [tabindex]="1"
+                                dropdownMode="current"
+                                [minLength]="2"
+                                scrollHeight="100px"
+                                [required]="true"
+                                (completeMethod)="
+                                    completeMethod($event, 'month')
+                                "
+                                [suggestions]="monthList"
+                                field="label"
+                                dataKey="value"
+                                [completeOnFocus]="true"
+                                autocomplete="cc-exp-month"
+                                formControlName="month"
+                                id="month"
+                                styleClass="new-autocomplete-blue sm"
+                            >
+                            </p-autoComplete>
+                            <label for="month" translate>Month</label>
+                        </span>
+                      <div
+                          class="error-sign"
+                          *ngIf="
+                                cardVerification.controls.month.errors?.pattern
+                            "
+                          translate
+                      >
+                        Wrong month
+                      </div>
+                    </div>
+
+                    <div class="form-row-input">
+                        <span class="p-float-label">
+                            <p-autoComplete
+                                [dropdown]="true"
+                                [tabindex]="2"
+                                dropdownMode="current"
+                                [minLength]="4"
+                                scrollHeight="100px"
+                                [required]="true"
+                                [baseZIndex]="100001"
+                                (completeMethod)="
+                                    completeMethod($event, 'year')
+                                "
+                                [suggestions]="yearList"
+                                field="label"
+                                dataKey="value"
+                                [completeOnFocus]="true"
+                                autocomplete="cc-exp-year"
+                                formControlName="year"
+                                id="year"
+                                styleClass="new-autocomplete-blue sm"
+                            >
+                            </p-autoComplete>
+                            <label for="year" translate>Year</label>
+                        </span>
+                      <div
+                          class="error-sign"
+                          *ngIf="
+                                cardVerification.controls.year.errors?.pattern
+                            "
+                          translate
+                      >
+                        Wrong year
+                      </div>
+                    </div>
+                    <div class="form-row-input">
+                        <span class="p-float-label">
+                            <input
+                                [autocomplete]="'cc-csc'"
+                                [maxlength]="cvcMaxLength"
+                                [minlength]="cvcMaxLength"
+                                [tabindex]="3"
+                                class="new-input-blue sm full-width"
+                                formControlName="cvc"
+                                id="cvc"
+                                name="cvc"
+                                pInputText
+                                type="password"
+                            />
+                            <label for="cvc" translate>CVC</label>
+                        </span>
+                      <div
+                          class="error-sign"
+                          *ngIf="
+                                cardVerification.controls.cvc.errors?.pattern
+                            "
+                          translate
+                      >
+                        Wrong cvc code
+                      </div>
+                    </div>
+                </div>
+        </form>
+      </div>
+
+      <div class="error-sign text-center" *ngIf="cardManualError">
+        {{ cardManualError }}
+      </div>
+
+      <div
+          class="other-payment-option box-bottom-border link"
+          *ngIf="bothAvailable"
+          [ngClass]="{
+                'disable-events disabled': importCardDetail,
+                green: !importCardDetail
+            }"
+          (click)="changePaymentOption()"
+      >
+        Other payment options
+      </div>
+
+      <div
+          class="footer-section"
+          [ngClass]="{
+                'mt-30': !bothAvailable && !cardError,
+                'mt-25': !bothAvailable && cardError
+            }"
+      >
+        <div
+            class="grid justify-content-even align-items-center mt-15 mb-3"
+        >
+          <button
+              class="button-simple shock-pink sm-35 fix-width margin-centered"
+              [disabled]="submitted && !cardVerification.valid"
+              (click)="validateCard()"
+          >
+            {{ importCardDetail ? 'Update' : 'Save' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+  <div *ngIf="!creditCardMode && bankAccountForm && bothAvailable">
+    <h2 class="membership__title" *ngIf="!creditCardMode">
+      Enter ACH Information
+      <img
+          *ngIf="isACHValid"
+          class="card_veirifed"
+          src="assets/images/verified.svg"
+          alt="verified"
+      />
+    </h2>
+    <div class="layout-card ach-information">
+      <app-bank-account-thumbnail
+          *ngIf="!editBankAccountMode && importBankDetail"
+          [model]="importBankDetail"
+      >
+      </app-bank-account-thumbnail>
+      <form
+          [formGroup]="bankAccountForm"
+          *ngIf="editBankAccountMode || !importBankDetail"
+      >
+        <div
+            class="card-verification-process"
+            [ngClass]="{
+                        show: validatingCard || isCardInvalid,
+                        warning: isCardInvalid,
+                        success: isCardValid
+                    }"
+        >
+          <div class="card-verification-message">
+            {{ cardErrorMessage || 'Validating account...' }}
+          </div>
+        </div>
+
+        <div class="form-row-input">
+                    <span class="p-float-label">
+                        <input
+                            class="new-input-blue sm full-width"
+                            type="text"
+                            id="account_holder_name"
+                            [tabindex]="1"
+                            formControlName="account_holder_name"
+                            pInputText
+                        />
+                        <label for="account_holder_name" translate
+                        >Account Holder Name *</label
+                        >
+                    </span>
+          <div
+              class="error-sign"
+              *ngIf="
+                            bankAccountForm.controls.account_holder_name.errors
+                        "
+              translate
+          >
+            <div
+                *ngIf="
+                                bankAccountForm.controls.account_holder_name
+                                    .errors.pattern
+                            "
+                translate
+            >
+              err_only_characters_allowed
+            </div>
+          </div>
+        </div>
+                <div class="form-row-input">
+                    <span class="p-float-label">
+                        <p-dropdown
+                            [options]="holderType"
+                            styleClass="new-input-blue sm full-width"
+                            [placeholder]="'label_select' | translate"
+                            formControlName="account_holder_type"
+                            id="account_holder_type"
+                        ></p-dropdown>
+                        <label for="account_holder_type" translate
+                        >Account Holder Type *</label
+                        >
+                    </span>
+                  <div
+                      class="error-sign"
+                      *ngIf="
+                            bankAccountForm.controls.account_holder_type.errors
+                        "
+                      translate
+                  >
+                    <div
+                        *ngIf="
+                                bankAccountForm.controls.account_holder_type
+                                    .errors.pattern
+                            "
+                        translate
+                    >
+                      err_required_label_account_holder_type
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row-input">
+                    <span class="p-float-label">
+                        <input
+                            formControlName="routing_number"
+                            type="text"
+                            class="new-input-blue sm full-width address-border"
+                            id="label_routing_number"
+                            pKeyFilter="int"
+                            autocomplete="off"
+                            minLength="8"
+                            maxlength="9"
+                            pInputText
+                            [tabindex]="2"
+                        />
+                        <label for="label_routing_number" translate
+                        >Routing Number *</label
+                        >
+                    </span>
+                  <div
+                      class="error-sign"
+                      *ngIf="bankAccountForm.controls.routing_number.errors"
+                      translate
+                  >
+                    <div
+                        *ngIf="
+                                bankAccountForm.controls.routing_number.errors
+                                    .pattern
+                            "
+                        translate
+                    >
+                      err_only_numerics_allowed
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row-input">
+                    <span class="p-float-label">
+                        <input
+                            #accNumber
+                            formControlName="account_number"
+                            type="text"
+                            class="new-input-blue sm full-width address-border"
+                            maxlength="12"
+                            pKeyFilter="int"
+                            autocomplete="off"
+                            pInputText
+                            [tabindex]="3"
+                            id="account_number"
+                        />
+                        <label for="account_number" translate
+                        >Account Number *</label
+                        >
+                    </span>
+                  <div
+                      class="error-sign"
+                      *ngIf="
+                            bankAccountForm.controls.account_number.errors &&
+                            bankAccountForm.controls.account_number.errors
+                                .pattern
+                        "
+                      translate
+                  >
+                    err_only_numerics_allowed
+                  </div>
+                </div>
+                <div class="form-row-input">
+                    <span class="p-float-label">
+                        <input
+                            #accNumber
+                            formControlName="confirm_account_number"
+                            class="new-input-blue sm full-width address-border"
+                            type="text"
+                            maxlength="12"
+                            pKeyFilter="int"
+                            autocomplete="off"
+                            pInputText
+                            [tabindex]="4"
+                            id="confirm_account_number"
+                        />
+                        <label for="confirm_account_number" translate
+                        >Verify Account Number *</label
+                        >
+                    </span>
+                  <div class="error-sign" *ngIf="!bankAccountForm.valid">
+                    All fields are required
+                  </div>
+                </div>
+        <div
+            class="form-errors"
+            *ngIf="
+                        submitted &&
+                        (bankAccountForm.controls.confirm_account_number
+                            .dirty ||
+                            bankAccountForm.controls.confirm_account_number
+                                .touched) &&
+                        bankAccountForm.controls.confirm_account_number
+                            .value !==
+                            bankAccountForm.controls.account_number.value &&
+                        !bankAccountForm.controls.confirm_account_number.errors
+                            .required
+                    "
+            translate
+        >
+          err_confirm_account_number_not_match
+        </div>
+      </form>
+    </div>
+    <div
+        class="other-payment-option box-bottom-border link"
+        [ngClass]="{
+                'disable-events disabled': importBankDetail,
+                green: !importBankDetail
+            }"
+        (click)="changePaymentOption()"
+    >
+      Other payment options
+    </div>
+
+    <div class="grid justify-content-even align-items-center mt-15 mb-2">
+      <button
+          class="button-simple shock-pink sm-35 fix-width"
+          [disabled]="submitted && !bankAccountForm.valid"
+          (click)="
+                    !editBankAccountMode && importBankDetail
+                        ? editBankAccount(true)
+                        : validateBankAccount()
+                "
+      >
+        {{ !editBankAccountMode && importBankDetail ? 'Edit' : 'Save' }}
+      </button>
+      <button
+          class="button-simple bg-pink sm-35 fix-width"
+          (click)="deleteBankAccount()"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

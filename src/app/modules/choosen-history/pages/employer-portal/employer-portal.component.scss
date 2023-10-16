@@ -1,0 +1,309 @@
+@import '../../../../styles/variables.scss';
+
+.employment-portal-wrapper {
+    display: flex;
+    font-size: 14px;
+    margin: 0 auto;
+    @media screen and (max-width: 1340px) {
+        padding: 0 60px;
+    }
+    border-radius: 4px;
+    max-width: 1280px;
+
+    .ep-header {
+        max-width: 1280px;
+        @media screen and (max-width: 1280px) {
+            max-width: 1160px;
+        }
+        @media screen and (max-width: 1200px) {
+            max-width: 1045px;
+        }
+        @media screen and (max-width: 1025px) {
+            max-width: 904px;
+        }
+    }
+
+    .ep-body {
+        font-size: 14px;
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pc-features {
+        padding: 10px 0;
+    }
+
+    .tp-layout-header-name {
+        width: 70%;
+        @media screen and (max-width: 1025px) {
+            width: 50%;
+        }
+    }
+
+    h1 {
+        font-weight: 600;
+        color: $white;
+        position: relative;
+        margin: 0;
+
+        /* If the screen size is 601px wide or more, set the font-size of <div> to 80px */
+        @media screen and (min-width: 601px) {
+            font-size: 2em;
+        }
+
+        /* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+        @media screen and (max-width: 600px) {
+            font-size: 1em;
+        }
+    }
+
+    .tp-layout-header-actions {
+        display: flex;
+        align-items: center;
+    }
+    .tp-actions-box {
+        text-align: center;
+        color: #fff;
+        width: 53px;
+        @media (max-width: 1025px) {
+            display: flex;
+            justify-content: flex-end;
+            width: 50px;
+            height: 50px;
+        }
+    }
+    .tp-actions {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      font-size: 9px;
+      padding: 7px 0;
+      @media screen and (max-width: 1024px) {
+        width: unset;
+        height: 100%;
+      }
+
+      img,
+      .tp-actions-icon {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 3px;
+        @media screen and (max-width: 1024px) {
+          width: 15px;
+          height: 15px;
+        }
+      }
+
+      .tp-actions-icon {
+            font-size: 19px;
+        }
+
+        .tp-actions-icon-error {
+            background-color: $toastBgColor;
+            width: 8px;
+            height: 8px;
+            position: absolute;
+            margin-left: 20px;
+            border-radius: 50%;
+        }
+    }
+
+    .dropdown-wrap {
+        margin-right: 10px;
+    }
+
+    .custom-border-bottom {
+        border-bottom: 1px solid #c4c4c4;
+        padding-bottom: 5px;
+    }
+
+    .tp-search-input {
+        position: relative;
+        input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid $teamMainBorderColor;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 12px;
+            padding: 6px 10px;
+            color: $placeHolder;
+            height: 35px;
+            &::placeholder {
+                color: $placeHolder;
+            }
+        }
+        span {
+            position: absolute;
+            right: 10px;
+            top: 6px;
+            font-size: 20px;
+        }
+    }
+}
+
+.welcome-header {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    h1 {
+        font-weight: 600;
+        font-size: 45px;
+        line-height: 54px;
+        margin: 0;
+        color: white;
+        @media screen and (max-width: 1025px) {
+            text-align: center;
+        }
+        @media screen and (max-width: 767px) {
+            font-size: 27px;
+        }
+        @media screen and (max-width: 365px) {
+            font-size: 25px;
+        }
+    }
+    .welcome-text-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .welcome-text {
+            display: flex;
+            margin-bottom: 20px;
+            @media screen and (max-width: 1025px) {
+                justify-content: center;
+            }
+            img {
+                height: 61px;
+                width: auto;
+                margin-right: 13px;
+                @media screen and (max-width: 767px) {
+                    height: 45px;
+                }
+            }
+        }
+    }
+
+    .team-welcome-list {
+        margin: 0 0 50px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        ul {
+            list-style-image: url('../../../../../assets/images/my-account-images/profile-sidebar-images/list-marker.svg');
+        }
+        li {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 19px;
+            color: white;
+            margin-bottom: 7px;
+        }
+    }
+    .create-new {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 280px;
+        max-width: 360px;
+        //margin-bottom: 30px;
+        border-radius: 6px;
+        //@media screen and (max-width: 1024px) {
+        //    margin: 0 auto 30px
+        //}
+        button {
+          width: 100%;
+          background: linear-gradient(
+                          273.12deg,
+                          #8235f8 5.42%,
+                          #f261da 98.01%
+          );
+          color: white;
+          font-weight: 600;
+          font-size: 18px;
+          line-height: 28px;
+          border-radius: 4px;
+          padding: 17px 0;
+          text-transform: uppercase;
+          border: unset;
+
+          &:hover {
+            outline: 0;
+          }
+        }
+
+      &:hover {
+        //box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+      }
+    }
+}
+
+.rounded-border {
+    border-radius: 6px;
+}
+
+.no-wrap {
+    flex-flow: nowrap;
+}
+
+@media screen and (max-width: 767px) {
+    .employment-portal-wrapper {
+        margin: 0;
+    }
+}
+
+.ep-body {
+    font-size: 14px;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.recruit-bttn {
+    border-radius: 6px !important;
+
+    &::after {
+      background: $resumeGradient;
+      -webkit-mask: $webkitWhiteMask;
+      -webkit-mask-composite: destination-out;
+      background: $resumeGradient;
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      content: '';
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      border-radius: 6px;
+      padding: 1px;
+    }
+
+    &:hover {
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+      border: inherit;
+    }
+}
+
+.add-new-pitchcard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    background: $shockPinkGradientColor;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 4px;
+    color: white;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+.settings-block {
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    max-width: 250px;
+}

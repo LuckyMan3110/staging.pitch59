@@ -1,0 +1,152 @@
+<div
+    class="grid reviews-header"
+    [ngStyle]="{
+        'justify-content':
+            business.businessType === PitchCardTypes.Resume ? 'flex-end' : null
+    }"
+    #mydiv
+>
+  <img
+      class="company-logo"
+      *ngIf="business.businessType !== PitchCardTypes.Resume"
+      [src]="business?.businessLogoThumbnailUrl"
+  />
+  <div class="company-label">
+    <div class="label-first">
+      {{
+      business.businessType === PitchCardTypes.Resume
+          ? 'Video References'
+          : 'Video Testimonials'
+      }}
+    </div>
+
+    <div class="label-second" *ngIf="!inlineName">
+            <span class="business-name">
+                {{ displayName ? displayName : '' }}</span
+            >
+    </div>
+  </div>
+</div>
+<div class="business-name-inline" *ngIf="inlineName">
+  {{ displayName ? displayName : '' }}
+</div>
+<div
+    class="reviews-rating"
+    *ngIf="!(!loaded || reviewsList?.length) && !isOrganization"
+>
+  <div class="summary-container pt-3 mt-3 mb-3">
+    <div
+        *ngIf="
+                !reviewsList?.length &&
+                currentUrl !== '/sign-in' && currentUrl !== '/sign-up'
+            "
+        class="button-simple add-full-text shock-pink lg-50"
+        (click)="addReview()"
+    >
+            <span
+            >Leave a
+              {{
+              business.businessType === PitchCardTypes.Resume
+                  ? 'Reference'
+                  : 'Testimonial'
+              }}</span
+            >
+    </div>
+  </div>
+</div>
+<div class="progress-bar" *ngIf="!loaded">
+  <p-progressBar
+      [style]="{ 'border-radius': 0 }"
+      mode="indeterminate"
+  ></p-progressBar>
+</div>
+<div class="no-reviews" *ngIf="!(!loaded || reviewsList?.length)">
+    <span
+    >No
+      {{
+      business.businessType === PitchCardTypes.Resume
+          ? 'references'
+          : 'testimonials'
+      }}
+      found.</span
+    ><br/>
+  <span>
+        You could be the first, would you like to leave a
+    {{
+    business.businessType === PitchCardTypes.Resume
+        ? 'reference'
+        : 'testimonial'
+    }}
+    ?
+    </span>
+</div>
+
+<div
+    class="reviews mb-3"
+    [ngClass]="{ 'mt-7': !isMobile, 'mt-3': isMobile }"
+    *ngIf="loaded && reviewsList?.length"
+    [ngStyle]="{
+        visibility: loaded && reviewsList.length > 0 ? 'visible' : 'hidden'
+    }"
+>
+  <div
+      class="grid justify-content-center mt-3 mb-3"
+      *ngIf="isMobile && !isOrganization"
+  >
+    <div
+        class="button-simple add-full-text shock-pink sm-35"
+        (click)="addReview()"
+    >
+      <span>Leave a Testimonial</span>
+    </div>
+  </div>
+
+  <div
+      (touchstart)="handleTouchStart($event)"
+      (touchmove)="handleTouchMove($event)"
+  >
+    <p-carousel
+        #carousel
+        [styleClass]="'reviews'"
+        [value]="reviewsList"
+        [circular]="true"
+        [showNavigators]="totalRecords > numVisible"
+        [responsiveOptions]="responsiveOptions"
+    >
+      <ng-template let-review pTemplate="item">
+        <app-business-review-item
+            *ngIf="review"
+            [review]="review"
+            [isOrganization]="isOrganization"
+            (handleMenu)="showReportMenu($event)"
+            (handleVideo)="showVideoPlayer($event)"
+            (isShow)="setTestimonialApprove(review)"
+            [businessType]="business.businessType"
+        ></app-business-review-item>
+      </ng-template>
+    </p-carousel>
+  </div>
+
+  <div
+      class="grid justify-content-center mt-7"
+      *ngIf="!isMobile && !isOrganization"
+  >
+    <div
+        class="button-simple add-full-text shock-pink lg-50"
+        (click)="addReview()"
+    >
+      <span>Leave a Testimonial</span>
+    </div>
+  </div>
+</div>
+
+<p-contextMenu
+    #menu
+    [baseZIndex]="4000"
+    [model]="reportTypes"
+    [triggerEvent]="'click'"
+    [appendTo]="'body'"
+    (onShow)="focusIn($event)"
+    styleClass="context-reports"
+>
+</p-contextMenu>

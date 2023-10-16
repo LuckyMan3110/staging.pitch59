@@ -1,0 +1,194 @@
+@import '../../../../styles//variables.scss';
+@mixin flex-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.business-hours-table {
+  border-spacing: 0;
+  font-size: 16px;
+  width: 100%;
+
+  th,
+  td {
+    padding: 5px;
+    font-size: 0.9rem;
+    color: $cardPrice;
+    text-transform: uppercase;
+    text-align: center;
+    border-bottom: 1px solid $borderColor;
+
+    @media screen and (max-width: 1280px) {
+      font-size: 0.8rem;
+    }
+    }
+
+    td {
+        height: 50px;
+        text-align: center;
+        min-width: 55px;
+        border: none;
+        border-bottom: 1px solid $borderColor;
+
+        .checkbox {
+          > div {
+            margin: 0;
+          }
+        }
+    }
+
+    .with-right-border {
+        border-right: 1px solid $borderColor;
+
+        @media screen and (max-width: 1280px) {
+            .tablet-open-hours {
+                padding-bottom: 5px;
+            }
+
+            .tablet-close-hours {
+                padding-top: 5px;
+                border-top: 1px solid $borderColor;
+            }
+        }
+    }
+
+    .with-left-border {
+        border-left: 1px solid $borderColor;
+    }
+
+    .remove-column {
+        div {
+            margin: 0 auto;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-weight: 800;
+            color: $white;
+            background-color: $borderColor;
+
+            &:hover {
+                cursor: pointer;
+                background-color: $cardPrice;
+            }
+        }
+    }
+}
+
+.mobile-business-hours {
+    @include flex-centered();
+
+    position: relative;
+    flex-direction: column;
+    border-bottom: 1px solid $borderColor;
+    padding: 5px 0;
+
+    .hours-container {
+        @include flex-centered();
+
+        @media screen and (max-width: 420px) {
+          flex-direction: column;
+        }
+
+        .mobile-open-hours {
+            padding-right: 7px;
+
+            @media screen and (max-width: 420px) {
+                padding-right: 0;
+                padding-bottom: 7px;
+            }
+        }
+
+        .mobile-close-hours {
+            padding-left: 7px;
+            border-left: 1px solid $borderColor;
+
+            @media screen and (max-width: 420px) {
+                padding-left: 0;
+                border-left: none;
+                padding-top: 7px;
+                border-top: 1px solid $borderColor;
+            }
+        }
+    }
+
+    .days-container {
+        @include flex-centered();
+
+        margin-top: 15px;
+
+        .week-day-container {
+            @include flex-centered();
+
+          margin: 0 5px;
+            flex-direction: column;
+
+            .day-label {
+                font-size: 0.8rem;
+                color: $cardPrice;
+                text-transform: uppercase;
+                font-weight: 600;
+                margin-bottom: 5px;
+            }
+
+            .checkbox {
+                margin-bottom: 5px;
+
+              > div {
+                margin: 0;
+              }
+            }
+        }
+    }
+
+    .remove-btn {
+      > div {
+        top: 0px;
+        right: 0px;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+            font-weight: 800;
+            color: $white;
+            background-color: $borderColor;
+
+        &:hover {
+                cursor: pointer;
+                background-color: $cardPrice;
+            }
+        }
+    }
+}
+
+.controls {
+    display: flex;
+    justify-content: flex-end;
+
+  .add-business-hours-btn {
+        color: $white;
+        text-transform: uppercase;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        padding: 10px 15px;
+        background-color: $titleColor;
+        margin-bottom: 15px;
+
+        &:hover {
+            cursor: pointer;
+            filter: brightness(110%);
+        }
+
+        &:active {
+            filter: brightness(90%);
+        }
+    }
+}

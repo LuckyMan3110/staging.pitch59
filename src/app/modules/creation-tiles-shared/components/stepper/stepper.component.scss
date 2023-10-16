@@ -1,0 +1,224 @@
+$mainColor: #f36;
+$completedColor: #30afb4;
+$backgroundColor: #f2f2f2;
+$currentBorderColor: #e8ad01;
+$stepColor: #c4c4c4;
+
+.wrapper {
+  width: 100%;
+}
+
+.step-progress {
+  display: flex;
+  flex-wrap: wrap;
+
+  &.withoutBtns {
+    .p-carousel-prev,
+    .p-carousel-next {
+      visibility: hidden;
+    }
+  }
+
+  p-carousel {
+    width: 100%;
+
+    .p-carousel-dots-container {
+      display: none;
+    }
+
+    .p-carousel-prev,
+    .p-carousel-next {
+      background-color: inherit !important;
+      border: none !important;
+
+      span {
+        &:before {
+          color: rgb(167, 164, 164);
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+
+  .step {
+    color: $stepColor;
+    padding: calc(4px * var(--scale-factor));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 15%;
+    background-color: white;
+    font-weight: 600;
+    margin: 5px auto;
+    width: calc(100px * var(--scale-factor));
+    height: calc(100px * var(--scale-factor));
+
+    // &.disabled {
+    //   color: $completedColor;
+    //   filter: grayscale(0.7);
+    //   opacity: 0.8;
+    //   cursor: initial !important;
+
+    //   &:hover {
+    //     box-shadow: none;
+
+    //     .icon {
+    //       transform: none;
+    //     }
+
+    //     .label {
+    //       font-size: calc(0.9rem * var(--scale-factor));
+    //       cursor: unset !important;
+    //       user-select: none;
+    //     }
+    //   }
+    // }
+
+    &.withoutMargin {
+      margin-right: 0;
+    }
+
+    &:hover {
+      box-shadow: none;
+
+      .icon {
+        transform: none;
+      }
+
+      .label {
+        font-size: calc(0.9rem * var(--scale-factor));
+        cursor: unset !important;
+        user-select: none;
+      }
+    }
+
+    // &.completed:not(.disabled) {
+    &.completed {
+      color: $completedColor;
+      cursor: pointer;
+
+      &:hover {
+        box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
+
+        .icon {
+          transform: scale(1.1);
+        }
+
+        .label {
+          font-size: calc(1rem * var(--scale-factor));
+        }
+      }
+    }
+
+    &.current {
+      border: 3px solid $completedColor;
+      padding: calc(1px * var(--scale-factor));
+    }
+
+    &.justView {
+      box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+
+      &:hover {
+        cursor: auto;
+
+        .icon {
+          transform: unset;
+        }
+
+        .label {
+          font-size: calc(0.9rem * var(--scale-factor));
+        }
+      }
+    }
+
+    .icon {
+      width: calc(35px * var(--scale-factor));
+      height: calc(35px * var(--scale-factor));
+      background-repeat: no-repeat;
+      background-position: center;
+      margin-bottom: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .label {
+      font-size: calc(0.9rem * var(--scale-factor));
+      transition: all 0.15s ease;
+    }
+  }
+}
+
+.mobile-stepper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  .step {
+    color: $stepColor;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 15%;
+    background-color: white;
+    font-weight: 600;
+    margin: 0 auto;
+    margin-bottom: 25px;
+    width: 100px;
+    height: 100px;
+
+    &.withoutMargin {
+      margin-right: 0;
+    }
+
+    &.justView {
+      box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+
+      @media (max-width: 400px) and (max-height: 680px) {
+        width: calc(95px * var(--scale-factor));
+        height: calc(95px * var(--scale-factor));
+        .label {
+          font-size: calc(0.8rem * var(--scale-factor));
+        }
+      }
+
+      &:hover {
+        cursor: auto;
+
+        .icon {
+          transform: unset;
+        }
+
+        .label {
+          font-size: calc(0.9rem * var(--scale-factor));
+        }
+      }
+    }
+
+    &.completed {
+      color: $completedColor;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    &.current {
+      border: 3px solid $currentBorderColor;
+    }
+
+    .icon {
+      width: 35px;
+      height: 35px;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin-bottom: 5px;
+    }
+
+    .label {
+      font-size: 0.9rem;
+    }
+  }
+}

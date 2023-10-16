@@ -1,0 +1,78 @@
+@import '../../../../styles/variables.scss';
+
+.container-assign {
+  position: relative;
+  padding-left: 25px;
+
+  .input-wrap {
+    display: flex;
+    align-items: baseline;
+    position: relative;
+
+    input.new-input-blue.sm {
+      margin-top: 0;
+    }
+
+    .p-dropdown .p-inputtext {
+      border-bottom: 0;
+    }
+
+    .form-errors {
+      position: absolute;
+      bottom: -15px;
+    }
+  }
+
+  .btn-remove {
+    color: $white;
+    background-color: $placeHolder;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    left: -3%;
+    top: 60%;
+
+    span {
+      height: 20px;
+    }
+  }
+}
+.add-more-btn {
+  max-width: 65px;
+  width: 100%;
+  margin-top: 15px;
+
+  button {
+    width: 100%;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 12px;
+    color: $white;
+    background-color: $activeColor;
+    border: unset;
+    white-space: nowrap;
+    padding: 3px 9px;
+    border-radius: 6px;
+    border: 1px solid $activeColor;
+    cursor: pointer;
+
+    &:hover:enabled button {
+      box-shadow: 0 0 8px rgba(60, 60, 60, 0.6);
+    }
+  }
+
+  button:disabled {
+    cursor: auto;
+    background: $placeHolder;
+    border: 1px solid $placeHolder;
+  }
+}
+.scrollable {
+  overflow-y: scroll;
+  max-height: 400px;
+  padding-right: 5px;
+}

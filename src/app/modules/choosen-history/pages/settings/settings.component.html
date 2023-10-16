@@ -1,0 +1,306 @@
+<div class="container">
+    <div class="settings-wrapper" *ngIf="profileForm">
+      <h1>Settings</h1>
+      <div class="settings-body">
+        <div class="layout-card info-container">
+          <form action="" [formGroup]="profileForm">
+            <div class="profile-input">
+                        <span class="p-float-label">
+                            <input
+                                class="new-input-blue"
+                                id="firstName"
+                                type="text"
+                                pInputText
+                                formControlName="firstName"
+                            />
+                            <label for="firstName"
+                            >{{ 'label_first_name' | translate }} *</label
+                            >
+                        </span>
+              <div
+                  class="form-errors input-error"
+                  *ngIf="
+                                profileForm.controls.firstName.invalid &&
+                                (profileForm.controls.firstName.dirty ||
+                                    profileForm.controls.firstName.touched)
+                            "
+              >
+                <div
+                    *ngIf="
+                                    profileForm.controls.firstName.errors
+                                        .required
+                                "
+                    translate
+                >
+                  err_required_firstname
+                </div>
+              </div>
+            </div>
+                    <div class="profile-input">
+                        <span class="p-float-label">
+                            <input
+                                class="new-input-blue"
+                                id="lastName"
+                                type="text"
+                                pInputText
+                                formControlName="lastName"
+                            />
+                            <label for="lastName"
+                            >{{ 'label_last_name' | translate }} *</label
+                            >
+                        </span>
+                      <div
+                          class="form-errors input-error"
+                          *ngIf="
+                                profileForm.controls.lastName.invalid &&
+                                (profileForm.controls.lastName.dirty ||
+                                    profileForm.controls.lastName.touched)
+                            "
+                      >
+                        <div
+                            *ngIf="
+                                    profileForm.controls.lastName.errors
+                                        .required
+                                "
+                            translate
+                        >
+                          err_required_lastname
+                        </div>
+                      </div>
+                    </div>
+            <div class="profile-input">
+                        <span class="p-float-label">
+                            <input
+                                class="new-input-blue"
+                                id="emailId"
+                                type="text"
+                                pInputText
+                                formControlName="emailId"
+                            />
+                            <label for="emailId"
+                            >{{
+                              'label_email_address' | translate
+                              }}
+                              *</label
+                            >
+                        </span>
+              <div
+                  class="form-errors input-error"
+                  *ngIf="
+                                profileForm.controls.emailId.invalid &&
+                                (profileForm.controls.emailId.dirty ||
+                                    profileForm.controls.emailId.touched)
+                            "
+              >
+                <div
+                    *ngIf="
+                                    profileForm.controls.emailId.errors.required
+                                "
+                    translate
+                >
+                  err_required_emailId
+                </div>
+                <div
+                    *ngIf="
+                                    profileForm.controls.emailId.errors.pattern
+                                "
+                    translate
+                >
+                  err_invalid_emailId
+                </div>
+              </div>
+                    </div>
+                    <div class="profile-input">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                class="new-input-blue"
+                                id="contactNumber"
+                                autocomplete="tel"
+                                type="tel"
+                                size="30"
+                                inputmode="tel"
+                                mask="(999) 999-9999"
+                                formControlName="contactNumber"
+                            ></p-inputMask>
+                            <label for="contactNumber"
+                            >{{
+                              'label_contact_number' | translate
+                              }}
+                              *</label
+                            >
+                        </span>
+                      <div
+                          class="form-errors"
+                          *ngIf="
+                                profileForm.controls.contactNumber.invalid &&
+                                (profileForm.controls.contactNumber.dirty ||
+                                    profileForm.controls.contactNumber.touched)
+                            "
+                      >
+                        <div
+                            *ngIf="
+                                    profileForm.controls.contactNumber.errors
+                                        .required
+                                "
+                            translate
+                        >
+                          err_required_contact
+                        </div>
+
+                        <div
+                            *ngIf="
+                                    profileForm.controls.contactNumber.errors &&
+                                    !profileForm.controls.contactNumber.errors
+                                        .required
+                                "
+                            translate
+                        >
+                          {{
+                          profileForm.controls.contactNumber.errors
+                              .message
+                              ? profileForm.controls.contactNumber
+                                  .errors.message
+                              : ('err_number_exist' | translate)
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="profile-input">
+                        <span class="p-float-label">
+                            <input
+                                class="new-input-blue"
+                                id="zipCode"
+                                type="text"
+                                pInputText
+                                autocomplete="postal-code"
+                                formControlName="zipCode"
+                            />
+                            <label for="zipCode" translate
+                            >label_zip_code</label
+                            >
+                        </span>
+                      <div
+                          class="form-errors"
+                          *ngIf="profileForm.controls.zipCode.errors?.pattern"
+                          translate
+                      >
+                        err_invalid_zip_code
+                      </div>
+                    </div>
+                </form>
+          <div
+              class="update-btn"
+              [ngClass]="{ inactive: !profileForm.valid }"
+              (click)="updateProfile('info')"
+              translate
+          >
+            label_update_Profile
+          </div>
+          <div
+              class="change-pswrd-btn"
+              (click)="changePassword()"
+              translate
+          >
+            label_change_password
+          </div>
+            </div>
+            <div class="layout-card photo-container">
+              <div class="form-errors" *ngIf="errorMessageImage">
+                {{ errorMessageImage }}
+              </div>
+                <div class="avatar-wrapper">
+                  <div class="img-thumb">
+                    <img
+                        [src]="profilePictureThumbnailUrl"
+                        alt=""
+                        (load)="profilePicLoad()"
+                        class="border50"
+                    />
+                    <p-progressSpinner
+                        *ngIf="!isProfilePicLoaded"
+                        [style]="{
+                                width: '40px',
+                                height: '40px',
+                                position: 'absolute',
+                                left: '36%',
+                                top: '36%',
+                                zIndex: 1
+                            }"
+                        strokeWidth="5"
+                        animationDuration=".9s"
+                    ></p-progressSpinner>
+                        <div class="overlay-camera">
+                            <div class="add-logo">
+                                <i class="fa fa-camera" aria-hidden="true"></i>
+                            </div>
+                            <div class="upload-file">
+                              <app-image-uploader
+                                  [aspectRatio]="1 / 1"
+                                  [resizeToWidth]="200"
+                                  [cropperMinWidth]="200"
+                                  dialogWidth="400px"
+                                  (afterFileUploadEvent)="
+                                        postCoverUpload($event)
+                                    "
+                                  (errorInImageCropperUpload)="
+                                        errorInImageCropperUpload($event)
+                                    "
+                              ></app-image-uploader>
+                            </div>
+                        </div>
+                    <div
+                        class="remove-block pointer"
+                        *ngIf="
+                                profilePictureThumbnailUrl !==
+                                defaultProfileImage
+                            "
+                        (click)="removeProfileImage()"
+                    >
+                      <span>&times;</span>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog
+    [(visible)]="otpModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '400px', width: '100%' }"
+    (onHide)="resetModal()"
+    styleClass="dialog"
+    appendTo="body"
+>
+  <div *ngIf="otpModal">
+    <div class="header-block text-center mb-20">
+      A verification text code has been sent to
+      <br/>
+      <span
+      >{{
+        otpRequestModel.type === 'phone'
+            ? profileForm.value.contactNumber
+            : profileForm.value.emailId
+        }}
+            </span>
+    </div>
+
+        <div class="main-content text-center mb-30">
+            <h1>Please Enter Code</h1>
+          <div class="input-wrap margin-centered">
+            <app-verify-form
+                [messageResource]="defaultResourceType"
+                [errorMessage]="otpCodeErrorMessage"
+                (otpCode)="verifyOtp($event)"
+                (resentOtp)="sendOtp($event)"
+            ></app-verify-form>
+          </div>
+        </div>
+    </div>
+</p-dialog>

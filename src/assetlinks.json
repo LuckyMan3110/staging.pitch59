@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.pitch.fiftynine",
+      "sha256_cert_fingerprints": [
+        "CE:80:54:8B:14:AA:9D:EE:3A:04:60:6F:13:02:9F:43:EC:85:65:9D:04:51:35:F2:4C:96:20:B2:E9:DD:98:94"
+      ]
+    }
+  }
+]

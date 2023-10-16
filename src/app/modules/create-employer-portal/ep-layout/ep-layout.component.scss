@@ -1,0 +1,297 @@
+@import '../../../styles/variables.scss';
+
+.layout-loader {
+  position: absolute;
+  top: calc(50% - 70px);
+  left: calc(50% - 90px);
+  z-index: 1;
+}
+
+.create-container {
+  width: 100%;
+  max-width: 1280px;
+  padding: 0;
+  overflow: hidden;
+
+  @media screen and (max-width: 767px) {
+    padding: 0;
+    margin-top: 0;
+  }
+
+  .wrapper-section {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+
+    .main-section {
+      width: 100%;
+
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
+    }
+
+    .pitchcard-view-section {
+      flex: auto;
+      margin: 130px 1rem 0;
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      @media (max-width: 851px) {
+        margin-top: 118px;
+      }
+
+      .business-information {
+        margin-bottom: 12px;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #25afb5;
+        text-transform: capitalize;
+
+        &.resume {
+          color: $resumeCardColor;
+        }
+
+        &.service {
+          color: $serviceCardColor;
+        }
+
+        &.job {
+          color: $jobCardColor;
+        }
+      }
+
+      .pitchcard-preview-download {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+
+        a {
+          color: #25afb5;
+          font-weight: 700;
+          text-decoration: none;
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .progress-section {
+      display: flex;
+      flex-direction: column;
+      background-color: rgb(213, 213, 213);
+      padding: 0px 10px 10px;
+      border-top-left-radius: 0.5em;
+      border-top-right-radius: 0.5em;
+
+      .business-stepper {
+        @media screen and (max-width: 767px) {
+          display: none;
+        }
+      }
+
+      .bars-menu {
+        display: none;
+
+        @media screen and (max-width: 767px) {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 40px;
+        }
+      }
+
+      .progress-bar {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        @media screen and (max-width: 767px) {
+          margin-top: 0.5rem;
+          margin-bottom: 0;
+          flex-grow: 1;
+          width: 100%;
+        }
+      }
+
+      .lower-mobile-section {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+
+        .section-name {
+          display: none;
+          @media screen and (max-width: 767px) {
+            display: initial;
+            font-size: 1.8rem;
+            font-weight: 700;
+          }
+        }
+
+        .view-pitchcard {
+          display: none;
+
+          @media screen and (max-width: 767px) {
+            display: inherit;
+            font-size: 2.2rem;
+            text-align: right;
+          }
+        }
+      }
+
+      @media screen and (max-width: 767px) {
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+        box-shadow: 0px 2px 5px 1px rgba(0, 0, 0, 0.3);
+        position: sticky;
+        top: 60px;
+        z-index: 101;
+      }
+    }
+
+    .main-form {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: calc(575px * var(--scale-factor));
+    }
+
+    @media (min-width: 768px) {
+      .navigation-footer {
+        height: 10%;
+        min-height: 3rem;
+      }
+    }
+
+    .navigation-footer {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      width: 100%;
+      border-top: 2px solid #dbdbdb;
+      padding: 0.33rem 1rem;
+
+      .navigation-footer-message {
+        color: #f36;
+        text-align: center;
+        word-wrap: break-word;
+        font-size: 12px;
+      }
+
+      @media (min-width: 375px) {
+        .navigation-footer-message {
+          text-align: end;
+          font-size: 14px;
+        }
+      }
+
+      .navigation-footer-message {
+        color: #f36;
+        text-align: end;
+        word-wrap: break-word;
+      }
+
+      .navigation-footer-buttons {
+        width: 100%;
+        padding: 0.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .back-button-wrapper {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          color: #5991a2;
+          font-weight: 700;
+          font-size: 16px;
+
+          .back-button {
+            cursor: pointer;
+
+            text-transform: uppercase;
+            align-self: center;
+          }
+        }
+      }
+
+      .button-simple {
+        width: 120px;
+        text-transform: uppercase;
+
+        &:focus {
+          box-shadow: 0px 0px 5px 5px rgba(218, 215, 66, 0.3);
+        }
+      }
+
+      .skip-button {
+        cursor: pointer;
+        text-align: center;
+        color: #000;
+        font-size: 0.725rem;
+        font-weight: 300;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+.created-modal {
+  p {
+    font-size: 18px;
+    margin-bottom: 45px;
+  }
+}
+
+.search-toggle {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  width: auto;
+  justify-content: center;
+  margin-top: 1rem;
+
+  & > * {
+    cursor: pointer;
+  }
+}
+
+.status {
+  position: relative;
+  width: 34px;
+  border-radius: 10px;
+  height: 20px;
+  margin-right: 15px;
+
+  &.inactive {
+    background-color: $stateErrorTextColor;
+
+    .toogler {
+      left: 1px;
+    }
+  }
+
+  &.active {
+    background-color: $growlMessageSuccessColor;
+
+    .toogler {
+      right: 1px;
+    }
+  }
+
+  .toogler {
+    top: 1px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    position: absolute;
+    background-color: $white;
+  }
+}

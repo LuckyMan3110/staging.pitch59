@@ -1,0 +1,69 @@
+@import '../../styles/variables.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: $white;
+  font-size: 3rem;
+  height: auto;
+  min-height: 67vh;
+
+  .error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12rem;
+    font-weight: 800;
+    width: 370px;
+    color: $NotFoundColor;
+
+    @media screen and (max-width: 668px) {
+      font-size: 8rem;
+
+      img {
+        width: 110px;
+      }
+    }
+
+    @media screen and (max-width: 550px) {
+      font-size: 6rem;
+
+      img {
+        width: 80px;
+      }
+    }
+
+    span,
+    img {
+      margin: 0;
+    }
+  }
+
+  h3 {
+    color: $titleColor;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+
+    @media screen and (max-width: 668px) {
+      font-size: 3rem;
+    }
+
+    @media screen and (max-width: 550px) {
+      font-size: 2rem;
+    }
+
+    @media screen and (max-width: 350px) {
+      font-size: 1.7rem;
+    }
+  }
+
+  .home-button {
+    margin-top: 25px;
+    font-weight: 400;
+    border-radius: 10px;
+    border: none;
+  }
+}

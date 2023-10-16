@@ -1,0 +1,21 @@
+# Use official node image as the base image
+FROM node:12
+
+# Set the working directory
+WORKDIR /usr/local/app
+
+# Add the source code to app
+COPY . /usr/local/app/
+
+# Install all the dependencies
+RUN npm install
+
+# to solve stupid typescript errors in deployment
+#RUN npm install -g typescript@3.8.3
+
+# Generate the build of the application.
+RUN npm run build:client-and-server-bundles-dev
+
+EXPOSE 4000
+
+CMD ["npm", "run", "serve:ssr"]

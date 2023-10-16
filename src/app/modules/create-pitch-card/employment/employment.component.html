@@ -1,0 +1,150 @@
+<form class="step-form" *ngIf="form" [formGroup]="form">
+  <h1>Employment</h1>
+  <div class="layout-card auto-complete-section">
+    <h2>Positions of Interest *</h2>
+    <span class="categories-input">
+            <p-autoComplete
+                #positions
+                (completeMethod)="suggestPositions($event)"
+                (keypress)="applyUserTagForPositions($event)"
+                (keyup.enter)="applyUserTagForPositions($event)"
+                (onBlur)="service.tileRequiredState = form.valid"
+                (onHide)="applyUserTagForPositions(null)"
+                (onSelect)="clickOnPositionItem($event)"
+                (onShow)="updateHeight(positions)"
+                (onFocus)="moveInputToTop($event)"
+                [minLength]="3"
+                [multiple]="true"
+                [suggestions]="positionsSuggestions"
+                [delay]="500"
+                class="employment-tags"
+                autocomplete="new-password"
+                field="name"
+                formControlName="positions"
+                placeholder="Sales, Receptionist, Engineer, etc..."
+            >
+                <ng-template let-selectedPosition pTemplate="selectedItem">
+                    <span
+                        class="p-autocomplete-token-label"
+                        [ngStyle]="{
+                            backgroundColor:
+                                (selectedPosition.status === 1 ||
+                                    !selectedPosition.id) &&
+                                '#bab8b8'
+                        }"
+                    >
+                        {{ selectedPosition.name }}
+                    </span>
+                </ng-template>
+                <ng-template let-position pTemplate="item">
+                    <p-checkbox
+                        name="positionItem"
+                        [label]="position.name"
+                        [value]="false"
+                        [binary]="true"
+                        (onChange)="clickOnPositionItem($event, position)"
+                    ></p-checkbox>
+                </ng-template>
+            </p-autoComplete>
+            <div class="error-sign" *ngIf="showNotApprovedPositionsMessage()">
+                Gray items will be submitted for approval.
+            </div>
+        </span>
+        <div class="employment-dropdown-block">
+          <div class="employment-dropdown-wrapper">
+            <h2>Work Type *</h2>
+            <div class="p-float-label">
+              <p-multiSelect
+                  #workTypesSelect
+                  styleClass="new-multiselect-gold sm"
+                  [options]="workTypes"
+                  optionLabel="name"
+                  (onChange)="service.tileRequiredState = form.valid"
+                  [filter]="false"
+                  ariaFilterLabel="Select All"
+                  [showHeader]="false"
+                  (onPanelShow)="updateHeight(workTypesSelect)"
+                  filterPlaceHolder="Select All"
+                  formControlName="workTypes"
+                  defaultLabel="Work Type"
+                  [showToggleAll]="false"
+                  selectedItemsLabel="{0} items selected"
+              >
+              </p-multiSelect>
+            </div>
+          </div>
+          <div class="employment-dropdown-wrapper">
+            <h2>Education</h2>
+            <div class="p-float-label">
+              <p-dropdown
+                  #educations
+                  class="new-input-blue sm"
+                  [options]="educationLevelDropdown"
+                  formControlName="educationLevel"
+                  optionLabel="value.name"
+                  defaultLabel="education"
+                  placeholder="education"
+                  (onShow)="updateHeight(educations)"
+                  (onChange)="onEducationChange()"
+              >
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+    <h2>
+      College/University
+      {{ this.form.value.educationLevel.value.id > 2 ? '*' : '' }}
+    </h2>
+    <span class="categories-input">
+            <p-autoComplete
+                #colleges
+                (completeMethod)="suggestEducational($event)"
+                (keypress)="applyUserTagForEducational($event)"
+                (keyup.enter)="
+                    this.service.tileRequiredState = this.form.valid;
+                    applyUserTagForEducational($event)
+                "
+                (onBlur)="service.tileRequiredState = form.valid"
+                (onFocus)="moveInputToTop($event)"
+                (onShow)="updateHeight(colleges)"
+                [minLength]="3"
+                [multiple]="true"
+                [suggestions]="educationalSuggestions"
+                [delay]="800"
+                [inputStyle]="{ width: '100%' }"
+                class="employment-tags"
+                field="name"
+                formControlName="educationalInstitutions"
+                placeholder="Please enter the full name of your college/university"
+                autocomplete="new-password"
+            >
+                <ng-template let-selectedCollege pTemplate="selectedItem">
+                    <span
+                        class="p-autocomplete-token-label"
+                        [ngStyle]="{
+                            backgroundColor:
+                                (selectedCollege.status === 1 ||
+                                    !selectedCollege.id) &&
+                                '#bab8b8'
+                        }"
+                    >
+                        {{ selectedCollege.name }}
+                    </span>
+                </ng-template>
+            </p-autoComplete>
+            <div class="error-sign" *ngIf="showNotApprovedCollegesMessage()">
+                Gray items will be submitted for approval.
+            </div>
+        </span>
+    <div class="p-float-label" style="margin: 1rem 0">
+      <p-checkbox
+          name="hasMilitaryService"
+          formControlName="hasMilitaryService"
+          label="Military Service"
+          class="checkbox-military"
+          binary="true"
+      >
+      </p-checkbox>
+    </div>
+    </div>
+</form>

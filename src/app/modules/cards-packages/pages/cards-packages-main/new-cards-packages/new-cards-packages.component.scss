@@ -1,0 +1,128 @@
+@import '../../../../../styles/variables.scss';
+
+.page-container {
+  max-width: 1280px;
+
+  @media (max-height: 640px) {
+    height: 100%;
+  }
+  @media (max-width: 1024px) {
+    max-width: 900px;
+  }
+
+  .header-section {
+    margin-bottom: 25px;
+    padding-top: 25px;
+
+    h1 {
+      font-size: 36px;
+      @media (max-width: 640px) {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .body-section {
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-flow: nowrap;
+    @media (max-width: 1024px) {
+      flex-flow: wrap;
+    }
+  }
+
+  .package-selection {
+    display: flex;
+
+    span {
+      font-weight: 800;
+      font-size: 24px;
+      line-height: 29px;
+    }
+  }
+
+  .package-description {
+    margin-left: 40px;
+    height: 45px;
+    @media (max-width: 1025px) {
+      height: 55px;
+    }
+    @media (max-width: 768px) {
+      height: 40px;
+    }
+  }
+
+  .package-block {
+    max-width: 20%;
+    width: 100%;
+    margin-bottom: 25px;
+    @media (max-width: 1024px) {
+      max-width: 50%;
+    }
+    @media (max-width: 767px) {
+      max-width: unset;
+      margin-bottom: 30px;
+    }
+  }
+
+  .package-block-header {
+    @media (max-width: 1024px) {
+      margin: 0 25%;
+    }
+    @media (max-width: 815px) {
+      margin: 0 15%;
+    }
+    @media (max-width: 650px) {
+      margin: 0 9%;
+    }
+    @media (max-width: 325px) {
+      margin: 0 2%;
+    }
+  }
+
+  .pitchcard-view-item {
+    display: flex;
+    margin-bottom: 20px;
+    @media (max-width: 1024px) {
+      align-items: center;
+      justify-content: center;
+    }
+
+    app-search-result-thumbnail:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .link-info a {
+    display: block;
+    font-size: 14px;
+    line-height: 17px;
+    color: $titleColor;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 0 auto;
+    max-width: 30%;
+  }
+
+  .footer-section {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 40px 30px;
+  }
+
+  .button-next {
+    width: 100px;
+  }
+}
+
+.bottom-sidebar {
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+}
+
+.selected {
+  font-size: 20px;
+}

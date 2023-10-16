@@ -1,0 +1,93 @@
+.logo.text-center {
+  img {
+    width: 20%;
+    min-width: 5rem;
+  }
+}
+
+.heading.text-center {
+  color: #3f4349;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.input-container-sgnUpPop {
+  label {
+    margin: 0;
+  }
+}
+
+.dis-flex {
+  justify-content: center;
+}
+
+.form-field input[type='text'] {
+  margin: 0;
+  padding: 0;
+}
+::ng-deep .p-dialog.sign-up-in-dialog .sign-up-wrapper {
+  overflow-y: unset;
+}
+
+@media screen and (max-width: 768px) {
+  .p-dialog.sign-up-in-dialog {
+    overflow: scroll;
+
+    .sign-up-box {
+      padding: 0;
+    }
+  }
+}
+
+.input-with-button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-container-sgnUpPop {
+  padding: 0px 0.5em;
+
+  .sprite {
+    top: 35% !important;
+  }
+
+  label {
+    margin: 0;
+  }
+}
+
+.text-center {
+  display: flex;
+  justify-content: center;
+
+  &.heading {
+    color: #3f4349;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+}
+
+.sign-up-box {
+  margin: 0;
+}
+
+button.new-style-green-button-m {
+  margin-bottom: 0;
+  background-color: #25afb5;
+  border-radius: 4px !important;
+  border: none !important;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  height: 2.4375rem;
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  text-transform: uppercase;
+  width: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}

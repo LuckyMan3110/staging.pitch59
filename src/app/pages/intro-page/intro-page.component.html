@@ -1,0 +1,363 @@
+<app-welcome-banner
+    *ngIf="pageType"
+    [bannerType]="pageType"
+    (navigateTo)="computeAction($event)"
+    (openModal)="openModal($event)"
+></app-welcome-banner>
+
+<section *ngIf="pageConfig" class="section">
+  <div
+      class="welcome-container main-banner grid align-items-center justify-content-center"
+      [ngClass]="{
+            'no-height': !isDesktop && !(isTablet && !isPortraitMode)
+        }"
+  >
+    <div
+        class="grid align-items-center justify-content-center no-margins"
+        [ngClass]="{ 'flex-column-reverse': isMobile }"
+    >
+      <div
+          class="intro-block"
+          [ngClass]="{
+                    'col-5': isDesktop || isTablet,
+                    'col-12': isMobile
+                }"
+      >
+        <h3 *ngIf="!isMobile" class="no-margins" [innerHTML]="pageConfig.videoBlockTitle">
+        </h3>
+        <h3 *ngIf="isMobile" class="no-margins">
+          {{ pageConfig.mobileVideoBlockTitle }}
+        </h3>
+
+        <p
+            [ngClass]="{
+                        'font-italic':
+                            pageConfig.type === BannersTypesEnum.ResumeBanner
+                    }"
+            class="text-2xl mb-6 mr-4"
+        >
+          {{ pageConfig.videoBlockSubTitle }}
+        </p>
+
+        <div
+            class="grid align-items-center mb-20"
+            [ngClass]="{ 'm-0': !isMobile }"
+        >
+          <div class="col-6 mr-25" [ngClass]="{ 'p-0': !isMobile }">
+            <button
+                class="button-simple full-width no-padding lg-50-sm-font"
+                [ngClass]="{
+                                'resume-g6t-bg':
+                                    pageConfig.type ===
+                                    BannersTypesEnum.ResumeBanner,
+                                'business-g6t-bg':
+                                    pageConfig.type ===
+                                    BannersTypesEnum.BusinessBanner,
+                                'text-sm': isMobile,
+                                'lg-50-sm-font': !isMobile
+                            }"
+                (click)="
+                                computeAction({
+                                    url: pageConfig.videoBlockBtnLink,
+                                    withAuth: true,
+                                    type:
+                                        pageConfig.type ===
+                                        BannersTypesEnum.ResumeBanner
+                                            ? PitchCardsEnum.Resume
+                                            : null
+                                })
+                            "
+            >
+              CREATE PITCHCARDS
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+          class="main-video-desk"
+          [ngClass]="{
+                    'col-7': isDesktop || isTablet,
+                    'col-12': isMobile
+                }"
+          *ngIf="pageConfig.videoInfo"
+      >
+        <div class="relative">
+          <video
+              class="video"
+              #mainVideo
+              [ngStyle]="{ display: 'block' }"
+              disablePictureInPicture
+              preload="metadata"
+              playsinline
+              [poster]="pageConfig.videoInfo.posterImgUrl"
+              (timeupdate)="
+                            onTimeUpdateVideo($event, pageConfig.videoInfo)
+                        "
+              webkit-playsinline="true"
+          ></video>
+
+          <div class="play-overlay align-items-end justify-content-end mr-2 mb-2" *ngIf="isPlayVideo">
+            <div
+                class="play-icon pointer"
+                (click)="handleWatchMainVideo(pageConfig.videoInfo)"
+            ></div>
+          </div>
+        </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section *ngIf="pageConfig" class="section top-down-gradient">
+  <div
+      class="welcome-container grid align-items-center justify-content-center"
+  >
+    <div class="intro-block mb-30">
+      <h3 class="no-margins" *ngIf="!isMobile">
+        {{ pageConfig.tabsBlockTitle }}
+      </h3>
+      <h3 class="no-margins" *ngIf="isMobile">
+        {{ pageConfig.mobileTabsBlockTitle }}
+      </h3>
+    </div>
+    <div
+        class="grid justify-content-between align-content-center no-margins"
+        [ngClass]="{ 'flex-column': isMobile }"
+    >
+      <div
+          class="gradient-block grid align-items-start empty-block"
+          *ngFor="let tab of pageConfig.tabs"
+          [ngClass]="{
+                    'resume-block': tab.type === PitchCardsEnum.Resume,
+                    'business-block':
+                        tab.type === PitchCardsEnum.Basic ||
+                        tab.type === PitchCardsEnum.Employee,
+                    'service-block': tab.type === PitchCardsEnum.Service,
+                    'job-block': tab.type === PitchCardsEnum.Job,
+                    'product-block': tab.type === PitchCardsEnum.Products
+                }"
+      >
+        <div class="col-8" *ngIf="tab?.type">
+          <div class="gradient-title">
+            <h2
+                class="text-center no-margins"
+                [ngClass]="{
+                                'text-left': isTablet && isPortraitMode
+                            }"
+            >
+              {{ tab.title }}
+              <span *ngIf="tab.comingSoon" class="uppercase">
+                                COMING SOON...
+                            </span>
+            </h2>
+          </div>
+          <p class="text-lg font-bold mt-1">{{ tab.subTitle }}</p>
+
+          <p
+              *ngIf="
+                            pageConfig.type === BannersTypesEnum.ResumeBanner
+                        "
+              class="text-base equal-content"
+          >
+            {{ tab.description }}
+          </p>
+
+          <ul
+              *ngIf="
+                            pageConfig.type === BannersTypesEnum.BusinessBanner
+                        "
+              class="text-base"
+          >
+            <li *ngFor="let desc of tab.descList">
+              {{ desc }}
+            </li>
+          </ul>
+
+          <div
+              *ngIf="
+                            pageConfig.type === BannersTypesEnum.ResumeBanner
+                        "
+              class="col-8 no-padding mt-30"
+              [ngClass]="{
+                            'col-12': isTablet || (isMobile && isPortraitMode)
+                        }"
+          >
+            <button
+                class="button-simple bg-transparent uppercase full-width relative"
+                [ngClass]="{
+                                'gradient-border resume-g6t-bg':
+                                    tab.type === PitchCardsEnum.Resume,
+                                'border-2': tab.type === PitchCardsEnum.Job
+                            }"
+                (click)="
+                                computeAction({
+                                    url: tab.btnUrl,
+                                    withAuth: tab.type !== PitchCardsEnum.Job,
+                                    type: tab.type
+                                })
+                            "
+            >
+              {{ tab.btnText }}
+            </button>
+          </div>
+        </div>
+
+        <div class="col-4" *ngIf="tab?.cardImg">
+          <img
+              class="full-width"
+              [src]="tab.cardImg"
+              [alt]="tab.cardImg"
+          />
+        </div>
+
+        <div
+            class="grid align-items-center justify-content-center full-width full-height"
+            *ngIf="!tab?.type"
+        >
+          <h3>MORE TO COME...</h3>
+        </div>
+      </div>
+        </div>
+
+        <!--        <div-->
+        <!--            *ngIf="pageConfig.type === BannersTypesEnum.BusinessBanner && !isMobile"-->
+        <!--            class="grid align-content-center justify-content-center full-width">-->
+        <!--            -->
+        <!--            <div class="button-container">-->
+        <!--                <button class="button-simple business-g6t-bg uppercase full-width"-->
+        <!--                        (click)="navigateToPage({url: '/select-pitchcards', withAuth: true})">-->
+        <!--                    CREATE PITCHCARDS-->
+        <!--                </button>-->
+        <!--            </div>-->
+        <!--            <div class="button-container">-->
+        <!--                <button class="button-simple bg-transparent gradient-border basic-g6t uppercase full-width"-->
+        <!--                        (click)="openModal()">-->
+        <!--                    REQUEST A DEMO-->
+        <!--                </button>-->
+        <!--            </div>-->
+        <!--        </div>-->
+
+    <div
+        *ngIf="pageConfig.type === BannersTypesEnum.BusinessBanner"
+        class="grid align-content-center justify-content-around sm:justify-content-center full-width"
+    >
+      <div
+          [ngClass]="{ 'button-container': !isMobile, 'col-6': isMobile }"
+      >
+        <button
+            class="button-simple full-width no-padding col business-g6t-bg"
+            [ngClass]="{ 'text-sm': isMobile }"
+            (click)="
+                        navigateToPage({
+                            url: '/select-pitchcards',
+                            withAuth: true
+                        })
+                    "
+        >
+          CREATE PITCHCARDS
+        </button>
+      </div>
+      <div
+          [ngClass]="{ 'button-container': !isMobile, 'col-6': isMobile }"
+      >
+        <button
+            class="button-simple full-width no-padding border-2 bg-transparent col-6 gradient-border basic-g6t"
+            [ngClass]="{ 'text-sm': isMobile }"
+            (click)="openModal()"
+        >
+          REQUEST A DEMO
+        </button>
+      </div>
+    </div>
+
+    <div class="buttons grid justify-content-around flex-nowrap mt-30">
+      <a
+          href="https://apps.apple.com/us/app/pitch59/id1502156356"
+          class="text-center sm-col-12 col-6 sm:mr-3 pointer"
+      >
+        <img
+            src="../../../assets/images/app-dl-buttons/apple-badge.png"
+            class="full-width"
+            alt="app-store-download"
+        />
+      </a>
+      <a
+          href="https://play.google.com/store/apps/details?id=com.pitch.fiftynine"
+          class="text-center sm-col-12 col-6 pointer"
+      >
+        <img
+            src="../../../assets/images/app-dl-buttons/google-badge.png"
+            class="full-width"
+            alt="google-store-download"
+        />
+      </a>
+    </div>
+    </div>
+</section>
+
+<div class="watch-demo-dialog">
+  <p-dialog
+      [(visible)]="showVideoPlayer"
+      [modal]="true"
+      [blockScroll]="true"
+      styleClass="video-player-dialog"
+      [style]="{ width: '800px', maxWidth: '100%' }"
+      [draggable]="false"
+      [dismissableMask]="true"
+      [resizable]="false"
+      [showHeader]="true"
+      (onHide)="detachMedia()"
+  >
+    <app-video-js-player
+        [autoplay]="true"
+        [muted]="false"
+        [isVideoMirrored]="isVideoMirrored"
+        [muxVideoId]="selectedVideoUrl"
+        [posterUrl]="posterImageUrl"
+        *ngIf="showVideoPlayer && selectedVideoUrl"
+        #videoPlayer
+    ></app-video-js-player>
+  </p-dialog>
+</div>
+
+<p-confirmDialog
+    [styleClass]="isResumeCreated ? 'header-center-y' : ''"
+    key="isResumeExist"
+></p-confirmDialog>
+
+<p-dialog
+    class="contact-me-dialog"
+    styleClass="pitch-modal"
+    [(visible)]="showRequestDemoModal"
+    [draggable]="false"
+    [modal]="true"
+    [style]="{
+        width: '100%',
+        maxWidth: '500px',
+        overflow: isMobile ? 'hidden' : 'initial'
+    }"
+    [blockScroll]="false"
+>
+  <app-contact-modal
+      *ngIf="showRequestDemoModal"
+      (hideModal)="showRequestDemoModal = false"
+      (submitForm)="onContactModalSubmit($event)"
+  ></app-contact-modal>
+</p-dialog>
+
+<p-dialog
+    class="contact-me-dialog"
+    styleClass="pitch-modal"
+    [(visible)]="showDoneDialog"
+    [draggable]="false"
+    [modal]="true"
+    [style]="{ width: '100%', maxWidth: '300px' }"
+    [blockScroll]="false"
+>
+  <app-done-modal (done)="showDoneDialog = false">
+    <ng-template #content>
+      <p>Great! One of our representatives will reach out to you soon!</p>
+    </ng-template>
+  </app-done-modal>
+</p-dialog>

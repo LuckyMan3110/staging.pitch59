@@ -1,0 +1,710 @@
+<div class="my-pockets-wrapper" #pocketContainer>
+    <div class="my-pockets-header">
+        <span
+            class="back-link"
+            (click)="goBackToAllPockets()"
+            *ngIf="openedPocket"
+        >
+            <i
+                class="pi pi-arrow-left"
+                style="font-size: 1.7rem; vertical-align: middle"
+            ></i>
+        </span>
+      <h1 *ngIf="!inviteId">
+        {{
+        openedPocket
+            ? "'" + openedPocket.name + "'" + ' Pocket'
+            : 'Pockets'
+        }}
+      </h1>
+      <h1 class="attach-header" *ngIf="inviteId">
+        Available for attaching PitchCards
+      </h1>
+    </div>
+  <div class="my-pocket-controls-container" *ngIf="!inviteId">
+    <div class="my-pockets-search-box">
+      <p-autoComplete
+          #searchPocket
+          class="auto-complete-wrapper mi-autocomplete"
+          [(ngModel)]="searchText"
+          [suggestions]="results"
+          [inputStyle]="{
+                    width: '100%',
+                    'margin-left': '5px',
+                    border: 'none',
+                    'font-size': '1rem'
+                }"
+          [placeholder]="'Search for PitchCards'"
+          (completeMethod)="searchInit($event, false)"
+          (keyup.enter)="searchInit($event, true)"
+          (onClear)="!openedPocket ? getAllPockets() : null"
+          [autofocus]="true"
+          (onSelect)="selectPocketFromSuggests($event)"
+          field="name"
+          delay="500"
+          [emptyMessage]="'No results'"
+      >
+        <ng-template let-pocket pTemplate="item">
+          <div
+              *ngIf="pocket?.content?.length"
+              class="pocket-result-name"
+          >
+            {{ pocket?.name }}
+          </div>
+          <div
+              *ngIf="!hasContent && results.indexOf(pocket) === 0"
+              class="pocket-result-name"
+              (click)="preventBehavior($event)"
+          >
+            No results
+          </div>
+        </ng-template>
+            </p-autoComplete>
+      <div class="search-controls">
+        <button
+            class="search-btn"
+            [ngClass]="{ disable: !searchText }"
+            (click)="searchInit($event, true)"
+        >
+          <span class="icon"></span>
+        </button>
+      </div>
+            <div *ngIf="selectedPockets.length" class="removing-block-wrapper">
+              <span>Selected Pockets: {{ selectedPockets.length }}</span>
+            </div>
+        </div>
+    <div class="pocket-controls" #pocketControls>
+      <div
+          class="btn share"
+          pTooltip="Share"
+          tooltipPosition="top"
+          *ngIf="selectedPockets.length === 1"
+          (click)="handleSharePocket()"
+      ></div>
+      <div
+          class="btn change"
+          pTooltip="Edit"
+          tooltipPosition="top"
+          *ngIf="selectedPockets.length === 1 && !hasDefaultPockets()"
+          (click)="handleDetailsPocketModal('edit')"
+      ></div>
+      <div
+          class="btn remove"
+          pTooltip="Remove"
+          tooltipPosition="top"
+          *ngIf="selectedPockets.length && !hasDefaultPockets()"
+          (click)="handleRemoveConfirmationModal()"
+      ></div>
+      <div
+          *ngIf="!openedPocket && isDesktop"
+          pTooltip="Add New Pocket"
+          tooltipPosition="top"
+          class="new-pocket-btn"
+          (click)="handleDetailsPocketModal('create')"
+      ></div>
+      <div
+          class="touch-device-options color-white text-2xl"
+          *ngIf="!isDesktop && !isOrganizationBusinesses"
+      >
+        <i
+            class="pi pi-ellipsis-h"
+            *ngIf="!isRearranging"
+            (click)="plusOptionsContextMenu = true"
+        ></i>
+        <span
+            class="text-base"
+            *ngIf="isRearranging"
+            (click)="stopRearranging()"
+        >Done</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <div
+      class="my-pockets-container"
+      [ngClass]="{ scrollable: isAndroid && isRearranging }"
+  >
+    <h2
+        *ngIf="noItemsAvailable && !showPocketsLoader"
+        class="no-available-message color-white"
+    >
+      {{ 'No Items Available' + inviteId ? ' for attaching' : '' }}
+    </h2>
+    <div
+        *ngIf="!appLoader"
+        [hidden]="!showPocketsLoader"
+        class="pockets-loader"
+    >
+      <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+    </div>
+    <div
+        *ngIf="!openedPocket; else pocketContent"
+        class="vamp-container relative"
+        #parent
+        dragula="VAMPIRES"
+        [(dragulaModel)]="myPockets"
+    >
+      <div
+          *ngFor="let pocket of myPockets; let i = index"
+          class="pocketName=>{{ pocket.name }} pocket-container"
+          [ngStyle]="{
+                    marginLeft:
+                        i === myPockets.length - 1
+                            ? calculateMarginLeft(parent, myPockets)
+                            : ''
+                }"
+          [ngClass]="{
+                    notDraggable: pocket.default,
+                    isDefault: pocket.default,
+                    'mb-30': isTablet
+                }"
+      >
+        <app-pocket-thumbnail
+            *ngIf="!showPocketsLoader"
+            (click)="
+                        mobileMode
+                            ? handleMobileContextMenu($event, null, pocket)
+                            : pocket.content.length &&
+                              getPocketContent($event, pocket.id, pocket.name)
+                    "
+            [scale]="scaleFactor"
+            [pocket]="pocket"
+            [attachMode]="!!inviteId"
+            [pocketColor]="myPocketsColors[pocket.color]"
+            [isNoSelected]="!checkSelectedPocket(pocket)"
+            [defaultPocket]="pocket.default"
+            (selectPocket)="selectPocket($event)"
+            (contextmenu)="onRightClick($event, null, pocket)"
+            oncontextmenu="return false;"
+        >
+        </app-pocket-thumbnail>
+      </div>
+    </div>
+    <ng-template #pocketContent>
+      <div
+          class="pitchCards-container"
+          [ngClass]="{
+                    'organization-pc-container': isOrganizationBusinesses
+                }"
+          [dragula]="
+                    !isOrganizationBusinesses && !inviteId ? 'WITCHES' : ''
+                "
+          [(dragulaModel)]="openedPocketContent"
+      >
+        <div
+            class="pitchCard-container"
+            *ngFor="let pitchCard of openedPocketContent; let j = index"
+            [ngStyle]="{
+                        marginLeft:
+                            j === openedPocketContent.length - 1
+                                ? calculateMarginLeft(
+                                      pocketContent,
+                                      openedPocketContent
+                                  )
+                                : ''
+                    }"
+        >
+          <app-search-result-thumbnail
+              #businessCard
+              (companyImages)="handleTitleClick($event)"
+              [businessDetails]="pitchCard.business"
+              [scale]="scaleFactor"
+              [disabled]="true"
+              [withShare]="true"
+              (click)="
+                            mobileMode &&
+                                handleMobileContextMenu($event, pitchCard, null)
+                        "
+              (contextmenu)="onRightClick($event, pitchCard)"
+              oncontextmenu="return false;"
+          >
+          </app-search-result-thumbnail>
+          <div
+              class="attach-button"
+              *ngIf="inviteId"
+              (click)="attachPitchCard(pitchCard)"
+          >
+            <div
+                *ngIf="!mobileMode"
+                class="button-simple shock-pink sm-35"
+            >
+              Attach PitchCard
+            </div>
+            <div
+                *ngIf="mobileMode"
+                class="button-simple shock-pink sm-30"
+            >
+              ATTACH
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+<p-dialog
+    class="new-pocket-modal"
+    [(visible)]="detailsPocketModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="mobileMode"
+    [style]="{ paddingTop: '10px', maxWidth: '800px', margin: '20px' }"
+    [header]="detailPocketMode === 'create' ? 'Create Pocket' : 'Edit Pocket'"
+    (onHide)="clearDetailsModalOptions()"
+>
+  <app-pocket-setup
+      *ngIf="detailsPocketModal"
+      [pocket]="
+            detailPocketMode === 'create'
+                ? null
+                : { name: newPocketName, color: newPocketColor }
+        "
+      [detailPocketMode]="detailPocketMode"
+      [modalErrors]="modalErrors"
+      (saveChanges)="newPocketSubmit($event)"
+  >
+  </app-pocket-setup>
+</p-dialog>
+<p-dialog
+    class="remove-confirmation-modal"
+    [(visible)]="removeConfirmationModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ paddingTop: '10px', maxWidth: '800px' }"
+>
+  <p-header class="confirmation-title">
+    Remove {{ contextPocket ? '1' : selectedPockets.length }} selected
+    pocket{{ !contextPocket && selectedPockets.length > 1 ? 's' : '' }}?
+  </p-header>
+  <div class="confirmation-wrapper">
+    <div class="delete" (click)="submitRemoving()">
+      <span class="icon"></span>
+      Remove Pocket{{
+      !contextPocket && selectedPockets.length > 1 ? 's' : ''
+      }}
+    </div>
+    <div class="cancel" (click)="handleRemoveConfirmationModal()">
+      <span>X</span>
+      Cancel
+    </div>
+  </div>
+</p-dialog>
+<div class="bottom-sidebar">
+  <app-sidebar
+      [(visible)]="selectedPockets.length"
+      [dismissible]="false"
+      [position]="'bottom'"
+      [modal]="false"
+      [style]="{ height: '50px' }"
+      [showCloseIcon]="false"
+  >
+    <div class="control-wrapper">
+      <div class="selected">
+        {{ selectedPockets.length }}
+      </div>
+      <div
+          class="btn share"
+          pTooltip="Share"
+          tooltipPosition="top"
+          *ngIf="selectedPockets.length === 1"
+          (click)="handleSharePocket(selectedPockets[0])"
+      ></div>
+      <div
+          class="btn change"
+          pTooltip="Edit"
+          tooltipPosition="top"
+          *ngIf="selectedPockets.length === 1 && !hasDefaultPockets()"
+          (click)="handleDetailsPocketModal('edit')"
+      ></div>
+      <div
+          class="btn remove"
+          pTooltip="Remove"
+          tooltipPosition="top"
+          *ngIf="selectedPockets.length && !hasDefaultPockets()"
+          (click)="handleRemoveConfirmationModal()"
+      ></div>
+    </div>
+    <span class="close-icon" (click)="selectedPockets.length = 0">X</span>
+  </app-sidebar>
+</div>
+<p-dialog
+    styleClass="share-business-card"
+    [header]="shareDialogHeader | translate"
+    [(visible)]="showSharingOptions"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ width: '500px', maxWidth: '100%' }"
+>
+  <app-share-business
+      [shareUrl]="shareUrl"
+      [businessType]="
+            contextBusiness?.businessType
+                ? contextBusiness.businessType
+                : mobileContextMenuPitchCard?.businessType
+        "
+      [isPocketSharing]="true"
+  >
+  </app-share-business>
+</p-dialog>
+<p-dialog
+    class="move-to-modal"
+    [(visible)]="moveToModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{
+        paddingTop: '10px',
+        width: '100%',
+        maxWidth: '1080px',
+        minHeight: '380px'
+    }"
+    (onHide)="copyMode = false"
+>
+  <p-header class="modal-title"> Choose a Pocket</p-header>
+
+  <div
+      class="folder-carousel"
+      *ngIf="getModalPockets() && getModalPockets().length; else noPockets"
+  >
+    <p-carousel
+        #carousel
+        [value]="getModalPockets()"
+        [numVisible]="numVisible"
+        [numScroll]="numScroll"
+        [responsiveOptions]="responsiveOptions"
+    >
+      <ng-template let-pocket pTemplate="item">
+        <app-pitchcard-folder-thumbnail
+            class="pocket"
+            [scaleFactor]="0.4"
+            [pitchCardFolder]="pocket"
+            [onlyFolder]="true"
+            (addContent)="
+                        copyMode
+                            ? copyBusinessToPocket($event)
+                            : moveBusinessToPocket($event)
+                    "
+        >
+        </app-pitchcard-folder-thumbnail>
+      </ng-template>
+    </p-carousel>
+  </div>
+
+  <ng-template #noPockets>
+    <div class="this-folder-empty">No pockets on this stage.</div>
+  </ng-template>
+</p-dialog>
+<div class="context-wrapper">
+  <app-context-menu
+      *ngIf="contextMenu"
+      [x]="contextMenuX"
+      [y]="contextMenuY"
+      [isVisible]="contextMenu"
+  >
+    <div class="context-menu-container">
+      <div
+          class="btn view"
+          *ngIf="!contextPocket"
+          (click)="handleViewPitchCard()"
+      >
+        <div class="icon view"></div>
+        <span>View PitchCard</span>
+      </div>
+      <div
+          *ngIf="!inviteId"
+          class="btn share"
+          (click)="
+                    contextPocket
+                        ? handleSharePocket(contextPocket)
+                        : handleSharePitchCard(contextBusiness)
+                "
+      >
+        <div class="icon share"></div>
+        <span>Share</span>
+      </div>
+      <div
+          *ngIf="!inviteId && contextPocket && !contextPocket?.default"
+          class="btn edit"
+          (click)="handleDetailsPocketModal('edit', contextPocket)"
+      >
+        <div class="icon edit"></div>
+        <span>Edit</span>
+      </div>
+      <div
+          *ngIf="
+                    !inviteId &&
+                    !contextPocket &&
+                    !isOrganizationBusinesses &&
+                    !contextPocket?.default
+                "
+          class="btn moveTo"
+          (click)="handleMoveToModal()"
+      >
+        <div class="icon moveTo"></div>
+        <span>Move To</span>
+      </div>
+      <div
+          *ngIf="
+                    !inviteId &&
+                    !contextPocket &&
+                    !isOrganizationBusinesses &&
+                    !contextPocket?.default
+                "
+          class="btn copyTo"
+          (click)="handleMoveToModal(true)"
+      >
+        <div class="icon copyTo"></div>
+        <span>Copy To</span>
+      </div>
+      <div
+          *ngIf="
+                    !inviteId &&
+                    !isOrganizationBusinesses &&
+                    !contextPocket?.default
+                "
+          class="btn remove"
+          (click)="
+                    contextPocket
+                        ? handleRemoveConfirmationModal()
+                        : handleRemoveBusiness()
+                "
+      >
+        <div class="icon remove"></div>
+        <span>Remove</span>
+      </div>
+    </div>
+  </app-context-menu>
+</div>
+<div class="mobile-context-menu">
+  <app-sidebar
+      [(visible)]="mobileContextMenu"
+      [dismissible]="true"
+      [position]="'bottom'"
+      [modal]="true"
+      [style]="{
+            display: 'flex',
+            flexDirection: 'column',
+            'max-height': '11rem;'
+        }"
+      [showCloseIcon]="false"
+      (hideSidebar)="contextPocket = null"
+  >
+    <div class="control-wrapper" *ngIf="contextBusiness || contextPocket">
+      <div
+          *ngIf="contextPocket && contextPocket?.content"
+          class="header"
+          (click)="
+                    getPocketContent(
+                        $event,
+                        contextPocket.id,
+                        contextPocket.name
+                    )
+                "
+      >
+        Open Pocket
+      </div>
+      <div
+          class="header"
+          *ngIf="contextPocket?.organizationId"
+          (click)="
+                    contextPocket
+                        ? handleSharePocket(contextPocket)
+                        : handleSharePitchCard(contextBusiness)
+                "
+      >
+        Share
+      </div>
+      <div class="body" *ngIf="!contextPocket?.organizationId">
+        <div
+            *ngIf="!contextPocket"
+            class="context-btn view"
+            (click)="handleViewPitchCard()"
+        >
+          View PitchCard
+        </div>
+        <div
+            class="context-btn share"
+            (click)="
+                        contextPocket
+                            ? handleSharePocket(contextPocket)
+                            : handleSharePitchCard(contextBusiness)
+                    "
+        >
+          Share
+        </div>
+        <div
+            *ngIf="
+                        !contextPocket &&
+                        !isOrganizationBusinesses &&
+                        !contextPocket?.default
+                    "
+            class="context-btn copyTo"
+            (click)="handleMoveToModal(true)"
+        >
+          Copy To
+        </div>
+        <div
+            *ngIf="
+                        !contextPocket &&
+                        !isOrganizationBusinesses &&
+                        !contextPocket?.default
+                    "
+            class="context-btn moveTo"
+            (click)="handleMoveToModal()"
+        >
+          Move To
+        </div>
+        <div
+            class="context-btn remove"
+            *ngIf="!contextPocket?.default && !isOrganizationBusinesses"
+            (click)="
+                        contextPocket
+                            ? handleRemoveConfirmationModal()
+                            : handleRemoveBusiness()
+                    "
+        >
+          Remove
+        </div>
+      </div>
+    </div>
+  </app-sidebar>
+</div>
+<div class="mobile-context-menu">
+  <app-sidebar
+      [(visible)]="plusOptionsContextMenu"
+      [dismissible]="true"
+      [position]="'bottom'"
+      [modal]="true"
+      [style]="{
+            display: 'flex',
+            flexDirection: 'column',
+            'max-height': '11rem;'
+        }"
+      [showCloseIcon]="false"
+      (hideSidebar)="contextPocket = null"
+  >
+    <div class="control-wrapper">
+      <div class="body">
+        <div
+            class="context-btn share"
+            *ngIf="!openedPocket"
+            (click)="
+                        handleDetailsPocketModal('create');
+                        plusOptionsContextMenu = false
+                    "
+        >
+          <div class="new-pocket-btn"></div>
+          <span>Add New Pocket</span>
+        </div>
+
+        <div
+            class="context-btn share"
+            (click)="
+                        disableRearrange = false;
+                        plusOptionsContextMenu = false;
+                        !isDesktop
+                            ? setAdditionalContainerClass(
+                                  !openedPocket
+                                      ? 'pocket-container'
+                                      : 'pitchCard-container',
+                                  'shake',
+                                  true,
+                                  false
+                              )
+                            : null;
+                        isRearranging = true
+                    "
+        >
+                    <span
+                    >Rearrange
+                      {{ !openedPocket ? 'Pockets' : 'PitchCards' }}</span
+                    >
+        </div>
+
+        <div
+            class="context-btn"
+            (click)="plusOptionsContextMenu = false"
+        >
+          <span>Cancel</span>
+        </div>
+      </div>
+    </div>
+  </app-sidebar>
+</div>
+<p-dialog
+    class="move-to-modal-mobile"
+    [(visible)]="moveToModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [position]="'bottom'"
+    [style]="{
+        margin: '0',
+        width: '100vw',
+        borderBottomLeftRadius: '0px',
+        borderBottomRightRadius: '0px'
+    }"
+    (onHide)="copyMode = false"
+>
+  <p-header class="modal-title"> Choose a Pocket</p-header>
+  <div class="pockets-container" #moveToPocketContainer>
+    <app-pitchcard-folder-thumbnail
+        *ngFor="let pocket of getModalPockets(); let i = index"
+        class="pocket"
+        [ngStyle]="{ marginLeft: !i ? '20px' : '50px' }"
+        [scaleFactor]="moveToPocketScaleFactor"
+        [pitchCardFolder]="pocket"
+        [onlyFolder]="true"
+        (addContent)="
+                copyMode
+                    ? copyBusinessToPocket($event)
+                    : moveBusinessToPocket($event)
+            "
+    >
+    </app-pitchcard-folder-thumbnail>
+  </div>
+</p-dialog>
+
+<div class="preview-pitchcard-dialog">
+  <p-dialog
+      *ngIf="pitchCardPreviewMode"
+      [(visible)]="pitchCardPreviewMode"
+      [modal]="true"
+      [blockScroll]="true"
+      [draggable]="false"
+      [dismissableMask]="true"
+      [resizable]="false"
+      [showHeader]="true"
+      (onHide)="clearPitchCardOnPreview()"
+      styleClass="preview-pitchcard"
+  >
+    <div class="dialog-content">
+      <app-search-result-thumbnail
+          #businessCard
+          [businessDetails]="contextBusiness"
+          [scale]="mobileMode ? 0.8 : 1"
+          (companyImages)="handlePitchCardTitleClick($event)"
+      >
+      </app-search-result-thumbnail>
+    </div>
+  </p-dialog>
+</div>
+<p-confirmDialog
+    class="attach-pitchCard-confirmation"
+    [blockScroll]="true"
+    acceptLabel="Great!"
+    [rejectVisible]="false"
+    header="Congratulations!"
+    key="attachPitchCardConfirmation"
+></p-confirmDialog>
+<app-pitchcard-modals-wrapper
+    [uniqueId]="uniqueId"
+></app-pitchcard-modals-wrapper>

@@ -1,0 +1,345 @@
+@import '../../../../../styles/variables.scss';
+
+@mixin flex-centered() {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.group-item-wrapper {
+    font-size: 14px;
+    margin-top: 20px;
+    margin-left: 24px;
+    border-radius: 4px;
+
+    h1 {
+        margin-top: 0;
+        margin-bottom: 25px;
+        font-size: 2rem;
+        color: white;
+    }
+
+    .btn {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        color: $white;
+        border-radius: 4px;
+        font-weight: 600;
+        background-color: $titleColor;
+
+        &:hover {
+            cursor: pointer;
+            filter: brightness(110%);
+        }
+
+        &:active {
+            filter: brightness(90%);
+        }
+    }
+
+    .table-loader {
+        @include flex-centered();
+    }
+
+    .members-table-container {
+      th,
+      td {
+        text-align: center;
+        padding: 10px;
+        border: none;
+      }
+
+      th {
+        font-size: 1rem;
+        background-color: $bodyBgColor;
+      }
+
+        .member-row {
+            border-bottom: 1px solid $bodyBgColor;
+            font-size: 0.8rem;
+
+            .member-role {
+              > span {
+                font-weight: 600;
+                border-radius: 4px;
+                padding: 5px 20px;
+                text-transform: uppercase;
+              }
+
+                .Owner {
+                  background-color: rgb(255, 205, 210);
+                  color: rgb(204, 61, 67);
+                }
+            }
+
+            .member-name {
+                @include flex-centered();
+                justify-content: flex-start;
+
+                .profile-photo {
+                    margin-right: 10px;
+                    width: 35px;
+                    height: 35px;
+                }
+            }
+
+            .controls {
+                .edit-button {
+                    width: 15px;
+                    height: 15px;
+                    background-size: 15px 15px;
+                    background-position: center;
+
+                    &:hover {
+                        cursor: pointer;
+                        transform: scale(1.1);
+                        filter: brightness(110%);
+                    }
+
+                    &:active {
+                        filter: brightness(90%);
+                    }
+                }
+
+                .edit-button {
+                    background-image: url('/assets/images/edit-pencil.svg');
+                }
+
+              > div {
+                @include flex-centered();
+
+                .remove-button {
+                  @include flex-centered();
+                  font-size: 1rem;
+                  color: $stateErrorTextColor;
+                  font-weight: 700;
+
+                  &:hover {
+                    cursor: pointer;
+                            transform: scale(1.1);
+                            filter: brightness(110%);
+                        }
+
+                        &:active {
+                            filter: brightness(90%);
+                        }
+                    }
+
+                    justify-content: space-evenly;
+                }
+            }
+        }
+    }
+
+    .new-user-panel {
+        display: flex;
+        margin-top: 20px;
+        width: 100%;
+
+        .search-panel {
+            position: relative;
+            display: flex;
+            flex-grow: 0.95;
+            margin-bottom: 20px;
+
+            .search-input {
+                height: 35px;
+                padding: 8px;
+                border-radius: 2px;
+                background: $white;
+                border: 1px solid $inputFieldBorderColor;
+                color: $headerTextColor;
+                width: 70%;
+            }
+
+            .input-error {
+                color: $stateErrorTextColor;
+                position: absolute;
+                left: 0;
+                top: -17px;
+            }
+
+            .role-select {
+                position: relative;
+                @include flex-centered();
+
+                margin-left: 25px;
+                width: calc(30% - 25px);
+                justify-content: flex-end;
+
+                .select-error {
+                    color: $stateErrorTextColor;
+                    position: absolute;
+                    left: 0;
+                    top: -17px;
+                }
+            }
+        }
+
+        .control-panel {
+            @include flex-centered();
+
+            justify-content: flex-end;
+            flex-grow: 0.05;
+            height: 35px;
+
+            .new-user-btn {
+                @include flex-centered();
+
+              padding: 10px 20px;
+                height: 35px;
+                font-size: 1rem;
+                font-weight: 500;
+                border-radius: 4px;
+                background-color: $titleColor;
+                color: $white;
+                cursor: pointer;
+
+                @media screen and (max-width: 767px) {
+                    padding: 10px 10px;
+                }
+            }
+        }
+    }
+}
+
+.remove-modal {
+    .modal-title {
+        text-transform: none;
+        font-size: 1.5rem;
+    }
+
+    .remove-list {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px 15px 0 0;
+    }
+
+    .controls-container {
+      display: flex;
+      padding: 20px 15px 0 0;
+      justify-content: space-between;
+
+      .delete,
+      .cancel {
+        @include flex-centered();
+
+        color: $white;
+        border-radius: 4px;
+        margin: 5px 0;
+        padding: 5px 20px;
+        width: auto;
+        justify-content: flex-start;
+        height: 40px;
+        border: none;
+            font-size: 1rem;
+
+        &:active {
+                filter: brightness(85%);
+            }
+
+            &:hover {
+                cursor: pointer;
+                filter: brightness(95%);
+            }
+        }
+
+        .delete {
+            background-color: $stateErrorTextColor;
+        }
+
+        .cancel {
+            background-color: $titleColor;
+            justify-self: flex-end;
+        }
+    }
+}
+
+.invite-modal {
+    .modal-title {
+        text-transform: none;
+        font-size: 1.5rem;
+    }
+
+    .invite-form {
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+        padding: 20px 15px 0 0;
+
+        .invite-input {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            width: 100%;
+            margin-top: 20px;
+
+            label {
+                font-size: 1rem;
+            }
+
+            input {
+                width: 100%;
+                padding: 8px;
+                border-radius: 2px;
+                border: 1px solid $bodyBgColor;
+                background-color: $white;
+            }
+
+            .invite-error {
+                font-size: 0.8rem;
+                bottom: -17px;
+                color: $stateErrorTextColor;
+                left: 0;
+                position: absolute;
+            }
+        }
+    }
+
+    .controls-container {
+      display: flex;
+      padding: 20px 15px 0 0;
+      justify-content: space-between;
+
+      .invite,
+      .later {
+        @include flex-centered();
+
+        color: $white;
+        border-radius: 4px;
+        margin: 5px 0;
+        padding: 5px 20px;
+        width: auto;
+        justify-content: flex-start;
+        height: 40px;
+        border: none;
+            font-size: 1rem;
+
+        &:active {
+                filter: brightness(85%);
+            }
+
+            &:hover {
+                cursor: pointer;
+                filter: brightness(95%);
+            }
+        }
+
+        .invite {
+            background-color: $welcome-hero-link;
+        }
+
+        .later {
+            background-color: $titleColor;
+            justify-self: flex-end;
+        }
+    }
+}

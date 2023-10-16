@@ -1,0 +1,114 @@
+<div class="upload-video">
+    <div [ngClass]="{ container: isMobile, 'm-auto pr-3 pl-3': !isMobile }">
+      <div class="upload-h1 text-4xl font-bold" translate>
+        {{
+        businessType === PitchCardTypes.Resume
+            ? 'label_upload_reference'
+            : 'label_upload_testimonial'
+        }}
+      </div>
+      <div class="upload-sub">
+        <div
+            class="upload-h2 font-medium"
+            [ngClass]="{ 'text-sm': isMobile, 'text-xl': !isMobile }"
+            translate
+        >
+          {{
+          businessType === PitchCardTypes.Resume
+              ? 'label_add_your_reference'
+              : 'label_add_your_testimonial'
+          }}
+        </div>
+
+        <div
+            class="upload-h3 text-lg font-normal"
+            [ngClass]="{ 'text-base': isMobile, 'text-lg': !isMobile }"
+            translate
+        >
+          {{
+          businessType === PitchCardTypes.Resume
+              ? 'label_video_reference_rules'
+              : 'label_video_testimonial_rules'
+          }}
+        </div>
+        <div
+            class="col-12 lg:col-10 md:col-12 p-0 md:p-2 upload-para text-base"
+        >
+          <div class="mb-0 sm:mb-1" translate>
+            label_rule_1_testimonial
+          </div>
+
+          <div class="mb-0 sm:mb-1" translate>
+            label_rule_2_testimonial
+          </div>
+
+          <div class="mb-0" translate>label_rule_3_testimonial</div>
+
+          <div class="mt-2" translate>
+            {{
+            businessType === PitchCardTypes.Resume
+                ? 'label_rule_terms_service_reference'
+                : 'label_rule_terms_service'
+            }}
+            <span
+                class="link green"
+                translate
+                [routerLink]="'/terms-and-conditions'"
+            >lbl_terms_conditions</span
+            >
+          </div>
+
+          <div class="mt-2" translate>
+            {{
+            businessType === PitchCardTypes.Resume
+                ? 'label_rule_4_reference'
+                : 'label_rule_4_testimonial'
+            }}
+          </div>
+
+          <div class="mt-2" translate>
+            {{
+            businessType === PitchCardTypes.Resume
+                ? 'label_rule_5_reference'
+                : 'label_rule_5_testimonial'
+            }}
+          </div>
+
+                <div class="mt-0 sm:mt-2">Thank You!</div>
+            </div>
+
+            <div class="col-8 sm:col-6 margin-centered relative">
+              <app-video-upload
+                  [chooseIcon]="'pi-upload'"
+                  [maxDuration]="29"
+                  [errorConfig]="errorConfig"
+                  (errorInVideoUpload)="errorInVideoUpload($event)"
+                  (postUpload)="postUpload($event)"
+              >
+              </app-video-upload>
+            </div>
+
+        <div
+            class="col-12 lg:col-10 md:col-12 upload-para"
+            *ngIf="errorMessage"
+        >
+          <div class="form-errors">
+            {{ errorMessage }}
+          </div>
+        </div>
+
+        <div class="col-12 lg:col-10 md:col-12 upload-para">
+          <div translate>
+            lbl_note_accepted_video_formats
+            <i
+                (click)="showFormat()"
+                class="pi green pi-info-circle"
+            ></i>
+          </div>
+          <div *ngIf="isShowVideoFormat">
+            {{ formats }}
+          </div>
+        </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+@import '../../../../styles/variables.scss';
+
+.context-menu-wrapper {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+  z-index: 4002;
+  background-color: $white;
+  box-shadow: 0px 0px 5px 5px rgba($color: #000000, $alpha: 0.2);
+  opacity: 0;
+  border-radius: 4px;
+
+  &.visible {
+    opacity: 1;
+    transition: opacity linear 0.2s;
+  }
+}

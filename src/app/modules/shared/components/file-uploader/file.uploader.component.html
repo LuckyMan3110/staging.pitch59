@@ -1,0 +1,16 @@
+<p-fileUpload
+    name="files"
+    [url]="fileUploadUrl"
+    auto="auto"
+    (onUpload)="onUpload($event)"
+    (onBeforeSend)="onBeforeSend($event)"
+    (onError)="onUploadError($event)"
+    ngDefaultControl
+    [accept]="accept"
+    [chooseLabel]="uploadButtonLabel"
+    [maxFileSize]="maxSize"
+    [invalidFileSizeMessageSummary]="maxSizeMessage"
+    (onSelect)="onSelect($event)"
+    [multiple]="multiple"
+>
+</p-fileUpload>

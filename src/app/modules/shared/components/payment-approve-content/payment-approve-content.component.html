@@ -1,0 +1,12 @@
+<div class="created-modal text-center" [ngClass]="{ 'mb-3': isMobile }">
+  <h1>{{ paymentStatus }}</h1>
+
+  <p>{{ paymentDescription }}</p>
+
+  <button
+      class="button-simple shock-pink sm-35 margin-centered"
+      (click)="close()"
+  >
+    {{ requestStatusBtnText }}
+  </button>
+</div>

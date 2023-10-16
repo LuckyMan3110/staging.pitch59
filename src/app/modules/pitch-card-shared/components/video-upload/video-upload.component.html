@@ -1,0 +1,79 @@
+<div [hidden]="isUploading" class="file-upload">
+  <p-fileUpload
+      mode="basic"
+      name="files"
+      [url]="fileUploadUrl"
+      auto="true"
+      chooseLabel="{{ 'label_upload_video' | translate }}"
+      [chooseIcon]="chooseIcon"
+      (onSelect)="onSelect($event)"
+      (onUpload)="onUpload($event)"
+      [headers]="headers"
+      (onBeforeUpload)="onBeforeUpload($event)"
+      (onProgress)="onProgress($event)"
+      (onError)="onError($event)"
+      [accept]="videoFormat"
+      [fileLimit]="fileLimit"
+      [disabled]="isUploading"
+      [invalidFileSizeMessageSummary]="
+            errorConfig?.invalidFileSizeMessageSummary
+                ? errorConfig.invalidFileSizeMessageSummary
+                : ''
+        "
+      [invalidFileSizeMessageDetail]="
+            errorConfig?.invalidFileSizeMessageDetail
+                ? errorConfig.invalidFileSizeMessageDetail
+                : ''
+        "
+      [invalidFileTypeMessageSummary]="
+            errorConfig?.invalidFileTypeMessageSummary
+                ? errorConfig.invalidFileTypeMessageSummary
+                : ''
+        "
+      [invalidFileTypeMessageDetail]="
+            errorConfig?.invalidFileTypeMessageDetail
+                ? errorConfig.invalidFileTypeMessageDetail
+                : ''
+        "
+      [invalidFileLimitMessageDetail]="
+            errorConfig?.invalidFileLimitMessageDetail
+                ? errorConfig.invalidFileLimitMessageDetail
+                : ''
+        "
+      [invalidFileLimitMessageSummary]="
+            errorConfig?.invalidFileLimitMessageSummary
+                ? errorConfig.invalidFileLimitMessageSummary
+                : ''
+        "
+      [maxFileSize]="maxSizeVideo"
+  ></p-fileUpload>
+</div>
+
+<div *ngIf="isUploading" class="col-12">
+  <div *ngIf="!isUploaded" class="upload-para" translate>
+    label_uploading
+    <span>{{ progressValue }}%</span>
+  </div>
+  <div *ngIf="isUploaded" class="upload-para" translate>
+    <!-- label_uploaded -->
+    {{ afterVideoUploadText }}
+  </div>
+  <div class="grid">
+    <div class="col-10 lg:col-12 md:col-7 sm:col-8">
+      <p-progressBar
+          [value]="progressValue"
+          [showValue]="false"
+      ></p-progressBar>
+    </div>
+  </div>
+</div>
+
+<video
+    #durationMeter
+    class="duration-meter"
+    playsinline
+    style="visibility: hidden; position: absolute; left: 1000em"
+    (loadedmetadata)="checkDuration($event)"
+    preload="auto"
+    webkit-playsinline="true"
+></video>

@@ -1,0 +1,335 @@
+@mixin disabled {
+  filter: grayscale(1);
+}
+
+@mixin resetMarginAndPadding {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+h1 {
+  color: #0b0a0a;
+  font-size: 2.1875rem;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+}
+
+h4 {
+  color: #0b0a0a;
+  font-size: 0.9375rem;
+  font-weight: 300;
+  text-align: center;
+}
+
+label[for='float-input'] {
+  color: #bdbdbd;
+  font-size: 17px;
+  font-weight: 300;
+}
+
+.p-float-label {
+  input.ng-dirty.ng-invalid ~ label {
+    color: #ff3366;
+  }
+
+  .sprite.eye,
+  .sprite.close-eye {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.error-sign {
+  color: #ff3366;
+  font-size: 0.75rem;
+  margin-top: 0.75rem;
+  position: absolute;
+  bottom: -15px;
+  //left: 6px;
+}
+
+.top-bar {
+  width: 100%;
+  max-width: 1280px;
+}
+
+.pitchcard-view-section {
+  align-items: center;
+  background-color: #f2f2f2;
+  border-right: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  width: 30%;
+  min-width: 320px;
+}
+
+.main-section {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  .main-form {
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    padding: 0 10%;
+    padding-top: 54px;
+    padding-bottom: 35px;
+    width: 70%;
+
+    .sign-up {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: flex-start;
+
+      .acc-question {
+        color: #0b0a0a;
+        font-size: 0.9375rem;
+        font-weight: 300;
+        margin: 0.375rem 0;
+
+        span {
+          color: #0b0a0a;
+          cursor: pointer;
+          font-weight: 700;
+          text-decoration: none;
+        }
+      }
+
+      &-link {
+        font-weight: bold;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.form-row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  &.double {
+    display: flex;
+    align-items: flex-end;
+
+    > button {
+      &:first-of-type {
+        margin-right: 15px;
+      }
+    }
+  }
+
+  &-label {
+    position: absolute;
+    top: 0;
+    font-weight: bold;
+  }
+
+  &-input {
+    min-width: 50%;
+
+    // &:first-of-type {
+    //     margin-right: 15px;
+    // }
+  }
+
+  &-button {
+    .gradient-button {
+      margin-top: 2.3125rem;
+      max-height: 32px;
+      padding: 0 12px;
+    }
+  }
+}
+
+.button-outline {
+  &-gold {
+    color: #25afb5;
+    border-color: #25afb5;
+    border: 1px solid;
+    background-color: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    height: 2.875rem;
+    margin-top: 2.3125rem;
+    min-width: fit-content;
+    text-transform: uppercase;
+    padding: 13px 28px;
+    width: unset;
+
+    &.disabled {
+      @include disabled();
+    }
+  }
+}
+
+.button-simple {
+  span {
+    color: #fff;
+    text-transform: uppercase;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .password-validator {
+    font-size: 12px;
+  }
+
+  .main-form {
+    padding: 20px 12px !important;
+  }
+
+  .form-row {
+    &.double {
+      width: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .pitchcard-view-section {
+    display: none;
+  }
+
+  .main-form {
+    padding: 25px 45px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .wrapper-section {
+    height: auto !important;
+  }
+
+  .main-section {
+    height: auto;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+  }
+
+  .container {
+    width: 100%;
+    @include resetMarginAndPadding();
+  }
+
+  .main-form {
+    width: 100% !important;
+    height: auto !important;
+    padding: 25px 15px !important;
+  }
+
+  .button-outline {
+    &-gold {
+      min-width: unset;
+      font-size: 14px;
+      padding: 3px 15px;
+    }
+  }
+
+  .form-row {
+    &.double {
+      width: 100%;
+
+      .form-row-button {
+        margin-right: 0;
+        margin-left: 15px;
+      }
+    }
+
+    &-input {
+      width: 100%;
+
+      &:first-of-type {
+        margin-right: 0px;
+      }
+    }
+  }
+}
+
+.create-container {
+  margin: 30px auto;
+  max-width: 1280px;
+
+  .main-section {
+    height: 100%;
+    border: 1px solid #707070;
+    border-radius: 0.5em;
+    perspective: 1px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px #00000080;
+    flex-direction: row;
+  }
+}
+
+.password-validator {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-top: 0.5rem;
+
+    &.text-danger {
+      color: #ff3366;
+    }
+
+    &.text-success {
+      color: #25afb5;
+    }
+
+    i {
+      vertical-align: middle;
+    }
+  }
+}
+
+.form-row-input {
+  margin-top: 1rem;
+}
+
+.button-outline-gold-m {
+  margin-top: 1rem;
+
+  &.disabled {
+    @include disabled();
+  }
+}
+
+.header-block {
+  line-height: 23px;
+  font-size: 18px;
+
+  span {
+    font-weight: bold;
+  }
+}
+
+.input-wrap {
+  max-width: 70%;
+}
+
+.sign-up-link {
+  color: #25afb5;
+  text-transform: uppercase;
+  text-decoration: underline;
+  font-weight: 700;
+  cursor: pointer;
+}

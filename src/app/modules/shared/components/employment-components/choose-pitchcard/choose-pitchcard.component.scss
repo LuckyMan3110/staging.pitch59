@@ -1,0 +1,208 @@
+@import '../../../../../styles/variables';
+
+.page-container {
+  max-width: 1280px;
+
+  @media (max-height: 640px) {
+    height: 100%;
+  }
+  @media (max-width: 1024px) {
+    max-width: 900px;
+  }
+
+  .header-section {
+    margin-bottom: 25px;
+    padding: 25px 40px 0;
+    text-align: center;
+  }
+
+  h1 {
+    @media (max-width: 500px) {
+      font-size: 1.6em;
+    }
+  }
+
+  .switch {
+    font-size: 18px;
+    @media (max-width: 500px) {
+      font-size: 15px;
+      margin-bottom: 8px;
+      justify-content: center;
+    }
+  }
+
+  .body-section {
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-flow: nowrap;
+    @media (max-width: 1024px) {
+      flex-flow: wrap;
+      padding-bottom: 35px;
+    }
+  }
+
+  .package-selection {
+    display: flex;
+
+    span {
+      font-weight: 800;
+      font-size: 24px;
+      line-height: 29px;
+    }
+  }
+
+  .package-description {
+    height: 55px;
+    @media (max-width: 1025px) {
+      height: 45px;
+    }
+    @media (max-width: 768px) {
+      height: 40px;
+    }
+  }
+
+  .package-block {
+    width: 100%;
+    margin-bottom: 25px;
+    position: relative;
+    @media (max-width: 1024px) {
+      max-width: 50%;
+      margin-bottom: 35px;
+    }
+    @media (max-width: 767px) {
+      max-width: unset;
+    }
+  }
+
+  .package-block-header {
+    @media (max-width: 1024px) {
+      margin: 0 25%;
+    }
+    @media (max-width: 815px) {
+      margin: 0 15%;
+    }
+    @media (max-width: 650px) {
+      margin: 0 9%;
+    }
+    @media (max-width: 325px) {
+      margin: 0 2%;
+    }
+  }
+
+  .pitchcard-view-item {
+    display: flex;
+    margin-bottom: 20px;
+    position: relative;
+
+    .underlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: $black;
+      opacity: 0.65;
+      z-index: 1;
+    }
+
+    @media (max-width: 1024px) {
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    //app-search-result-thumbnail:hover {
+    //  transform: scale(1.05);
+    //}
+  }
+
+  .price-block {
+    min-height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-size: 22px;
+
+    .old-price-color {
+      color: #828282;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+    }
+
+    @media (max-width: 1440px) {
+      font-size: 19px;
+    }
+    @media (max-width: 500px) {
+      justify-content: center;
+    }
+  }
+
+  .link-info a {
+    display: block;
+    font-size: 14px;
+    line-height: 17px;
+    color: $titleColor;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 0 auto;
+    max-width: 30%;
+  }
+
+  .footer-section {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 40px 30px;
+  }
+
+  .button-next {
+    width: 100px;
+  }
+}
+
+.modal-body {
+  padding: 5%;
+  color: $profileItem;
+
+  h1 {
+    font-size: 32px;
+    @media (max-width: 500px) {
+      font-size: 23px;
+    }
+  }
+
+  h2 {
+    font-size: 26px;
+    @media (max-width: 500px) {
+      font-size: 20px;
+    }
+  }
+
+  ul {
+    list-style: disc;
+    list-style-position: inside;
+    margin-left: 10px;
+  }
+
+  .tips-message {
+    margin-top: -5%;
+  }
+
+  .modal-title {
+    display: flex;
+    align-items: center;
+
+    img {
+      height: 50px;
+      width: auto;
+      margin-right: 7px;
+      @media (max-width: 500px) {
+        height: 32px;
+      }
+    }
+  }
+
+  .mt-5 {
+    margin-top: 5px;
+  }
+}

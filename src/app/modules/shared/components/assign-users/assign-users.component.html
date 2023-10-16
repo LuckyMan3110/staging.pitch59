@@ -1,0 +1,153 @@
+<div>
+  <form [formGroup]="form">
+    <div
+        *ngIf="inputItems.length"
+        #userContainer
+        class="container-assign mb-15"
+        [ngClass]="{ scrollable: inputItems.length > 10 }"
+        formArrayName="inputItems"
+    >
+      <div *ngFor="let user of inputItems.controls; let i = index">
+        <div class="input-wrap" [formGroupName]="i">
+          <div
+              class="grid justify-content-center align-items-center btn-remove"
+              *ngIf="user.get('id').value !== superAdminId"
+              [ngClass]="{
+                            disable: user.get('id').value === superAdminId
+                        }"
+              (click)="clearInput(user, i)"
+              [pTooltip]="'Clear'"
+              [tooltipPosition]="'top'"
+          >
+            <span>&times;</span>
+          </div>
+
+          <input
+              formControlName="emailId"
+              type="text"
+              id="{{ 'emailId' + i }}"
+              autocomplete="nope"
+              class="new-input-box sm"
+              pInputText
+              [ngClass]="{
+                            disable:
+                                user.get('id').value === superAdminId ||
+                                (user.get('emailId').value &&
+                                    user.get('isCharged').value)
+                        }"
+              (blur)="setInputAsValid()"
+              (change)="setInputValue($event.target.value, i)"
+              [placeholder]="i === 0 ? 'jeff@pitch59.com' : 'Email'"
+          />
+
+          <div class="form-errors" *ngIf="user.get('emailId').errors">
+            <div
+                *ngIf="
+                                user.get('emailId').errors.pattern ||
+                                user.get('emailId').errors.failed
+                            "
+                translate
+            >
+              {{
+              errorMessage
+                  ? errorMessage
+                  : 'err_invalid_emailId'
+              }}
+            </div>
+
+            <div
+                *ngIf="
+                                user.get('emailId').errors.duplicate &&
+                                user.get('emailId').touched
+                            "
+                translate
+            >
+              This user is already an admin.
+            </div>
+          </div>
+
+          <div
+              class="disable-overlay"
+              *ngIf="user.get('id').value === superAdminId"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-grid p-justify-start no-margins">
+      <button
+          class="button-simple shock-pink sm-25"
+          [disabled]="form.invalid"
+          type="button"
+          (click)="addAdditionalAdminsModal = true"
+      >
+        <span class="pi pi-plus mr-1"></span>Add More
+      </button>
+    </div>
+
+    <div class="grid justify-content-end no-margins">
+      <button
+          class="button-simple shock-pink sm-35 uppercase"
+          type="submit"
+          (click)="saveChanges($event)"
+          translate
+      >
+        label_save_finish
+      </button>
+    </div>
+  </form>
+</div>
+
+<p-dialog
+    [(visible)]="addAdditionalAdminsModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="true"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '550px', width: '550px' }"
+    (onHide)="additionalNumberOfAdmins = 2"
+    styleClass="dialog"
+    appendTo="body"
+>
+  <div class="modal-layout" style="padding: 5%">
+    <div class="modal-header">
+      <h2 class="no-margins">
+        How many Administrators would you like to add?
+      </h2>
+    </div>
+
+    <div class="modal-body mb-30">
+      <div class="mt-20 mb-20">
+        <p-inputNumber
+            [(ngModel)]="additionalNumberOfAdmins"
+            mode="decimal"
+            [showButtons]="true"
+            [min]="1"
+            [max]="99"
+        >
+        </p-inputNumber>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="grid justify-content-end align-items-center">
+        <div class="mr-2">
+          <button
+              class="button-simple sm-35 bg-darkgray white"
+              (click)="addAdditionalAdminsModal = false"
+          >
+            {{ 'CANCEL' | uppercase }}
+          </button>
+        </div>
+        <button
+            class="button-simple sm-35 shock-pink"
+            (click)="addMoreInputs()"
+        >
+          {{ 'Add Administrators' | uppercase }}
+        </button>
+      </div>
+    </div>
+  </div>
+</p-dialog>

@@ -1,0 +1,165 @@
+<div class="pocket-page" id="pocket-page">
+  <div *ngIf="!appLoader" [hidden]="!appLoader" class="pitchCards-loader">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+  <div class="body-gradient" *ngIf="appLoader">
+    <div class="create-container container">
+      <div class="pocket-page-header" *ngIf="pocket">
+        <div class="block">
+          <span>Pocket</span>
+          <h2>{{ pocket?.name ? pocket.name : 'Pocket Name' }}</h2>
+        </div>
+
+        <div
+            *ngIf="!isZoomPreviewMode"
+            class="no-padding"
+            [ngClass]="{
+                        'col-3': isTablet || isMobile,
+                        'col-2': !isTablet && !isMobile,
+                        'fade-out': isZoomPreviewMode
+                    }"
+        >
+          <button
+              class="button-simple shock-pink full-width uppercase"
+              [ngClass]="{ 'sm-30': isMobile }"
+              (click)="
+                            isAuthUser
+                                ? savePocket($event)
+                                : handleAuthModal($event)
+                        "
+          >
+            {{ !isMobile ? 'Save Pocket' : 'Save' }}
+          </button>
+        </div>
+
+        <div
+            *ngIf="isZoomPreviewMode"
+            class="no-paddings pointer"
+            (click)="closeZoomPreviewMode()"
+        >
+          <img
+              src="../../../../assets/images/zoom-out.svg"
+              alt="zoom-out"
+          />
+        </div>
+      </div>
+
+      <div
+          *ngIf="
+                    pocketBusinessList?.length && isCustomPreviewMode;
+                    else EmptySection
+                "
+          class="wrapper-section"
+          [ngClass]="{ 'fade-out': isZoomPreviewMode }"
+      >
+        <div
+            class="pitchcard-view-section"
+            [ngClass]="{
+                        'col-3': !isMobile && !isTablet,
+                        'col-4': isTablet,
+                        'col-6': isMobile
+                    }"
+            *ngFor="let pitchCard of pocketBusinessList; let i = index"
+        >
+          <app-search-result-thumbnail
+              #businessCard
+              [withShare]="true"
+              [businessDetails]="pitchCard"
+              [scale]="!isMobile ? scaleFactor : 0.4"
+              [disabled]="true"
+              (click)="handleViewPitchCard(pitchCard)"
+          >
+          </app-search-result-thumbnail>
+        </div>
+      </div>
+
+      <ng-template #EmptySection>
+        <div class="empty-section" *ngIf="isCustomPreviewMode">
+          <h2 class="text-4xl sm:text-7xl">This Pocket is Empty</h2>
+        </div>
+      </ng-template>
+    </div>
+
+    <app-pitchcard-modals-wrapper
+        [uniqueId]="uniqueId"
+    ></app-pitchcard-modals-wrapper>
+
+    <div
+        class="card-page-footer"
+        [ngClass]="{
+                'absolute left-0 right-0 bottom-0 mr-auto ml-auto':
+                    isZoomPreviewMode
+            }"
+    >
+      <span>Powered by</span>
+      <a [routerLink]="'/welcome'">
+        <img src="./assets/images/logo/pitch59-logo-white.svg" alt=""/>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="preview-pitchcard-dialog">
+  <p-dialog
+      *ngIf="
+            (!!pitchCardOnPreview && !isMobile) ||
+            (!!pitchCardOnPreview && isMobile && !isPortraitMode)
+        "
+      [(visible)]="!!pitchCardOnPreview"
+      [modal]="true"
+      [blockScroll]="true"
+      [draggable]="false"
+      [dismissableMask]="true"
+      [resizable]="false"
+      [showHeader]="true"
+      (onHide)="clearPitchCardOnPreview()"
+      styleClass="preview-pitchcard"
+  >
+    <div class="dialog-content">
+      <app-search-result-thumbnail
+          [businessDetails]="pitchCardOnPreview"
+          [scale]="isMobile ? 0.8 : 1"
+          (companyImages)="
+                    handlePitchCardTitleClick($event, this.pitchCardOnPreview)
+                "
+      >
+      </app-search-result-thumbnail>
+    </div>
+    </p-dialog>
+</div>
+
+<div class="zoom-pitchcard-preview">
+  <p-dialog
+      *ngIf="isZoomPreviewMode && isMobile && isPortraitMode"
+      [(visible)]="isZoomPreviewMode && isMobile"
+      [modal]="false"
+      [draggable]="false"
+      [dismissableMask]="false"
+      [resizable]="false"
+      [showHeader]="false"
+      [styleClass]="'zoom-preview'"
+  >
+    <div class="dialog-content" *ngIf="previewBusinessList?.length">
+      <p-carousel
+          #Carousel
+          [value]="previewBusinessList"
+          [showNavigators]="false"
+          [numVisible]="1"
+          [numScroll]="1"
+      >
+        <ng-template let-card pTemplate="item">
+          <app-search-result-thumbnail
+              [businessDetails]="card"
+              [scale]="0.7"
+              (companyImages)="
+                            handlePitchCardTitleClick($event, card)
+                        "
+          >
+          </app-search-result-thumbnail>
+        </ng-template>
+            </p-carousel>
+        </div>
+    </p-dialog>
+</div>
+
+<p-toast styleClass="main-toast" key="main"></p-toast>

@@ -1,0 +1,444 @@
+<div class="content" [formGroup]="form">
+  <div
+      class="billing-view-item layout-wrap"
+      [ngClass]="{ 'flip-card-mode': isPaymentApproved }"
+  >
+    <div class="header-form mb-30">
+      <div *ngIf="!!bankDetail || !!cardDetail.length">
+        <div *ngIf="cardDetail && cardDetail.length">
+          <app-credit-card
+              [miniSize]="false"
+              [midSize]="true"
+              [cardDetails]="cardDetail[0]"
+              [allowRemoveCard]="false"
+          >
+          </app-credit-card>
+                </div>
+            </div>
+      <div class="header-form-pay-text text-center">
+        You can update your payment information
+        <span class="link green" (click)="handlePaymentMethods = true"
+        >here.</span
+        >
+      </div>
+        </div>
+
+    <div class="billing-info-block">
+      <div class="billing-item mb-2 box-bottom-border">
+        <div class="light-text">
+          {{
+          billingFrequencyModel[paymentPlan?.paymentFrequency]
+          }}
+          Subscription
+        </div>
+      </div>
+
+      <div
+          class="billing-item mb-2"
+          [ngClass]="{
+                    'mb-2':
+                        !addedDiscountMode ||
+                        !(
+                            paymentPlan?.discountCode &&
+                            paymentPlan?.amountDiscountCode
+                        )
+                }"
+      >
+        <div class="bold-text">
+                    <span
+                    >{{
+                      businessType === PitchCards.Job
+                          ? 'Job'
+                          : getBusinessTypeValue()
+                      }}PitchCards
+                        <span class="light-text"
+                        >({{
+                          pricingProduct?.type === productTypeModel.Single
+                              ? '1'
+                              : pricingProduct?.freeCountBusiness
+                                  ? pricingProduct.freeCountBusiness
+                                  : LimitBusinessesInPackage
+                          }}
+                          )
+                        </span>
+                    </span>
+        </div>
+        <div class="bold-text">
+                    <span
+                        *ngIf="pricingProduct && pricingProduct.price > 0"
+                        class="nowrap"
+                    >
+                        &#x24;{{ pricingProduct.price.toFixed(2) }}
+                    </span>
+          <span *ngIf="pricingProduct && pricingProduct.price === 0"
+          >&#x24;0.00</span
+          >
+        </div>
+      </div>
+
+      <div
+          class="billing-item mb-2"
+          *ngIf="
+                    addedDiscountMode ||
+                    (paymentPlan?.discountCode &&
+                        paymentPlan?.amountDiscountCode)
+                "
+      >
+        <div class="promo-block-badge color-white promo-approved">
+          <div (click)="clearPromoCode()" class="close pointer">
+            <span class="pi pi-times"></span>
+          </div>
+          <span
+              *ngIf="
+                            discountTypeValue &&
+                            paymentFrequencyValue &&
+                            paymentPlan?.discountCodeValue >= 0
+                        "
+          >
+                        {{
+            paymentPlan.discountType === DiscountType.Dollar
+                ? discountTypeValue +
+                paymentPlan.discountCodeValue
+                : paymentPlan.discountCodeValue +
+                discountTypeValue
+            }}
+            Discount
+                    </span>
+
+          <span *ngIf="!(discountTypeValue && paymentFrequencyValue)">
+                        {{
+            form.get('discountCode').value
+                ? form.get('discountCode').value
+                : ''
+            }}
+                    </span>
+        </div>
+        <span class="promo-discount"
+        >{{
+          paymentPlan?.priceByAppliedDiscount
+              ? '-$' +
+              paymentPlan.priceByAppliedDiscount.toFixed(2)
+              : ''
+          }}
+                </span>
+      </div>
+
+      <div
+          class="billing-item"
+          *ngIf="paymentPlan?.virtualVideo && virtualVideoData"
+      >
+        <div class="bold-text">
+          <span>Virtual Video Shoot</span>
+          <span class="basic big-video-svg"></span>
+        </div>
+        <div class="bold-text">
+          {{
+          resultPriceOfProduct
+              ? '&#x24;' + resultPriceOfProduct
+              : 'FREE'
+          }}
+        </div>
+      </div>
+
+      <div
+          class="billing-item mb-2 box-bottom-border"
+          style="margin-top: 45px"
+      >
+        <div class="promo-block border-text">
+          <div
+              *ngIf="
+                            !editDiscountMode &&
+                            !addedDiscountMode &&
+                            !paymentPlan?.amountDiscountCode &&
+                            !paymentPlan?.discountCode
+                        "
+              (click)="editDiscountMode = true"
+              class="link green"
+          >
+            Promo code?
+          </div>
+
+          <div class="promo-block-input" *ngIf="editDiscountMode">
+            <input
+                type="text"
+                class="new-input-box xs no-margins text-ellipsis"
+                formControlName="discountCode"
+                style="border-color: #4d4d4d !important"
+                placeholder="Enter promo code"
+                minlength="4"
+                maxlength="10"
+            />
+
+            <span *ngIf="wrongPromoCode" class="pink">{{
+              invalidDiscountMessage | titlecase
+              }}</span>
+
+            <div
+                class="clear-promo pointer"
+                *ngIf="wrongPromoCode"
+                (click)="clearPromoCode(); wrongPromoCode = false"
+            >
+              <span class="pi pi-times"></span>
+            </div>
+
+            <button
+                class="button-simple shock-pink uppercase sm-30"
+                [ngClass]="{
+                                disabled: !(
+                                    form.get('discountCode').value?.length >= 4
+                                )
+                            }"
+                [disabled]="
+                                !(form.get('discountCode').value?.length >= 4)
+                            "
+                (click)="updatePaymentPlan('discountCode', true)"
+            >
+              Apply
+            </button>
+          </div>
+                </div>
+            </div>
+
+            <div class="billing-item mb-20">
+              <div class="light-text">Subtotal</div>
+
+              <div class="light-text">
+                    <span
+                        *ngIf="paymentPlan?.amount || paymentPlan?.amount === 0"
+                    >&#x24;{{ paymentPlan.amount.toFixed(2) }}</span
+                    >
+                <span
+                    *ngIf="
+                            !paymentPlan?.amount && paymentPlan?.amount !== 0
+                        "
+                >-</span
+                >
+              </div>
+            </div>
+
+            <div class="billing-item">
+              <div class="bold-text large-text">
+                Total
+                {{ billingFrequencyModel[paymentPlan?.paymentFrequency] }}:
+              </div>
+
+              <div class="bold-text large-text">
+                    <span
+                        *ngIf="paymentPlan?.amount || paymentPlan?.amount === 0"
+                        class="total-price"
+                    >&#x24;{{ paymentPlan.amount.toFixed(2) }}</span
+                    >
+                <span
+                    *ngIf="
+                            !paymentPlan?.amount && paymentPlan?.amount !== 0
+                        "
+                >-</span
+                >
+              </div>
+            </div>
+    </div>
+
+    <div
+        class="flip-card"
+        [ngStyle]="{
+                perspective: isSafari && isPaymentApproved ? '1000px' : ' unset'
+            }"
+    >
+      <div class="flip-card-header">
+        <h2>Thank you!</h2>
+      </div>
+
+      <div class="flip-card-icon">
+        <span class="pi pi-check"></span>
+      </div>
+
+      <div class="flip-card-footer">
+        <div class="privacy-policy text-center mb-20">
+          A payment confirmation has <br/>
+          been sent to {{ userDetailsFromStorage.email }}.
+        </div>
+
+        <button
+            class="button-simple shock-pink uppercase"
+            (click)="calculateNextRoute()"
+        >
+          Create
+          {{ isPackageCreation ? 'Employer Portal' : 'PitchCard' }}
+        </button>
+      </div>
+        </div>
+    </div>
+
+  <div class="nav-buttons mt-20" *ngIf="!isPaymentApproved">
+    <button
+        class="button-simple shock-pink lg-50"
+        [disabled]="
+                !(bankDetail || cardDetail.length) ||
+                wrongRefEmail ||
+                wrongPromoCode
+            "
+        (click)="
+                isPackageCreation
+                    ? initBillingOfEmployerPortal()
+                    : createBusinessByBilling()
+            "
+    >
+      PAY NOW
+    </button>
+  </div>
+
+  <div class="privacy-policy text-center" *ngIf="!isPaymentApproved">
+    <p class="no-margins">
+      By clicking PAY NOW, you agree to Pitch59’s
+      <span class="link green" [routerLink]="'/terms-and-conditions'"
+      >Terms of Service</span
+      >
+      and
+      <span class="link green" [routerLink]="'/privacy-policy'"
+      >Privacy Policy</span
+      >. You also acknowledge your monthly renewal cycle
+    </p>
+    <p class="no-margins">
+      and authorize us to charge your default payment method for any
+      balance due. You can cancel anytime by deleting your PitchCard.
+    </p>
+  </div>
+
+  <p-dialog
+      [(visible)]="handleReferralEmail"
+      [blockScroll]="true"
+      [draggable]="false"
+      [modal]="true"
+      [closeOnEscape]="false"
+      [resizable]="false"
+      [dismissableMask]="false"
+      [style]="{ minWidth: '300px', maxWidth: '480px', width: '100%' }"
+      [closable]="true"
+      styleClass="billing-modal"
+      appendTo="body"
+  >
+    <div class="form-layout-wrap" style="padding: 10px">
+      <div
+          class="p-dialog-titlebar-icon pi pi-times pointer"
+          (click)="acceptReferralModal()"
+      ></div>
+      <p-header class="modal-title"
+      ><h2 class="no-margins" translate>
+        lbl_edit_referral_email
+      </h2></p-header
+      >
+      <div class="modal-body">
+        <div class="form-field mb-15">
+          <input
+              #referralInput
+              type="text"
+              class="text-ellipsis pointer new-input-blue"
+              formControlName="referralEmail"
+              placeholder="test@test.com"
+              pInputText
+          />
+          <div
+              class="form-errors input-error"
+              *ngIf="
+                            (referralEmail.invalid &&
+                                (referralEmail.dirty ||
+                                    referralEmail.touched)) ||
+                            wrongRefEmail ||
+                            yourOwnEmail
+                        "
+          >
+            <div *ngIf="wrongRefEmail">
+              {{ 'err_account_not_found' | translate }}
+            </div>
+            <div *ngIf="yourOwnEmail">
+              {{ 'err_your_own_email' | translate }}
+            </div>
+            <div *ngIf="referralEmail?.errors?.pattern" translate>
+              err_invalid_emailId
+            </div>
+          </div>
+                </div>
+
+                <div class="grid">
+                  <div class="col-3">
+                    <button
+                        class="button-simple shock-pink sm-35 w-100 mr-25"
+                        translate
+                        [disabled]="!referralEmail.valid"
+                        (click)="updateReferralEmail()"
+                    >
+                      label_save_As_favorite
+                    </button>
+                  </div>
+                  <div class="col-3">
+                    <button
+                        class="button-simple bg-darkgray sm-35 w-100"
+                        (click)="acceptReferralModal()"
+                        translate
+                    >
+                      label_cancel
+                    </button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </p-dialog>
+</div>
+
+<p-dialog
+    [(visible)]="handlePaymentMethods"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '500px', width: '100%' }"
+    [closable]="false"
+    styleClass="billing-modal"
+    appendTo="body"
+    header="Enter Credit Card Information"
+>
+  <div class="form-layout-wrap" *ngIf="handlePaymentMethods">
+    <button class="p-dialog-header-close pointer" (click)="acceptModal()">
+      <span class="pi pi-times"></span>
+    </button>
+    <div class="form-layout" *ngIf="paymentPlan && businessType">
+      <app-payment-method-forms
+          [importCardDetail]="
+                    cardDetail && cardDetail.length ? cardDetail[0] : null
+                "
+          [importBankDetail]="bankDetail ? bankDetail : null"
+          [achErrorMessage]="achErrorMessage"
+          [cardError]="cardErrorMessage"
+          [bothAvailable]="false"
+          [(isHaveChangesModel)]="isHaveChanges"
+          (saveChanges)="saveChanges($event)"
+          (deleteACH)="populateBankDetailRemoveObj($event)"
+      ></app-payment-method-forms>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="paymentApprovedModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '480px', width: '100%' }"
+    [closable]="true"
+>
+  <app-payment-approve-content
+      *ngIf="requestStatus"
+      [requestStatus]="requestStatus"
+      [withMessage]="
+            requestStatus?.message &&
+            requestStatus?.code !== 200 &&
+            requestStatus?.code !== 3000
+        "
+      (closeEvent)="paymentApprovedModal = false; handlePaymentMethods = true"
+  ></app-payment-approve-content>
+</p-dialog>

@@ -1,0 +1,65 @@
+<div class="full-height-wrap">
+    <div class="col-12">
+        <app-select-pitchcards></app-select-pitchcards>
+    </div>
+</div>
+
+<p-dialog
+    [(visible)]="showInformationModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '600px', width: '600px' }"
+    (onHide)="showInformationModal = false"
+    styleClass="dialog"
+    appendTo="body"
+>
+  <div class="col-12" style="margin-bottom: 2em" *ngIf="showInformationModal">
+    <div
+        *ngIf="pitchCardConfig?.pack?.businessType === PitchCardTypes.Job"
+        class="text-center"
+        style="
+                font-weight: 500;
+                font-size: 24px;
+                line-height: 30px;
+                color: #646363;
+            "
+    >
+      <h2>Employer Portal Needed</h2>
+      <p>
+        We’ll help you create your Employer Portal first and then you
+        can add your job positions.
+      </p>
+    </div>
+
+    <div
+        class="text-center"
+        style="
+                font-weight: 500;
+                font-size: 24px;
+                line-height: 30px;
+                color: #646363;
+            "
+        *ngIf="
+                pitchCardConfig?.pack?.businessType === PitchCardTypes.Resume
+            "
+    >
+      <p>
+        {{ selectedType | titlecase }} Cards are only for helping you
+        find employment or get recruited. Please confirm that you’re
+        seeking new employment or exploring other job opportunities.
+      </p>
+    </div>
+    <div class="margin-centered" style="width: 120px">
+      <button
+          class="button-simple shock-pink lg-50 full-width"
+          (click)="showInformationModal = false; setNavigateUrl()"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+</p-dialog>

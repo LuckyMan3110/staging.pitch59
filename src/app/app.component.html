@@ -1,0 +1,39 @@
+<p-sidebar
+    visible="true"
+    styleClass="p-sidebar-sticky"
+    position="top"
+    [showCloseIcon]="false"
+    #headerBar
+    [dismissible]="false"
+    [modal]="false"
+    [closeOnEscape]="false"
+    [autoZIndex]="true"
+>
+  <div class="col-12 no-padding" id="header-container" [hidden]="!showHeader">
+    <div class="header">
+      <app-welcome-page-header
+          class="top-bar"
+          [elementToAppend]="headerBar"
+      ></app-welcome-page-header>
+    </div>
+  </div>
+</p-sidebar>
+<app-loader></app-loader>
+<p-toast styleClass="main-toast" key="main"></p-toast>
+<main
+    class="header-margin"
+    [ngClass]="{
+        gradient: !welcomePage,
+        'extra-header-margin': hasSmartBanner()
+    }"
+>
+  <router-outlet></router-outlet>
+</main>
+<div class="col-12 no-padding">
+  <app-footer [hideFooterlinks]="signedIn"></app-footer>
+</div>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="offline">
+  <p-toast styleClass="main-toast" life="0" key="offline"></p-toast>
+</div>

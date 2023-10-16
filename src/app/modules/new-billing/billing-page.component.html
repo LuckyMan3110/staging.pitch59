@@ -1,0 +1,78 @@
+<div class="full-height-wrap">
+  <div class="page-container container">
+    <div
+        class="layout-card main-section"
+        [ngClass]="{
+                transparent: externalProductType || !isVirtualVideoPage
+            }"
+    >
+      <div
+          class="grid justify-content-center rounded-block mt-30 {{
+                    isMobile ? ' align-items-center flex-column' : ''
+                }}"
+      >
+        <div
+            class="pitchcard-view-item"
+            *ngIf="
+                        pricingProducts &&
+                        pricingProducts.length &&
+                        isVirtualVideoPage
+                    "
+        >
+          <div #packageWrap>
+            <h3 class="text-center">
+              {{
+              getBusinessTypeValue(
+                  businessDetails.businessType
+              ) | titlecase
+              }}
+            </h3>
+            <p class="description text-center">
+              {{ cardDescription }}
+            </p>
+
+            <app-search-result-thumbnail
+                [businessDetails]="businessDetails"
+                [demo]="true"
+                [scale]="scaleFactor"
+                [disabled]="true"
+            ></app-search-result-thumbnail>
+
+            <ul class="package-description">
+              <li
+                  *ngFor="
+                                    let item of getBillingDescription(
+                                        businessDetails.businessType
+                                    )
+                                "
+              >
+                                <span
+                                    [ngStyle]="{
+                                        color: selectedPackage
+                                            ? selectedPackage.packageColor
+                                            : ''
+                                    }"
+                                    class="list-item"
+                                >✔</span
+                                >
+                <span>{{ item }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+            *ngIf="pricingProducts && pricingProducts.length"
+            class="layout-block"
+            [ngClass]="{
+                        'external-product-class':
+                            externalProductType || !isVirtualVideoPage,
+                        'fix-width': !externalProductType
+                    }"
+        >
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="main-block">
+  <div class="mt-3 mb-4">
+    <app-otp-input
+        [config]="otpInputConfig"
+        (inputChange)="onOtpChange($event)"
+    ></app-otp-input>
+  </div>
+
+  <div class="error-sign text-center mb-30" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="footer-block text-center mb-30">
+    <button
+        class="button-simple shock-pink lg-50 uppercase margin-centered"
+        [disabled]="errorMessage"
+        (click)="submitOtpCode(messageResource)"
+        translate
+    >
+      label_verify
+    </button>
+    <div
+        class="link mt-10"
+        *ngIf="isTimerRunning"
+        (click)="resendOtpCode()"
+        [ngClass]="{
+                'disable-events disabled': isResetTimerRunning,
+                green: !isResetTimerRunning
+            }"
+    >
+      {{
+      messageResource === verificationResources.Phone
+          ? 'Resend code?'
+          : 'Email Code'
+      }}
+    </div>
+
+    <div class="mt-10" *ngIf="!isTimerRunning">
+      <a class="green pointer mt-10" href="tel:(832)412-4070">
+        Didn’t get a code? Call (832)412-4070
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+@import '../../../../styles/variables.scss';
+
+.coming-soon-wrapper {
+  font-size: 14px;
+  border-radius: 4px;
+  max-width: 1280px;
+  margin: 10px auto 0;
+
+  @media screen and (max-width: 767px) {
+    margin: 10px 0 0;
+  }
+
+  h1 {
+    font-size: 32px;
+    margin: 0;
+    color: white;
+    @media screen and (max-width: 980px) {
+      font-size: 2rem;
+    }
+    @media screen and (max-width: 767px) {
+      text-align: center;
+    }
+  }
+
+  .coming-soon-block {
+    text-align: center;
+
+    h2 {
+      font-size: 3.5rem;
+      text-transform: uppercase;
+      color: white;
+      margin: 2em 0;
+      @media screen and (max-width: 980px) {
+        font-size: 2.5rem;
+      }
+    }
+  }
+}

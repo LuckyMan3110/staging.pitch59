@@ -1,0 +1,44 @@
+<div
+    class="card-page"
+    [ngStyle]="{ height: isMobile && !isSafari ? windowHeight : '100vh' }"
+    (touchmove)="stopScroll($event)"
+>
+  <div class="body-gradient">
+    <div class="create-container container">
+      <div class="wrapper-section">
+        <div class="pitchcard-view-section" #pitchCardWrapper>
+          <div style="width: 100%">
+            <app-search-result-thumbnail
+                #previewCard
+                *ngIf="businessDetails"
+                [scale]="scale"
+                [businessDetails]="businessDetails"
+                [demo]="false"
+                (companyImages)="handlePitchCardTitleClick($event)"
+                (isVideoLoaded)="
+                                isPlayThumbnailVideo ? playInlineVideo() : null
+                            "
+            ></app-search-result-thumbnail>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-page-footer">
+      <span class="ml-2">Powered by</span>
+      <a (click)="goToPage('/welcome')">
+        <img src="./assets/images/logo/pitch59-logo-white.svg" alt=""/>
+      </a>
+    </div>
+  </div>
+</div>
+
+<app-pitchcard-modals-wrapper
+    [uniqueId]="uniqueId"
+></app-pitchcard-modals-wrapper>
+
+<p-toast styleClass="main-toast" key="main"></p-toast>
+
+<p-confirmDialog></p-confirmDialog>
+
+<app-loader></app-loader>

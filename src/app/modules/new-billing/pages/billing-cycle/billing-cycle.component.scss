@@ -1,0 +1,223 @@
+@import '../../../../styles/variables';
+
+.content {
+  position: relative;
+  min-height: 100%;
+  margin-top: 30px;
+
+  .billing-view-item {
+    position: relative;
+    @media (max-width: 851px) {
+      margin: 0 auto;
+    }
+    @media (max-width: 650px) {
+      width: 96%;
+    }
+
+    .header-section {
+      min-height: 74px;
+      margin-bottom: 20px;
+      @media (max-width: 650px) {
+        min-height: unset;
+      }
+
+      h1 {
+        font-size: 36px;
+        @media (max-width: 640px) {
+          font-size: 28px;
+        }
+      }
+    }
+  }
+
+  .price-wrap {
+    justify-content: space-between;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+  }
+
+  .price-content {
+    min-height: 68%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .billing-block {
+    border-radius: 4px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    max-width: 280px;
+    width: 100%;
+    padding: 13% 0 5%;
+    @media (max-width: 1024px) {
+      max-width: 250px;
+    }
+    @media (max-width: 851px) {
+      margin-bottom: 20px;
+      padding: 17% 0 7%;
+    }
+
+    .billing-title {
+      font-size: 30px;
+      line-height: 36px;
+      @media (max-width: 851px) {
+        font-size: 25px;
+        line-height: 30px;
+      }
+    }
+
+    .price {
+      font-size: 28px;
+      line-height: 38px;
+      font-weight: 700;
+      margin-bottom: 14%;
+      margin-right: auto;
+      margin-left: auto;
+      @media (max-width: 1100px) {
+        font-size: 25px;
+        line-height: 28px;
+      }
+      @media (max-width: 851px) {
+        line-height: unset;
+      }
+
+      span {
+        font-size: 20px;
+        line-height: 24px;
+      }
+
+      &.decorate {
+        font-size: 20px;
+        line-height: 24px;
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        top: -15%;
+        @media (max-width: 851px) {
+          font-size: 18px;
+        }
+
+        h2 {
+          position: relative;
+          overflow: hidden;
+          padding: 5px 0;
+
+          &:after {
+            content: '';
+            height: 3px;
+            width: 53%;
+            position: absolute;
+            background: #f75671;
+            transform: rotate(-9deg);
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 14px;
+
+            @media (max-width: 1025px) {
+              width: 63%;
+            }
+            @media (max-width: 650px) {
+              width: 45%;
+            }
+          }
+        }
+      }
+
+      &.extra-height {
+        padding: 15% 0 20%;
+      }
+
+      &.extra-margin {
+        @media (max-width: 851px) {
+          margin-bottom: 30%;
+        }
+      }
+    }
+
+    p {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 20px;
+      margin: 10px auto 15px;
+    }
+  }
+
+  .button-simple {
+    img,
+    span {
+      height: 25px;
+      width: 25px;
+      margin-right: 4px;
+    }
+  }
+
+  .back-btn {
+    position: absolute;
+    left: 6%;
+    @media (max-width: 851px) {
+      position: relative;
+      margin: 0;
+      bottom: 0;
+    }
+  }
+
+  .referral-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    position: absolute;
+    width: 100%;
+    bottom: 10%;
+    @media (max-width: 851px) {
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 10px;
+      span.mr-2 {
+        display: none;
+      }
+    }
+
+    .error-sign {
+      position: absolute;
+      top: 15px;
+    }
+  }
+
+  .input-block {
+    position: relative;
+    width: auto;
+    @media (max-width: 851px) {
+      margin-right: 35px;
+    }
+
+    .text-ellipsis {
+      max-width: 300px;
+      @media (max-width: 1100px) {
+        max-width: 250px;
+      }
+      @media (max-width: 980px) {
+        max-width: 200px;
+      }
+    }
+
+    img {
+      position: absolute;
+      bottom: 0;
+      right: -18px;
+      @media (max-width: 851px) {
+        right: -15px;
+      }
+      @media (max-width: 650px) {
+        right: -20px;
+      }
+    }
+  }
+}

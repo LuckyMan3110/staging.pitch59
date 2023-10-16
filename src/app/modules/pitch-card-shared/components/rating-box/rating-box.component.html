@@ -1,0 +1,29 @@
+<div
+    class="cointainer"
+    [ngClass]="{
+        'bd-green': rating >= 4 || rating < 0,
+        'bd-gold': rating >= 3 && rating < 4,
+        'bd-pink': rating >= 0 && rating < 3
+    }"
+>
+  <div
+      class="top"
+      [ngClass]="{
+            green: rating >= 4 || rating < 0,
+            gold: rating >= 3 && rating < 4,
+            pink: rating >= 0 && rating < 3
+        }"
+  >
+    {{ rating >= 0 ? rating?.toFixed(1) : '—' }}
+  </div>
+  <div
+      class="bottom"
+      [ngClass]="{
+            'bg-green': rating >= 4 || rating < 0,
+            'bg-gold': rating >= 3 && rating < 4,
+            'bg-pink': rating >= 0 && rating < 3
+        }"
+  >
+    out of 5
+  </div>
+</div>

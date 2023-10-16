@@ -1,0 +1,486 @@
+<div class="pitch-cards-wrapper">
+    <div class="pitch-cards-header">
+      <h1>
+        {{
+        selectedPitchCards.length
+            ? selectedPitchCards.length + ' / ' + pitchCardsNumber
+            : pitchCardsNumber
+        }}
+        Groups PitchCards
+      </h1>
+      <div class="header-control-panel" #headerControlPanel>
+        <div
+            class="btn move"
+            pTooltip="Move To"
+            tooltipPosition="top"
+            *ngIf="selectedPitchCards.length && !noFolders"
+            (click)="handleMoveToModal()"
+        ></div>
+        <div
+            class="btn change"
+            pTooltip="Edit"
+            tooltipPosition="top"
+            *ngIf="
+                    selectedPitchCards.length === 1 &&
+                    selectedPitchCards[0].type === 'folder'
+                "
+            (click)="handleDetailsFolderModal('edit')"
+        ></div>
+        <div
+            class="btn remove"
+            pTooltip="Remove"
+            tooltipPosition="top"
+            *ngIf="selectedPitchCards.length"
+            (click)="handleRemoveModal()"
+        ></div>
+        <div
+            pTooltip="Add New Pocket"
+            tooltipPosition="top"
+            class="new-folder-btn"
+            (click)="handleDetailsFolderModal('create')"
+        ></div>
+      </div>
+    </div>
+    <div class="folders-links">
+        <span *ngFor="let link of folderPath">
+            <span class="indicator" *ngIf="link.id"> ></span>
+            <span
+                class="link"
+                [ngClass]="{ selected: link.id && link.id === +folderIdParam }"
+                [routerLink]="[
+                    link.id
+                        ? '/account/my-pitchcards/' + link.id
+                        : '/account/my-pitchcards'
+                ]"
+            >{{ link.name }}</span
+            >
+        </span>
+    </div>
+  <div class="body" #pitchCardsWrapper>
+    <h2
+        *ngIf="noPitchCardsAvailable && !showPitchCardsLoader"
+        class="no-available-message"
+    >
+      No PitchCards Available
+    </h2>
+    <div
+        *ngIf="!appLoader"
+        [hidden]="!showPitchCardsLoader"
+        class="pitchCards-loader"
+    >
+      <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+    </div>
+    <div
+        *ngFor="let pitchCard of myPitchCardsList"
+        class="card-container"
+        [ngClass]="{ withStatus: pitchCard.type !== 'folder' }"
+        (contextmenu)="onRightClick($event, pitchCard)"
+        oncontextmenu="return false;"
+    >
+      <div
+          *ngIf="pitchCard.type !== 'folder'"
+          [class]="
+                    'status-line ' +
+                    businessStatusList[pitchCard.content?.businessStatus]
+                "
+      >
+        {{ businessStatusList[pitchCard.content?.businessStatus] }}
+      </div>
+      <div
+          class="mark-container"
+          [ngClass]="{ folder: pitchCard.type === 'folder' }"
+          (click)="selectPitchCard(pitchCard)"
+      >
+        <div
+            class="selected-mark"
+            [ngClass]="{ selected: checkSelectedPitchCards(pitchCard) }"
+        ></div>
+      </div>
+      <div
+          *ngIf="
+                    !pitchCard.content?.accountStatus &&
+                    pitchCard.type !== 'folder'
+                "
+          class="draft-card-background"
+          (click)="onBusinessSelect(pitchCard.content)"
+      ></div>
+      <app-search-result-thumbnail
+          (click)="onBusinessSelect(pitchCard.content)"
+          *ngIf="pitchCard.type === 'content'; else folderType"
+          [businessDetails]="pitchCard.content"
+          #businessCard
+          [scale]="scaleFactor"
+          class="pitch-card"
+      >
+      </app-search-result-thumbnail>
+      <ng-template #folderType>
+        <app-pitchcard-folder-thumbnail
+            [scaleFactor]="scaleFactor"
+            [pitchCardFolder]="pitchCard"
+            (openFolder)="handleFolderOpen($event)"
+        >
+        </app-pitchcard-folder-thumbnail>
+      </ng-template>
+    </div>
+  </div>
+</div>
+<p-dialog
+    class="new-folder-modal"
+    [(visible)]="detailsFolderModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ paddingTop: '10px', maxWidth: '800px', margin: '20px' }"
+    (onHide)="clearModalOptions()"
+>
+  <p-header class="modal-title">
+    {{ detailsFolderMode === 'create' ? 'Create' : 'Edit' }}Pocket
+  </p-header>
+  <div class="new-folder-wrapper">
+    <div
+        [hidden]="!showCreateLoader"
+        class="pitchCards-loader"
+        style="top: 35%; position: absolute"
+    >
+      <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+    </div>
+    <div *ngIf="modalErrors.newFolderName" class="nameError">
+      {{ modalErrors.newFolderName }}*
+    </div>
+    <input
+        #folderNameInput
+        class="new-folder-input"
+        [ngClass]="{ error: modalErrors.newFolderName }"
+        type="text"
+        [(ngModel)]="newFolderName"
+        (ngModelChange)="modalErrors.newFolderName = null"
+        placeholder="Enter folder name"
+    />
+    {{ folderNameInput.focus() }}
+    <div
+        class="colors-wrapper"
+        [ngClass]="{ error: modalErrors.newFolderColor }"
+    >
+      <div *ngIf="modalErrors.newFolderColor" class="colorsError">
+        {{ modalErrors.newFolderColor }}*
+      </div>
+      <div
+          *ngFor="let color of myFoldersColors"
+          class="color"
+          [ngClass]="{ selected: color === newFolderColor }"
+          (click)="selectNewFolderColor(color)"
+      >
+        <div [ngStyle]="{ 'background-color': color }"></div>
+      </div>
+    </div>
+    <button class="create-btn" (click)="newFolderSubmit()">
+      {{ detailsFolderMode === 'create' ? 'Create' : 'Edit' }}
+    </button>
+  </div>
+</p-dialog>
+<p-dialog
+    *ngIf="moveToModal"
+    class="move-to-modal"
+    [(visible)]="moveToModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ paddingTop: '10px' }"
+>
+  <p-header class="modal-title">
+    Move
+    {{ contextMenuBusiness ? 1 : selectedPitchCards.length }}
+    Item{{ selectedPitchCards.length > 1 ? 's' : '' }} To:
+  </p-header>
+  <div class="path-links">
+        <span *ngFor="let link of modalFolderPath">
+            <span class="indicator" *ngIf="link.id">></span>
+            <span
+                class="link"
+                [ngClass]="{
+                    selected: link.id && link.id === +modalFolderIdParam
+                }"
+                (click)="handleOpenModalFolder(link.id)"
+            >{{ link.name }}</span
+            >
+        </span>
+  </div>
+  <div
+      class="folder-carousel"
+      *ngIf="allFolders.length; else thisFolderEmpty"
+  >
+    <p-carousel
+        #carousel
+        [value]="allFolders"
+        [numVisible]="numVisible"
+        [numScroll]="numScroll"
+        [responsiveOptions]="responsiveOptions"
+    >
+      <ng-template let-folder pTemplate="item">
+        <app-pitchcard-folder-thumbnail
+            class="folder"
+            [scaleFactor]="moveToModal ? 0.5 : scaleFactor"
+            [pitchCardFolder]="folder"
+            [onlyFolder]="true"
+            (addContent)="addContentToFolder($event)"
+            (openFolder)="handleOpenModalFolder($event)"
+            [folderLoader]="showMoveLoader"
+        >
+                </app-pitchcard-folder-thumbnail>
+            </ng-template>
+        </p-carousel>
+    </div>
+    <ng-template #thisFolderEmpty>
+      <div class="this-folder-empty">This pocket is empty.</div>
+    </ng-template>
+    <div
+        class="current-folder-button"
+        *ngIf="currentFolderButton"
+        (click)="addContentToFolder(currentFolderButton.id)"
+    >
+      <div
+          style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            "
+      >
+        <span>Current Folder</span>
+        <span>"{{ currentFolderButton && currentFolderButton.name }}"</span>
+      </div>
+      <span class="icon"></span>
+    </div>
+</p-dialog>
+<p-dialog
+    *ngIf="removeModal"
+    class="remove-modal"
+    [(visible)]="removeModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ paddingTop: '10px', maxWidth: '800px' }"
+>
+  <p-header class="modal-title"> Are you sure you want to remove?</p-header>
+  <div class="modal-body">
+    <div
+        [hidden]="!showRemoveLoader"
+        class="pitchCards-loader"
+        style="left: 40%; bottom: 40%; position: absolute"
+    >
+      <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+    </div>
+    <div class="remove-list">
+      <div *ngIf="removeList.pitchCards && !contextMenuBusiness">
+        {{ removeList.pitchCards }} PitchCard{{
+        removeList.pitchCards > 1 ? 's' : ''
+        }}
+      </div>
+      <div *ngIf="removeList.folders && !contextMenuBusiness">
+        {{ removeList.folders }} Folder{{
+        removeList.folders > 1 ? 's' : ''
+        }}
+      </div>
+      <div *ngIf="contextMenuBusiness">
+        {{
+        contextMenuBusiness.type === 'folder'
+            ? 'Folder '
+            : 'PitchCard '
+        }}{{ contextMenuBusiness.name }}
+      </div>
+    </div>
+    <div
+        class="checkbox-container"
+        *ngIf="
+                (removeList.folders && !contextMenuBusiness) ||
+                (contextMenuBusiness && contextMenuBusiness.type === 'folder')
+            "
+    >
+      <p-checkbox
+          [(ngModel)]="removeWithContent"
+          name="removeWithContent"
+          [binary]="true"
+      >
+      </p-checkbox>
+      <span
+      >Remove folder{{
+        selectedPitchCards.length > 1 ? 's' : ''
+        }}
+        with content</span
+      >
+    </div>
+    <div class="controls-container">
+      <div class="delete" (click)="removeFolderSubmit()">
+        <span class="icon"></span>
+        Remove Item{{ selectedPitchCards.length > 1 ? 's' : '' }}
+      </div>
+      <div class="cancel" (click)="handleRemoveModal()">
+        <span>X</span>
+        Cancel
+      </div>
+    </div>
+  </div>
+</p-dialog>
+<p-dialog
+    *ngIf="accessModal"
+    class="access-modal"
+    [(visible)]="accessModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ paddingTop: '10px', maxWidth: '1000px', minHeight: '200px' }"
+>
+  <p-header class="modal-title"> Manage your PitchCards access</p-header>
+  <div class="modal-body">
+    <div class="table-title">Users with access:</div>
+    <p-table class="access-table" [value]="folderContentUsers">
+      <ng-template pTemplate="body" let-user>
+        <tr
+            style="position: absolute; left: 45%"
+            [hidden]="userTableLoaded"
+        >
+          <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+        </tr>
+        <tr class="user-row" *ngIf="userTableLoaded">
+          <td class="full-name">
+            <img
+                class="profile-photo"
+                [src]="
+                                user.profilePictureThumbnailUrl ||
+                                '/assets/images/default_profile.png'
+                            "
+                alt="profile_photo"
+            />
+            <span>{{ user.firstName }} {{ user.lastName }}</span>
+          </td>
+          <td>{{ user.emailId }}</td>
+          <td class="contact">{{ user.contactNumber }}</td>
+          <td class="role">
+                        <span [class]="userRolesList[user.role]">{{
+                          userRolesList[user.role]
+                          }}</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-dialog>
+<div class="bottom-sidebar">
+  <app-sidebar
+      [(visible)]="selectedPitchCards.length"
+      [dismissible]="false"
+      [position]="'bottom'"
+      [modal]="false"
+      [style]="{
+            height: '50px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+        }"
+      [showCloseIcon]="false"
+  >
+    <div class="control-wrapper">
+      <div class="selected">
+        {{ selectedPitchCards.length }}
+      </div>
+      <div
+          class="btn move"
+          pTooltip="Move To"
+          tooltipPosition="top"
+          *ngIf="selectedPitchCards.length && !noFolders"
+          (click)="handleMoveToModal()"
+      ></div>
+      <div
+          class="btn change"
+          pTooltip="Edit"
+          tooltipPosition="top"
+          *ngIf="
+                    selectedPitchCards.length === 1 &&
+                    selectedPitchCards[0].type === 'folder'
+                "
+          (click)="handleDetailsFolderModal('edit')"
+      ></div>
+      <div
+          class="btn remove"
+          pTooltip="Remove"
+          tooltipPosition="top"
+          *ngIf="selectedPitchCards.length"
+          (click)="handleRemoveModal()"
+      ></div>
+    </div>
+    <span class="close-icon" (click)="selectedPitchCards.length = 0"
+    >X</span
+    >
+  </app-sidebar>
+</div>
+<div class="context-wrapper">
+  <app-context-menu
+      [x]="contextMenuX"
+      [y]="contextMenuY"
+      [isVisible]="contextMenu"
+  >
+    <div class="context-menu-container">
+      <div
+          class="btn status"
+          *ngIf="
+                    contextMenuBusiness &&
+                    contextMenuBusiness.type !== 'folder' &&
+                    (contextMenuBusiness.content?.businessStatus === 1 ||
+                        contextMenuBusiness.content?.businessStatus === 2)
+                "
+          (click)="handlePitchCardStatus()"
+      >
+        <div
+            class="status"
+            [ngClass]="{
+                        active: contextMenuBusiness.content.accountStatus,
+                        inactive: !contextMenuBusiness.content.accountStatus
+                    }"
+        >
+          <span class="toogler"></span>
+        </div>
+        <span>{{
+          contextMenuBusiness.content.accountStatus ? 'Hide' : 'Show'
+          }}</span>
+      </div>
+      <div
+          class="btn request"
+          *ngIf="
+                    contextMenuBusiness &&
+                    contextMenuBusiness.type !== 'folder' &&
+                    contextMenuBusiness.content?.businessStatus === 7
+                "
+          (click)="handleRequestApproval()"
+      >
+        <div class="icon request"></div>
+        <span>Request Approval</span>
+      </div>
+      <div class="btn access" (click)="handleAccessModal()">
+        <div class="icon access"></div>
+        <span>Editors</span>
+      </div>
+      <div
+          class="btn edit"
+          *ngIf="
+                    contextMenuBusiness && contextMenuBusiness.type === 'folder'
+                "
+          (click)="handleDetailsFolderModal('edit')"
+      >
+        <div class="icon edit"></div>
+        <span>Edit</span>
+      </div>
+      <div class="btn moveTo" (click)="handleMoveToModal()">
+        <div class="icon moveTo"></div>
+        <span>Move To</span>
+      </div>
+      <div class="btn remove" (click)="handleRemoveModal()">
+        <div class="icon remove"></div>
+        <span>Remove</span>
+            </div>
+        </div>
+    </app-context-menu>
+</div>

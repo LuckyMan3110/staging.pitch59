@@ -1,0 +1,12 @@
+.done-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 19px;
+  text-align: center;
+
+  .submit-button {
+    margin-top: 20px;
+    width: 100%;
+  }
+}

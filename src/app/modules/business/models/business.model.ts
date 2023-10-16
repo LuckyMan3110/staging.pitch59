@@ -1,0 +1,95 @@
+import { PitchCardType } from '../../shared/enums/pitch-card-type.enum';
+import { CategoryTag } from './category-tag.model';
+
+export class BusinessModel {
+  accountStatus = true;
+  address = '';
+  businessBillingAddress = '';
+  businessId = 0;
+  businessLogoFilelId = '';
+  businessLogoThumbnailId = '';
+  businessName = '';
+  businessStatus = 0;
+  businessTags: CategoryTag[];
+  businessType: PitchCardType;
+  cardDetails: any = null;
+  city: number = null;
+  contactNumber = '';
+  educationalInstitution = '';
+  email = '';
+  employeePictureFileIds = '';
+  employeePictureThumnailIds = '';
+  facebookLink = '';
+  facebookPageId = '';
+  googlePageId = '';
+  id = '';
+  instagramLink = '';
+  latitude = 0;
+  linkedinLink = '';
+  longitude = 0;
+  monthlyBudget = 0;
+  noTexting = false;
+  placeId = '';
+  pricingModel = '';
+  radius = 0;
+  referralEmail = '';
+  educationLevel: number = 0;
+  state: number = null;
+  stripeCustomerId;
+  textingNumber = '';
+  title = '';
+  videoCoverImageFileId = '';
+  videoCoverImageThumbnailId = '';
+  videoFileId = '';
+  videoThumbnailId = '';
+  websiteLink = '';
+  zip: number;
+  zipFromMap: number;
+
+  constructor(option?: BusinessModel) {
+    if (option) {
+      this.accountStatus = option.accountStatus;
+      this.address = option.address;
+      this.businessBillingAddress = option.businessBillingAddress;
+      this.businessType = option.businessType;
+      this.businessId = option.businessId;
+      this.businessLogoFilelId = option.businessLogoFilelId;
+      this.businessName = option.businessName;
+      this.businessStatus = option.businessStatus;
+      this.businessType = option.businessType;
+      this.cardDetails = option.cardDetails;
+      this.city = option.city;
+      this.contactNumber = option.contactNumber;
+      this.educationalInstitution = option.educationalInstitution;
+      this.email = option.email;
+      this.employeePictureFileIds = option.employeePictureFileIds;
+      this.employeePictureThumnailIds = option.employeePictureThumnailIds;
+      this.facebookLink = option.facebookLink;
+      this.facebookPageId = option.facebookPageId;
+      this.googlePageId = option.googlePageId;
+      this.id = option.id;
+      this.instagramLink = option.instagramLink;
+      this.latitude = option.latitude;
+      this.linkedinLink = option.linkedinLink;
+      this.longitude = option.longitude;
+      this.monthlyBudget = option.monthlyBudget;
+      this.noTexting = option.noTexting;
+      this.placeId = option.placeId;
+      this.pricingModel = option.pricingModel;
+      this.radius = option.radius;
+      this.referralEmail = option.referralEmail;
+      this.educationLevel = option.educationLevel;
+      this.state = option.state;
+      this.stripeCustomerId = option.stripeCustomerId;
+      this.textingNumber = option.textingNumber;
+      this.title = option.title;
+      this.videoCoverImageFileId = option.videoCoverImageFileId;
+      this.videoCoverImageThumbnailId = option.videoCoverImageThumbnailId;
+      this.videoFileId = option.videoFileId;
+      this.videoThumbnailId = option.videoThumbnailId;
+      this.websiteLink = option.websiteLink;
+      this.zip = option.zip;
+      this.zipFromMap = option.zipFromMap;
+    }
+  }
+}

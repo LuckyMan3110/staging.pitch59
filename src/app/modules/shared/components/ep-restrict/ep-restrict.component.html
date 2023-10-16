@@ -1,0 +1,18 @@
+<div class="blur" *ngIf="isShowBlur" id="restrictBanner">
+    <div class="restrict" *ngIf="isShowRestrict">
+        <i class="pi pi-lock"></i>
+        <p class="restrict-text">
+          Are you an employer? To recruit or hire on the Resume Carousel, post
+          your job positions.
+        </p>
+      <div class="get-started">
+        <button
+            class="button-simple lg-20 shock-pink uppercase"
+            (click)="goToPrice()"
+        >
+          Get started
+        </button>
+        <p>Need help? <a (click)="showContactMeDialog()">Contact Us.</a></p>
+      </div>
+    </div>
+</div>

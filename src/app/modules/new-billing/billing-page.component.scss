@@ -1,0 +1,122 @@
+@import '../../styles/variables';
+
+.transparent {
+  background: transparent;
+  box-shadow: unset;
+}
+
+.rounded-border {
+  border-radius: 6px;
+}
+
+.page-container {
+  margin-bottom: 0;
+
+  .loader {
+    position: absolute;
+    left: 43%;
+    top: 45%;
+  }
+
+  .main-section {
+    border-radius: 6px;
+    margin: 20px 0 30px;
+  }
+
+  .header-section h1 {
+    font-size: 36px;
+    line-height: 43px;
+    @media (max-width: 851px) {
+      padding: 15px;
+      font-size: 24px;
+      line-height: unset;
+    }
+  }
+
+  .pitchcard-view-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 40%;
+    padding: 40px 0;
+    @media (max-width: 851px) {
+      width: 50%;
+      align-items: flex-start;
+    }
+    @media (max-width: 767px) {
+      width: 100%;
+      padding: 40px 30px;
+    }
+
+    h3 {
+      font-size: 24px;
+      margin: 0;
+    }
+
+    p.description {
+      min-height: 32px;
+    }
+
+    p.description,
+    ul.package-description {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    ul.package-description {
+      margin: 25px auto 0;
+
+      li {
+        line-height: 20px;
+
+        .list-item {
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+
+  .layout-block {
+    width: 100%;
+    min-height: 100%;
+    background-color: #f2f2f2;
+    border-left: 1px solid #ccc;
+
+    &.fix-width {
+      width: 60%;
+    }
+
+    &.external-product-class {
+      width: 70%;
+      padding: 3rem;
+      background: #fff;
+      border-radius: 6px;
+    }
+
+    &.fix-width,
+    &.external-product-class {
+      @media (max-width: 851px) {
+        width: 85%;
+        padding: 1rem;
+      }
+      @media (max-width: 650px) {
+        width: 96%;
+      }
+      @media (max-width: 340px) {
+        width: 95%;
+        padding: 0.5rem;
+      }
+    }
+
+    @media (max-width: 650px) {
+      border: unset;
+      border-radius: unset;
+    }
+  }
+}
+
+.description-block,
+.calendar-block {
+  width: 50%;
+}

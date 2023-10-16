@@ -1,0 +1,177 @@
+<app-welcome-banner
+        [bannerType]="BannerTypesEnum.MainBanner"
+        (openModal)="showOurPitchModal = true"
+        (openCalendar)="showCalendar(bannerConfig.secondaryLink)"
+        (navigateTo)="goToPage('/select-pitchcards')">
+</app-welcome-banner>
+
+<section class="section whycard-section" [ngClass]="{'center-gradient': isMobile || (isTablet && isPortraitMode)}">
+  <div class="welcome-container">
+    <p class="text-6xl" *ngIf="isDesktop || (isTablet && !isPortraitMode)">{{whyCard.title}}</p>
+    <div class="grid align-items-center justify-content-between" [ngClass]="{'mt-3': isMobile || (isTablet && isPortraitMode)}">
+      <div [ngClass]="{'col-6': isDesktop || (isTablet && !isPortraitMode), 'col-12 p-3': isMobile || (isTablet && isPortraitMode), 'pr-4': i === 0 , 'pl-4': i === 1}"  *ngFor="let desclist of whyCard.descLists let i = index">
+        <div class="intro-part" [ngClass]="{'driver-eta': i === 1 }">
+            <p class="mt-1 mb-3" [ngClass]="{'text-5xl': isDesktop || (isTablet && !isPortraitMode), 'text-2xl': isMobile || (isTablet && isPortraitMode)}">
+              <span class="business-title2">{{desclist.gradientTitle}}</span>{{desclist.title}}
+            </p>
+            <p class="line-height-2" [ngClass]="{'text-xl': isDesktop || (isTablet && !isPortraitMode), 'text-base': isMobile || (isTablet && isPortraitMode)}">
+              {{desclist.description}}
+            </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid align-items-center justify-content-between">
+      <div class="lg:col-4 col-12" *ngFor="let review of whyCard.reviews let i = index">
+        <div class="ad-part text-center" [ngClass]="{'border-lr': i === 1 && (isDesktop || (isTablet && !isPortraitMode))}">
+            <p class="mb-3 text-4xl font-bold">
+              <span class="business-title2">{{review.stat}}</span>
+            </p>
+            <p class="text-lg mb-1">
+              {{review.desc}}
+            </p>
+            <p class="text-lg mt-1 font-italic font-light">
+              {{review.company}}
+            </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section whatcard-section" [ngClass]="{'top-down-gradient4': isMobile || (isTablet && isPortraitMode)}">
+  <div class="welcome-container mt-6 mb-4" *ngIf="isMobile || (isTablet && isPortraitMode)">
+    <img class="full-width" src="{{whatCard.phoneCardImg}}" alt="whatcardimg">
+  </div>
+
+  <div class="welcome-container grid justify-content-between gradient-block business-block" [ngClass]="{'bg-transparent m-3 p-3': isMobile || (isTablet && isPortraitMode)}">
+    <div [ngClass]="{'col-7': isDesktop || (isTablet && !isPortraitMode), 'col-12': isMobile || (isTablet && isPortraitMode)}">
+      <p class="mt-0" [ngClass]="{'text-6xl mb-5': isDesktop || (isTablet && !isPortraitMode), 'text-3xl': isMobile || (isTablet && isPortraitMode)}">{{whatCard.title}}</p>
+      <ul [ngClass]="{'bigLineheight text-xl mb-6': isDesktop || (isTablet && !isPortraitMode), 'text-base': isMobile || (isTablet && isPortraitMode)}">
+          <li *ngFor="let desclist of whatCard.descLists">
+            {{desclist}}
+          </li>
+      </ul>
+      <div class="grid align-items-center no-margins" *ngIf="isDesktop || (isTablet && !isPortraitMode)"
+            [ngClass]="{'justify-content-around': isMobile || (isTablet && isPortraitMode)}">
+          <div class="no-padding col-5 mr-5 flex">
+              <button class="button-simple full-width no-padding lg-50-sm-font shock-pink" [routerLink]="bannerConfig.createBtnLink">
+                {{bannerConfig.createBtnText}}
+              </button>
+          </div>
+          <div class="no-padding col-5 ml-5 flex">
+              <button class="schedule-demo no-underline button-simple full-width no-padding border-2 bg-transparent lg-50-sm-font gradient-border basic-g6t"  (click)="showCalendar(bannerConfig.secondaryLink)">
+                {{bannerConfig.secondaryBtnText}}
+              </button>
+          </div>
+      </div>
+    </div>
+    <div class="col-4" *ngIf="isDesktop || (isTablet && !isPortraitMode)">
+        <img class="full-width" src="{{whatCard.desktopCardImg}}" alt="whatcardimg">
+    </div>
+  </div>
+
+  <div class="welcome-container mt-6 mb-4" *ngIf="isMobile || (isTablet && isPortraitMode)">
+    <div class="flex flex-column align-items-center">
+      <div class="no-padding col-8 flex mb-4">
+        <button class="button-simple full-width no-padding lg-50-sm-font shock-pink" [routerLink]="bannerConfig.createBtnLink">
+          {{bannerConfig.createBtnText}}
+        </button>
+      </div>
+      <div class="no-padding col-8 flex">
+        <button class="schedule-demo no-underline button-simple full-width no-padding border-2 bg-transparent lg-50-sm-font gradient-border basic-g6t" (click)="showCalendar(bannerConfig.secondaryLink)">
+          {{bannerConfig.secondaryBtnText}}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="desktop-only section howcard-section pb-8" [ngClass]="{'top-down-gradient ': isDesktop || (isTablet && !isPortraitMode), 'bg-black': isMobile || (isTablet && isPortraitMode)}">
+  <div class="welcome-container">
+    <div class="grid">
+      <div class="col-6">
+        <p class="text-6xl mb-8">{{howCard.title}}</p>
+        <div class="main-video-desk col-10">
+          <div class="relative">
+              <video class="video block" #mainVideo
+                  preload="metadata" playsinline
+                  webkit-playsinline="true" loop>
+              </video>
+              <div class="play-overlay align-items-end justify-content-end mr-2 mb-2" *ngIf="isPlayMainVideo">
+                <div class="play-icon pointer" (click)="handleWatchMainVideo()"></div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 pl-8">
+        <p class="text-6xl mb-8" *ngIf="isDesktop || (isTablet && !isPortraitMode)">{{howCard.title2}}</p>
+        <div class="card-steps mb-6" *ngFor="let descList of howCard.descLists let i = index" >
+          <span class="text-4xl blue-border">{{i+1}}</span>
+          <p class="text-5xl mb-1">
+            <span class="business-title2">{{descList.gradientTitle}}</span>{{descList.title}}
+          </p>
+          <p class="line-height-2 text-xl mt-1" [innerHTML]="descList.description">
+          </p>
+        </div>
+        <div class="no-padding col-7 mb-8">
+          <button class="button-simple full-width no-padding lg-50-sm-font shock-pink" [routerLink]="bannerConfig.createBtnLink">
+            {{bannerConfig.createBtnText}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="watch-demo-dialog">
+  <p-dialog
+      [(visible)]="showVideoPlayer"
+      [modal]="true"
+      [blockScroll]="true"
+      styleClass="video-player-dialog"
+      [style]="{ width: '800px', maxWidth: '100%' }"
+      [draggable]="false"
+      [dismissableMask]="true"
+      [resizable]="false"
+      [showHeader]="true"
+      (onHide)="detachMedia()"
+  >
+    <app-video-js-player
+        [autoplay]="true"
+        [muted]="false"
+        [isVideoMirrored]="isVideoMirrored"
+        [muxVideoId]="selectedVideoUrl"
+        [posterUrl]="posterImageUrl"
+        *ngIf="showVideoPlayer && selectedVideoUrl"
+        #videoPlayer
+    ></app-video-js-player>
+  </p-dialog>
+</div>
+
+<div class="preview-pitchcard-dialog">
+  <p-dialog
+      [(visible)]="showOurPitchModal"
+      [modal]="true"
+      [blockScroll]="true"
+      [draggable]="false"
+      [dismissableMask]="true"
+      [resizable]="false"
+      [showHeader]="true"
+      styleClass="preview-pitchcard"
+  >
+    <div class="dialog-content" *ngIf="showOurPitchModal">
+      <app-search-result-thumbnail
+          #businessCard
+          [businessDetails]="watchOurPitchBusiness"
+          [scale]="isMobile ? 0.8 : 1"
+          (isVideoLoaded)="setupCard()"
+          (companyImages)="handlePitchCardTitleClick($event)"
+      ></app-search-result-thumbnail>
+    </div>
+  </p-dialog>
+</div>
+
+<app-pitchcard-modals-wrapper
+    [uniqueId]="uniqueId"
+></app-pitchcard-modals-wrapper>

@@ -1,0 +1,167 @@
+<div class="groups-wrapper">
+  <h1>User Groups</h1>
+  <div *ngIf="!appLoader && !tableLoaded" class="table-loader">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+  <p-table
+      class="group-table-container"
+      [value]="userGroups"
+      *ngIf="tableLoaded"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Group Name</th>
+        <th>Admin Name</th>
+        <th>User Role</th>
+        <th>Controls</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-group class="table-body">
+      <tr class="group-row">
+                <td class="group-name">
+                  <span>{{ group.name }}</span>
+                </td>
+        <td class="admin-name">
+                    <span
+                    >{{ group.admin.firstName }}
+                      {{ group.admin.lastName }}</span
+                    >
+        </td>
+                <td class="user-role">
+                    <span [class]="userRoles[group.userRole]">
+                        {{ userRoles[group.userRole] }}
+                    </span>
+                </td>
+                <td class="controls">
+                    <div>
+                        <div
+                            *ngIf="group.userRole !== 2"
+                            pTooltip="Members"
+                            tooltipPosition="top"
+                            class="members-button"
+                            [routerLink]="['/account/groups/' + group.id]"
+                        ></div>
+                      <div
+                          *ngIf="group.userRole !== 2"
+                          pTooltip="Edit"
+                          tooltipPosition="top"
+                          class="edit-button"
+                          (click)="
+                                handleDetailsGroupsModal(
+                                    'edit',
+                                    group.name,
+                                    group.color,
+                                    group.id
+                                )
+                            "
+                      ></div>
+                        <div
+                            *ngIf="group.userRole !== 0"
+                            class="leave-button pi pi-sign-out"
+                            pTooltip="Leave"
+                            tooltipPosition="top"
+                            (click)="handleRemoveModal(group, 'leave')"
+                        ></div>
+                      <div
+                          *ngIf="group.userRole !== 2"
+                          class="remove-button"
+                          pTooltip="Remove group"
+                          tooltipPosition="top"
+                          (click)="handleRemoveModal(group, 'remove')"
+                      >
+                        &#10006;
+                      </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+  <h2 *ngIf="!userGroups.length && tableLoaded">The Groups List is Empty</h2>
+  <div class="table-controls" *ngIf="tableLoaded">
+    <div (click)="handleDetailsGroupsModal('create')" class="btn">
+      + Add new Group
+    </div>
+  </div>
+</div>
+<p-dialog
+    class="new-group-modal"
+    [(visible)]="detailsGroupModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ paddingTop: '10px', maxWidth: '800px', margin: '20px' }"
+    (onHide)="clearModalOptions()"
+>
+  <p-header class="modal-title">
+    {{ detailsGroupMode === 'create' ? 'Create ' : 'Edit ' }}Group
+  </p-header>
+  <div class="new-group-wrapper">
+    <div *ngIf="modalErrors.newGroupName" class="nameError">
+      {{ modalErrors.newGroupName }}*
+    </div>
+    <input
+        #groupNameInput
+        class="new-group-input"
+        [ngClass]="{ error: modalErrors.newGroupName }"
+        type="text"
+        [(ngModel)]="newGroupName"
+        (ngModelChange)="modalErrors.newGroupName = null"
+        placeholder="Enter group name"
+    />
+    {{ groupNameInput.focus() }}
+    <div
+        class="colors-wrapper"
+        [ngClass]="{ error: modalErrors.newGroupColor }"
+    >
+      <div *ngIf="modalErrors.newGroupColor" class="colorsError">
+        {{ modalErrors.newGroupColor }}*
+      </div>
+      <div
+          *ngFor="let color of myGroupColors"
+          class="color"
+          [ngClass]="{ selected: color === newGroupColor }"
+          (click)="selectNewGroupColor(color)"
+      >
+        <div [ngStyle]="{ 'background-color': color }"></div>
+      </div>
+    </div>
+    <button class="create-btn" (click)="newGroupSubmit()">
+      <i
+          *ngIf="showModalsLoader; else buttonTitle"
+          class="new-group-loader fa fa-spinner fa-pulse fa-5x fa-fw"
+      ></i>
+      <ng-template #buttonTitle>
+                <span>{{
+                  detailsGroupMode === 'create' ? 'Create' : 'Edit'
+                  }}</span>
+      </ng-template>
+    </button>
+    </div>
+</p-dialog>
+<p-dialog
+    class="remove-modal"
+    [(visible)]="removeModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ paddingTop: '10px', maxWidth: '800px' }"
+    (onHide)="removingGroup = null"
+>
+  <p-header class="modal-title">
+    Are you sure you want to
+    {{ removeModalMode === 'leave' ? 'leave' : 'remove' }}?
+  </p-header>
+    <div class="modal-body">
+      <div class="remove-list">
+        "{{ removingGroup && removingGroup.name }}" Group
+      </div>
+        <div class="controls-container">
+          <div class="delete">
+            {{ removeModalMode === 'leave' ? 'Leave' : 'Remove' }}
+          </div>
+          <div class="cancel">Cancel</div>
+        </div>
+    </div>
+</p-dialog>

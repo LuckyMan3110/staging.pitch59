@@ -1,0 +1,7 @@
+<div
+    class="context-menu-wrapper"
+    [ngStyle]="{ 'left.px': isVisible ? x : 0, 'top.px': isVisible ? y : 0 }"
+    [ngClass]="{ visible: isVisible }"
+>
+  <ng-content></ng-content>
+</div>

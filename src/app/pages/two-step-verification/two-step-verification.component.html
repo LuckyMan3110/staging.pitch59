@@ -1,0 +1,101 @@
+<div class="sign-up-wrapper container">
+  <div class="col-12 no-padding">
+    <div class="grid signin-sub justify-content-center">
+      <div class="col-12 sm:col-9 md:col-6 dis-flex">
+        <div class="sign-up-box">
+          <div
+              class="col-12 logo text-center"
+              *ngIf="!profileVerification"
+          >
+            <img
+                class="full-width"
+                src="assets/images/logo/pitch59-logo-gray.svg"
+                alt="{{ 'lbl_img_alt_logo' | translate }}"
+            />
+          </div>
+          <div class="col-12 heading text-center" translate>
+            label_two_setp_verification
+          </div>
+
+          <form
+              [formGroup]="twoStepVerification"
+              (ngSubmit)="verifyOtp()"
+          >
+            <div class="col-12 text-center">
+              <div class="para" translate>
+                lbl_wehave_sent_four_digitcode
+              </div>
+              <div class="emailaddress">{{ contactNumber }}</div>
+            </div>
+
+            <div class="form-field col-12">
+              <div class="form-label">
+                <label for="smsOtpCode" translate
+                >label_enter_digit_code</label
+                >
+              </div>
+              <div class="form-control">
+                <input
+                    formControlName="smsOtpCode"
+                    autofocus
+                    class="full-width"
+                    type="text"
+                    pKeyFilter="int"
+                    maxlength="4"
+                />
+              </div>
+              <div
+                  class="form-errors"
+                  *ngIf="submitted && f.smsOtpCode.errors"
+              >
+                <div
+                    *ngIf="
+                                        twoStepVerification.controls.smsOtpCode
+                                            .errors.required
+                                    "
+                    translate
+                >
+                  err_required_digitCode
+                </div>
+                <div
+                    *ngIf="
+                                        twoStepVerification.controls.smsOtpCode
+                                            .errors.pattern
+                                    "
+                    translate
+                >
+                  err_invalid_digitCode
+                </div>
+              </div>
+            </div>
+            <div class="col-12 form-errors">
+              {{ errorMessage }}
+            </div>
+            <div class="col-12 text-center">
+              <button
+                  class="primary-btn"
+                  [disabled]="loading"
+                  *ngIf="!profileVerification"
+                  translate
+              >
+                label_verify
+              </button>
+            </div>
+          </form>
+          <div class="col-12 text-center">
+                        <span
+                            [ngClass]="{ 'mock-link-disabled': isTimerRunning }"
+                            class="mock-link"
+                            (click)="resendOTP()"
+                            translate
+                        >lbl_resend_otp</span
+                        >
+            <span class="otp-timer" *ngIf="otpTimer !== '00'"
+            >(00:{{ otpTimer }})</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

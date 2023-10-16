@@ -1,0 +1,63 @@
+<video
+    (click)="onClickEmit($event)"
+    (ended)="onVideoEnded()"
+    (load)="onLoaded()"
+    (pause)="setPlayIcon(false)"
+    (play)="setPlayIcon(true)"
+    (timeupdate)="onTimeUpdate($event)"
+    [controls]="controls"
+    [muted]="muted"
+    [ngClass]="{ mirrored: isVideoMirrored }"
+    [ngStyle]="{ width: width, height: height }"
+    [poster]="cover"
+    #videoPlayer
+    autoplay="true"
+    disablePictureInPicture
+    playsinline
+    preload="none"
+></video>
+
+<div
+    #videoControls
+    id="video-controls"
+    (mouseenter)="onMouseEnter($event)"
+    (mouseleave)="onMouseLeave($event)"
+>
+  <div
+      #playback
+      class="playback slide-out-bottom"
+      (animationend)="playback.style.animationPlayState = 'paused'"
+  >
+    <button type="button" #playButton (click)="onPlayPause()">
+      pause_circle_outline
+    </button>
+    <input
+        (change)="onSeekChange()"
+        (mousedown)="onSeekMouseDown()"
+        (mouseup)="onSeekMouseUp()"
+        #seekBar
+        class="seek"
+        type="range"
+        value="0"
+    />
+  </div>
+  <div
+      #secondaryControls
+      class="secondary-controls slide-out-bottom"
+      (animationend)="secondaryControls.style.animationPlayState = 'paused'"
+  >
+    <button type="button" #muteButton (click)="onMute()">volume_up</button>
+    <input
+        (change)="onVolumeChange()"
+        #volumeBar
+        max="1"
+        min="0"
+        step="0.1"
+        type="range"
+        value="1"
+    />
+    <button type="button" #fullScreenButton (click)="onFullscreen()">
+      fullscreen
+    </button>
+  </div>
+</div>

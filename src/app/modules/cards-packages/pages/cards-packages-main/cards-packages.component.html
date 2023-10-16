@@ -1,0 +1,148 @@
+<div class="full-height-wrap" *ngIf="cardPackages && cardPackages.length">
+  <div
+      class="cards-packages-container"
+      [ngClass]="{ 'team-packages-layout': teamPackagesLayout }"
+  >
+    <div class="wrapper-section">
+      <div class="main-section">
+        <div class="cards-packages-header" *ngIf="!teamPackagesLayout">
+          Choose your Plan
+        </div>
+        <div class="cards-packages-body" #packageContainer>
+          <app-card-package-item
+              *ngFor="let package of cardPackages"
+              [package]="package"
+              [scale]="scale"
+              class="card {{
+                            package.comingSoon &&
+                                !teamPackagesLayout &&
+                                'comingSoon'
+                        }} {{ teamPackagesLayout ? 'smaller-shadow' : '' }}"
+          ></app-card-package-item>
+        </div>
+        <div
+            class="team-packages"
+            *ngIf="teamPackagesLayout"
+            [ngClass]="{ scale: isDesktop }"
+        >
+          <div class="team-packages-header grid no-padding">
+            <div class="col-6 no-padding">
+              <span class="text-indent">Active PitchCards</span>
+            </div>
+            <div class="col-6 grid align-items-end no-padding">
+              <div class="col-4 text-center no-padding">
+                <span>2-10</span>
+              </div>
+              <div class="col-4 text-center no-padding">
+                <span>11-100</span>
+              </div>
+              <div class="col-4 text-center no-padding">
+                <span>100+</span>
+              </div>
+            </div>
+                    </div>
+
+          <div class="team-packages-body mb-15">
+            <div class="team-package-stripe"></div>
+            <div
+                class="team-packages-body-container grid align-items-center"
+            >
+              <div class="col-6">
+                <div
+                    class="team-packages-text grid justify-content-center align-items-center border-right"
+                >
+                  <span>Team Volume Discounts</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div
+                    class="discount-section grid align-items-center"
+                >
+                  <div
+                      class="md:col-4 col-12 text-center no-padding"
+                      [ngClass]="{ 'mb-15': isMobile }"
+                  >
+                    <div class="discount border-right">
+                                            <span class="discount-count"
+                                            >10%</span
+                                            >
+                      <span>Off per Month</span>
+                    </div>
+                  </div>
+                  <div
+                      class="md:col-4 col-12 text-center no-padding"
+                      [ngClass]="{ 'mb-15': isMobile }"
+                  >
+                    <div class="discount border-right">
+                                            <span class="discount-count"
+                                            >20%</span
+                                            >
+                      <span>Off per Month</span>
+                    </div>
+                  </div>
+                  <div
+                      class="md:col-4 col-12 text-center no-padding"
+                  >
+                    <div class="discount">
+                                            <span class="discount-talk"
+                                            >Let’s talk</span
+                                            >
+                      <div
+                          class="button-simple green full-rounded"
+                          (click)="handleContactUs()"
+                          [ngClass]="{
+                                                    'sm-30': isDesktop,
+                                                    'sm-35': isTablet,
+                                                    'lg-50': isMobile
+                                                }"
+                      >
+                        Contact Us
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="team-packages-footer">
+            <div class="text-center">
+              Discounts are automatically applied when minimum
+              thresholds are met.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+        class="back-btn"
+        *ngIf="teamPackagesLayout && !isMobile"
+        (click)="goBack()"
+    >
+      <span class="arrow-back"></span>
+      <span>Back</span>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+    [(visible)]="showContactUsModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="true"
+    [resizable]="false"
+    [dismissableMask]="true"
+    [style]="{ minWidth: '300px', maxWidth: '500px', width: '500px' }"
+    styleClass="dialog"
+    appendTo="body"
+>
+  <div class="contact-us-container">
+    <h1>We’ll be in touch soon!</h1>
+    <p>One of our reps will contact you shortly.</p>
+
+    <p>
+      For immediate assistance, please call (832)412-4070 or email
+      help@pitch59.com
+    </p>
+  </div>
+</p-dialog>

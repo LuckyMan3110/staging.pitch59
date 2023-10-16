@@ -1,0 +1,301 @@
+<div #main class="step-form" *ngIf="form">
+  <h1>Pitch Video</h1>
+  <div #container class="container layout-card">
+    <div
+        class="preview-area"
+        *ngIf="!isUploading && form.controls.videoThumbnailUrl.value"
+    >
+      <div class="current-video">
+        <div
+            class="video mb-10"
+            [ngClass]="{ mirrored: form.value.isMirrorVideo }"
+            (click)="loadVideo()"
+        >
+          <img
+              *ngIf="!showVideoPlayer"
+              [src]="form.controls.videoThumbnailUrl.value"
+              #videoUploadTag
+              (load)="videoPlayCoverThumbnailLoaded()"
+              alt=""
+          />
+          <span
+              class="sprite big-video"
+              *ngIf="
+                            form.controls.videoThumbnailUrl.value &&
+                            isUploaded &&
+                            !isUploading
+                        "
+          ></span>
+          <p-dialog
+              styleClass="video-player-dialog uploaded-video"
+              [(visible)]="showVideoPlayer"
+              [modal]="true"
+              [blockScroll]="true"
+              [style]="{ width: '800px', maxWidth: '100%' }"
+              [draggable]="false"
+              [dismissableMask]="true"
+              [resizable]="false"
+              (onHide)="detachMedia()"
+              appendTo="body"
+          >
+            <app-video-js-player
+                [autoplay]="true"
+                [isVideoMirrored]="form.value.isMirrorVideo"
+                [muxVideoId]="videoFileUrl"
+                *ngIf="showVideoPlayer && videoFileUrl"
+                #videoPlayer
+            ></app-video-js-player>
+          </p-dialog>
+          <span class="big-video-svg employee sprite"></span>
+
+          <div *ngIf="appLoader" class="loader">
+            <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+          </div>
+        </div>
+
+        <div
+            *ngIf="form.controls.videoFileId.value"
+            (click)="downloadVideo(form.controls.videoFileId.value)"
+            class="p-grid p-align-center p-justify-center margin-centered pointer download-video"
+        >
+          <img
+              src="/assets/images/pitch-card-svg/download-icon.svg"
+              alt="Download"
+              style="margin-right: 5px"
+          />
+          <div class="link green">Download Video</div>
+        </div>
+      </div>
+      <div
+          *ngIf="form.controls.videoThumbnailUrl.value"
+          class="preview-actions"
+      >
+        <div
+            (click)="showVideorecorder()"
+            #buttonRecorder
+            class="action re-record"
+        >
+          <p>RECORD</p>
+          <div class="icon re-record-icon"></div>
+        </div>
+        <div
+            (click)="showCalendar(calendlyLink)"
+            class="action virtual-shoot"
+        >
+          <p>SCHEDULE VIRTUAL SHOOT</p>
+          <div class="icon virtual-shoot"></div>
+        </div>
+        <div
+            (click)="showGetHelp(); $event.stopPropagation()"
+            class="action videograph"
+        >
+          <p>SCHEDULE VIDEOGRAPHER</p>
+          <div class="icon videograph"></div>
+          <p-dialog
+              [(visible)]="showGetAProTip"
+              [modal]="true"
+              [blockScroll]="true"
+              styleClass="videograph"
+              header="Get in Touch With a Pro"
+              [style]="{
+                            width: '500px',
+                            maxWidth: '90%',
+                            padding: '0 15px'
+                        }"
+              [draggable]="false"
+              [dismissableMask]="true"
+              appendTo="body"
+              [resizable]="false"
+              id="videograph"
+          >
+            <app-pro-help-request></app-pro-help-request>
+          </p-dialog>
+        </div>
+        <div (click)="uploadVideoFile()" class="action upload">
+          <div>
+            <p>UPLOAD</p>
+            <small style="font-weight: 400"
+            >MUST BE ≤ 59 SECONDS</small
+            >
+          </div>
+          <div class="preview-custom-uploader"></div>
+        </div>
+      </div>
+    </div>
+    <div
+        class="progress-block"
+        *ngIf="
+                isUploading ||
+                (isUploaded && !form.controls.videoThumbnailUrl.value)
+            "
+    >
+      <p-progressBar
+          *ngIf="isUploading && !isLoadingFinished"
+          [value]="progress"
+          [showValue]="true"
+          [style]="{ height: '17px' }"
+      ></p-progressBar>
+      <div
+          *ngIf="isUploading && !isLoadingFinished"
+          class="progress-status-text"
+      >
+        Loading...
+      </div>
+      <p-progressSpinner
+          *ngIf="
+                    (isUploaded && isLoadingFinished) ||
+                    (isUploading &&
+                        isLoadingFinished &&
+                        !form.controls.videoThumbnailUrl.value)
+                "
+          styleClass="spinnerUpload"
+          [style]="{ width: '50px', height: '50px' }"
+      ></p-progressSpinner>
+      <div
+          *ngIf="isUploading && isLoadingFinished"
+          class="progress-status-text processing"
+      >
+        This could take a minute...
+      </div>
+    </div>
+    <p-fileUpload
+        [style]="{ display: 'none' }"
+        (uploadHandler)="uploading($event.currentFiles[0], false)"
+        (onSelect)="onSelect($event)"
+        (onBeforeUpload)="onBeforeUpload($event)"
+        (onError)="onError($event)"
+        accept="video/*"
+        #fileUploader
+        [auto]="false"
+        [customUpload]="false"
+        cancelIcon="pi-cloud-upload"
+        chooseIcon="pi-cloud-upload"
+        maxFileSize="314572800"
+        mode="basic"
+        name="files"
+        chooseLabel=""
+    >
+    </p-fileUpload>
+    <p-dialog
+        [(visible)]="displayModal"
+        [modal]="true"
+        appendTo="body"
+        styleClass="pitch-modal"
+        [style]="{ width: '600px', 'max-width': '95%' }"
+        [baseZIndex]="10000"
+        [draggable]="false"
+        [resizable]="false"
+    >
+      <ng-template pTemplate="header">
+        <span class="green capitalize my-3"> Pitch Rules </span>
+      </ng-template>
+      <div class="col-12 md:col-12 p-3 upload-para guidelines-content">
+        <div class="gc-field">
+          <p class="checkbox">
+            <p-checkbox
+                styleClass="checboxGuidelines"
+                [(ngModel)]="checboxesGuidelines.checkBox1"
+                [binary]="true"
+            >
+            </p-checkbox>
+          </p>
+          <span>Video must be 59 seconds or less.</span>
+        </div>
+        <div class="gc-field">
+          <p class="checkbox">
+            <p-checkbox
+                styleClass="checboxGuidelines"
+                [(ngModel)]="checboxesGuidelines.checkBox2"
+                [binary]="true"
+            >
+            </p-checkbox>
+          </p>
+          <span>
+                        Video pitch MUST be done by the PITCHCARD OWNER or
+                        CREATOR (no paid actors, models, or computer animation).
+                    </span>
+        </div>
+        <div class="gc-field">
+          <p class="checkbox">
+            <p-checkbox
+                styleClass="checboxGuidelines"
+                [(ngModel)]="checboxesGuidelines.checkBox3"
+                [binary]="true"
+            >
+            </p-checkbox>
+          </p>
+          <span
+          >No slander, illegal activity, profanity, vulgarity,
+                        nudity, sexual material or inappropriate behavior of any
+                        kind. Pitch59 reserves the right to refuse or remove any
+                        video we deem inappropriate. See
+                        <span
+                            routerLink="{{ '/terms-and-conditions' }}"
+                            class="link green"
+                        >Terms of Service</span
+                        >.</span
+          >
+        </div>
+        <div class="gc-field">
+          <p class="checkbox">
+            <p-checkbox
+                styleClass="checboxGuidelines"
+                [(ngModel)]="checboxesGuidelines.checkBox4"
+                [binary]="true"
+            >
+            </p-checkbox>
+          </p>
+          <span>I am at least 16 years old.</span>
+        </div>
+        <span class="sales-video">
+                    Note: Mobile devices need to be horizontal when recording
+                    the video.
+                </span>
+        <button
+            [disabled]="
+                        !checboxesGuidelines.checkBox1 ||
+                        !checboxesGuidelines.checkBox2 ||
+                        !checboxesGuidelines.checkBox3 ||
+                        !checboxesGuidelines.checkBox4
+                    "
+            class="button-simple shock-pink"
+            (click)="acceptGuidlines()"
+            style="width: 10rem; justify-content: space-around"
+        >
+          I ACCEPT
+        </button>
+      </div>
+    </p-dialog>
+    <p-dialog
+        [(visible)]="isRecording"
+        appendTo="body"
+        [modal]="true"
+        id="videoDialog"
+        [closable]="!mobileMode"
+        styleClass="recorder"
+    >
+      <app-video-recorder
+          *ngIf="isRecording"
+          (saveVideo)="saveRecorderVideo($event)"
+          (closeVideo)="hideVideoRecorder($event)"
+      ></app-video-recorder>
+    </p-dialog>
+    <input
+        type="file"
+        accept="video/*"
+        capture
+        style="display: none"
+        #videoInput
+        (change)="uploadInputNativeVideo($event)"
+    />
+  </div>
+  <video
+      style="visibility: hidden; position: absolute; left: 1000em"
+      #durationMeter
+      class="duration-meter"
+      playsinline
+      (loadedmetadata)="checkDuration($event)"
+      preload="auto"
+      webkit-playsinline="true"
+  ></video>
+</div>

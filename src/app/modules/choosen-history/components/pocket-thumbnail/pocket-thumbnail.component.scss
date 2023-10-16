@@ -1,0 +1,129 @@
+@import '../../../../styles/variables.scss';
+
+@mixin flex-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pocket-thumbnail {
+    @include flex-centered();
+    align-items: flex-start;
+
+    position: relative;
+    margin: 12px;
+    width: calc(360px * var(--scale-factor));
+    height: calc(575px * var(--scale-factor));
+    cursor: grab;
+
+    &.notSelected {
+        //&.default {
+        //    .mark-container {
+        //        display: none;
+        //    }
+        //}
+
+        .mark-container {
+          position: absolute;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: rgba($color: #000000, $alpha: 0.5);
+          width: calc(80px * var(--scale-factor));
+          height: calc(80px * var(--scale-factor));
+          z-index: 2;
+          bottom: calc(-4px * var(--scale-factor));
+          right: calc(-18px * var(--scale-factor));
+          border-radius: calc(20px * var(--scale-factor));
+
+          .selected-mark {
+            width: calc(40px * var(--scale-factor));
+            height: calc(40px * var(--scale-factor));
+            border: calc(5px * var(--scale-factor)) solid rgba($color: #ffffff, $alpha: 0.7);
+            border-radius: 50%;
+          }
+        }
+    }
+
+    &.selected {
+        //&.default {
+        //    .selected-mark {
+        //        display: none;
+        //    }
+        //}
+
+        .mark-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: rgba($color: #000000, $alpha: 0.5);
+
+          position: absolute;
+          width: calc(80px * var(--scale-factor));
+          height: calc(80px * var(--scale-factor));
+          z-index: 2;
+          bottom: calc(-4px * var(--scale-factor));
+          right: calc(-18px * var(--scale-factor));
+          border-radius: calc(20px * var(--scale-factor));
+
+          .selected-mark {
+            width: calc(40px * var(--scale-factor));
+            height: calc(40px * var(--scale-factor));
+            border: none;
+            border-radius: 50%;
+            opacity: 0.7;
+            background-image: url('/assets/images/checkmark.svg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+          }
+        }
+    }
+
+    &.default {
+        cursor: unset;
+
+        .pocket-jacket img {
+            user-drag: none;
+            -webkit-user-drag: none;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    }
+
+    .pocket-jacket {
+        @include flex-centered();
+
+        flex-flow: wrap;
+        position: absolute;
+        white-space: normal;
+        bottom: calc(-5px * var(--scale-factor));
+        z-index: 1;
+        height: 65%;
+        width: 110%;
+        color: $white;
+        font-size: calc(2.6rem * var(--scale-factor));
+        border-bottom-left-radius: calc(20px * var(--scale-factor));
+        border-bottom-right-radius: calc(20px * var(--scale-factor));
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+        padding: calc(10px * var(--scale-factor));
+        text-align: center;
+
+        img {
+            width: 70%;
+        }
+
+        img.org-icon {
+            width: calc(var(--scale-factor) * 175px);
+        }
+    }
+
+    &:hover {
+        .pocket-jacket {
+            box-shadow: 0px 0px 20px 3px rgba(209, 205, 205, 0.4);
+        }
+    }
+}

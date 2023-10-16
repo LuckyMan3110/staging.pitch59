@@ -1,0 +1,493 @@
+<div class="step-form" *ngIf="form">
+  <h1>{{ isResume ? 'Files' : 'Images' }}</h1>
+  <div class="layout-card upload-block">
+    <div class="column column-left" *ngIf="!isOrganization">
+      <div class="upload-block-text">
+        <p class="upload-block-text-main" #leftTitle>
+          Upload Profile Picture *
+        </p>
+        <p class="upload-block-text-notes" #leftNotes>
+          (Picture of the one giving the pitch)
+        </p>
+        <p *ngIf="isResume" class="upload-block-text-notes">&nbsp;</p>
+      </div>
+      <button class="button-simple sm-35 w-100 shock-pink">
+        <img
+            class="icon"
+            src="/assets/images/cloud_upload-white-48dp.svg"
+            alt=""
+        />
+        <span>UPLOAD PHOTO</span>
+        <app-image-uploader
+            (afterFileUploadEvent)="postCoverUpload($event)"
+            (errorInImageCropperUpload)="
+                        errorInImageCropperUpload($event)
+                    "
+            (onSelect)="onSelect($event)"
+            [aspectRatio]="16 / 9"
+            [cropperMinHeight]="200"
+            [cropperMinWidth]="200"
+            [imageQuality]="100"
+            [onlyScaleDown]="false"
+            [resizeToHeight]="null"
+            [resizeToWidth]="null"
+            dialogWidth="400px"
+            dialogWidth="400px"
+        >
+        </app-image-uploader>
+      </button>
+      <div
+          class="preview-image-block"
+          *ngIf="form.controls.videoCoverImageThumbnailUrl.value"
+      >
+        <img
+            [src]="form.controls.videoCoverImageThumbnailUrl.value"
+            alt=""
+        />
+        <div
+            class="delete-image-button"
+            (click)="
+                        service.tileRequiredState = false; deleteImage('cover')
+                    "
+        >
+          &#10006;
+        </div>
+      </div>
+      <div
+          class="form-errors"
+          *ngIf="form.controls.videoCoverImageFileId.errors"
+      >
+        <div
+            *ngIf="
+                        form.controls.videoCoverImageFileId.errors.required &&
+                        form.controls.videoCoverImageFileId.dirty
+                    "
+        >
+          Please upload cover image
+        </div>
+      </div>
+      <div class="error-sign">{{ errorMessageForVideoCover }}</div>
+    </div>
+    <div>{{ service.BusinessType }}</div>
+    <div
+        class="column column-right"
+        *ngIf="!isResume"
+        [ngClass]="{ 'mr-auto': isOrganization }"
+    >
+      <div class="upload-block-text">
+        <p class="upload-block-text-main">Upload Logo *</p>
+      </div>
+      <button
+          class="button-simple sm-35 w-100 shock-pink"
+          [ngStyle]="{
+                    marginTop: rightColumnMargin
+                        ? rightColumnMargin + 'px'
+                        : null
+                }"
+      >
+        <img
+            class="icon"
+            src="/assets/images/cloud_upload-white-48dp.svg"
+            alt=""
+        />
+        <span>UPLOAD LOGO</span>
+        <app-image-uploader
+            (afterFileUploadEvent)="postLogoUpload($event)"
+            (errorInImageCropperUpload)="
+                        errorInImageCropperUpload($event)
+                    "
+            [aspectRatio]="3 / 1"
+            [cropperMinHeight]="200"
+            [cropperMinWidth]="200"
+            [imageQuality]="100"
+            [onlyScaleDown]="false"
+            [resizeToHeight]="null"
+            [resizeToWidth]="null"
+            dialogWidth="400px"
+        >
+        </app-image-uploader>
+      </button>
+      <div
+          class="preview-image-block logo"
+          *ngIf="
+                    form.value.businessLogoThumbnailUrl ||
+                    form.value.organizationLogoThumbnailUrl
+                "
+      >
+        <img
+            *ngIf="isOrganization"
+            [src]="form.controls.organizationLogoThumbnailUrl?.value"
+            alt=""
+        />
+        <img
+            *ngIf="!isOrganization"
+            [src]="form.controls.businessLogoThumbnailUrl?.value"
+            alt=""
+        />
+        <div
+            class="delete-image-button"
+            (click)="
+                        service.tileRequiredState = false; deleteImage('logo')
+                    "
+        >
+          &#10006;
+        </div>
+      </div>
+      <div
+          class="form-errors"
+          *ngIf="
+                    form.controls?.businessLogoFilelId?.errors ||
+                    form.controls?.organizationLogoFilelId?.errors
+                "
+      >
+        <div
+            *ngIf="
+                        (form.controls.businessLogoFilelId?.errors.required &&
+                            form.controls.businessLogoFilelId?.dirty) ||
+                        (form.controls.organizationLogoFilelId?.errors
+                            .required &&
+                            form.controls.organizationLogoFilelId?.dirty)
+                    "
+        >
+          Please upload
+          {{ isOrganization ? 'organization' : 'business' }} logo
+        </div>
+      </div>
+    </div>
+    <div class="column column-right" *ngIf="isResume">
+      <div class="upload-block-text">
+        <p class="upload-block-text-main">Upload Resume *</p>
+        <p class="upload-block-text-notes" #leftNotes>
+          (Supported file formats:
+        </p>
+        <p class="upload-block-text-notes">
+          .DOC, .DOCX, .JPEG, .JPG, .PDF, .PNG)
+        </p>
+      </div>
+      <button
+          class="button-simple sm-35 w-100 shock-pink"
+          (click)="uploadBtn.click()"
+      >
+        <img
+            class="icon"
+            src="/assets/images/cloud_upload-white-48dp.svg"
+            alt=""
+        />
+        <span>UPLOAD RESUME</span>
+        <input
+            accept=".doc, .docx, .jpeg, .jpg, .pdf, .png"
+            type="file"
+            #uploadBtn
+            (change)="uploadResume($event)"
+            hidden
+        />
+      </button>
+      <span class="pdf-block-name" *ngIf="form.value.resumeFileUrl">
+                <img
+                    *ngIf="
+                        uploadingFileFormat === 'jpg' ||
+                        uploadingFileFormat === 'jpeg' ||
+                        uploadingFileFormat === 'png'
+                    "
+                    class="uploaded-file-icon"
+                    src="/assets/images/fa-icons/image-file.svg"
+                    alt="uploaded file icon"
+                />
+                <img
+                    *ngIf="uploadingFileFormat === 'pdf'"
+                    class="uploaded-file-icon"
+                    src="/assets/images/fa-icons/pdf-file.svg"
+                    alt="uploaded file icon"
+                />
+                <img
+                    *ngIf="
+                        uploadingFileFormat === 'doc' ||
+                        uploadingFileFormat === 'docx'
+                    "
+                    class="uploaded-file-icon"
+                    src="/assets/images/fa-icons/word-file.svg"
+                    alt="uploaded file icon"
+                />
+                <span
+                    class="pdf-filename"
+                    (click)="showPdfDoc()"
+                    data-toggle="modal"
+                    data-target="modal-doc-viewer"
+                >View uploaded document</span
+                >
+                <span>&nbsp;&nbsp;&nbsp;</span>
+
+                <div
+                    class="delete-pdf-button"
+                    (click)="service.tileRequiredState = false; deletePdf()"
+                >
+                    X
+                </div>
+            </span>
+      <div
+          class="form-errors"
+          *ngIf="form.controls?.resumeFileId?.errors"
+      >
+        <div
+            *ngIf="
+                        form.controls.resumeFileId?.errors.required &&
+                        form.controls.resumeFileId?.dirty
+                    "
+        >
+          Please upload resume
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+      *ngIf="service.businessType !== PitchCardType.Job && !isOrganization"
+      class="layout-card upload-block-bottom"
+  >
+    <div class="column" [ngClass]="{ 'w-8': mobileMode || isTablet }">
+      <div class="upload-block-text">
+        <p class="upload-block-text-main">Upload Other Files</p>
+        <p class="upload-block-text-notes">
+          (Pictures, Works, Spreadsheets, Articles, Awards,
+          Certificates)
+        </p>
+      </div>
+      <button
+          class="button-simple sm-35 w-100 shock-pink"
+          (click)="uploadBtn.click()"
+      >
+        <img
+            class="icon"
+            src="/assets/images/cloud_upload-white-48dp.svg"
+            alt=""
+        />
+        <span>UPLOAD ATTACHMENTS</span>
+        <input
+            accept="image/x-png,image/gif,image/jpeg,image/jpg,image/heic,image/heif,application/msword,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            multiple
+            type="file"
+            #uploadBtn
+            (change)="uploadCompanyImage($event)"
+            [(ngModel)]="files"
+            hidden
+        />
+      </button>
+    </div>
+    <div class="column gallery" #galleryContainer>
+      <div *ngIf="uploadedFiles" #thumbImg class="grid">
+        <div
+            *ngFor="
+                        let image of uploadedFiles
+                            | slice : 0 : imagesInGalleryView;
+                        index as i;
+                        last as isLast
+                    "
+            class="col-4 preview-image-gallery"
+            [ngClass]="{ 'w-auto': isDocument(image.thumbnail) }"
+            key="index"
+        >
+          <img
+              (load)="cropWide(i)"
+              (error)="handleBrokenImg(image, i)"
+              [src]="getFilePreviewSrc(image.thumbnail)"
+              style="
+                            cursor: pointer;
+                            height: 100%;
+                            width: 100%;
+                            object-fit: cover;
+                        "
+              *ngIf="!isDocument(image?.thumbnail)"
+              (click)="imageClick(i)"
+              alt=""
+          />
+          <ngx-doc-viewer
+              *ngIf="isDocument(image?.thumbnail)"
+              viewerUrl="https://docs.google.com/gview?url=%URL%&embedded=true"
+              [url]="image?.thumbnail"
+              googleCheckContentLoaded="true"
+              googleCheckInterval="3000"
+              style="
+                            object-fit: contain;
+                            display: block;
+                            width: 100px;
+                            height: 75vh;
+                        "
+          ></ngx-doc-viewer>
+          <div
+              *ngIf="
+                            uploadedFiles.length - imagesInGalleryView <= 0 ||
+                            !isLast
+                        "
+              class="delete-image-button"
+              (click)="deleteImage(i)"
+          >
+            &#10006;
+          </div>
+          <div
+              *ngIf="
+                            isLast &&
+                            uploadedFiles.length - imagesInGalleryView > 0
+                        "
+              class="more-image-block"
+              (click)="imageClick(i)"
+          >
+            <span>See All</span>
+            <span>{{ uploadedFiles.length }}</span>
+          </div>
+        </div>
+      </div>
+      <div
+          class="form-errors"
+          *ngIf="form.controls.employeePictureFileIds.errors"
+      >
+        <div
+            *ngIf="
+                        form.controls.employeePictureFileIds.errors.required &&
+                        !errorMessage
+                    "
+            translate
+        >
+          lbl_slect_comapny_images
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-errors" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+</div>
+<p-galleria
+    class="mask-container"
+    [ngClass]="{
+        one: uploadedFiles.length === 1,
+        two: uploadedFiles.length === 2,
+        three: uploadedFiles.length === 3
+    }"
+    #galleria
+    [value]="uploadedFiles"
+    [(visible)]="service.displayCustom"
+    [(activeIndex)]="activeIndex"
+    [containerStyle]="{ 'max-width': '100%', height: '100%' }"
+    [numVisible]="
+        uploadedFiles.length < 5 && !mobileMode
+            ? uploadedFiles.length
+            : mobileMode
+            ? 4
+            : 5
+    "
+    [circular]="true"
+    [fullScreen]="true"
+    [baseZIndex]="100000"
+    [showItemNavigators]="true"
+    (activeIndexChange)="
+        updateCloseBtnStyle(true); startLoader(); setGalleryNavigation(true)
+    "
+>
+  <ng-template pTemplate="item" let-item>
+    <img
+        *ngIf="!isDocument(item?.thumbnail)"
+        [src]="item?.file"
+        (load)="stopLoader(); setGalleryNavigation(false)"
+        style="height: 75vh; object-fit: cover; display: block"
+        alt=""
+    />
+    <ngx-doc-viewer
+        *ngIf="isDocument(item?.thumbnail)"
+        viewerUrl="https://docs.google.com/gview?url=%URL%&embedded=true"
+        [url]="item?.thumbnail"
+        (loaded)="
+                updateCloseBtnStyle(); stopLoader(); setGalleryNavigation(false)
+            "
+        googleCheckContentLoaded="true"
+        googleCheckInterval="3000"
+        style="
+                object-fit: contain;
+                display: block;
+                width: 100%;
+                height: 75vh;
+            "
+        class="resume-modal"
+    ></ngx-doc-viewer>
+  </ng-template>
+  <ng-template pTemplate="thumbnail" let-item>
+    <div
+        class="grid pb-0 pl-0 pr-0 justify-content-center"
+        style="position: relative"
+    >
+      <img
+          [src]="getFilePreviewSrc(item?.thumbnail)"
+          style="
+          display: block;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 10px;
+          padding: 5px; {{
+                    isDocument(item?.thumbnail) ? 'width: auto' : 'width: 100%;'
+                }}"
+          alt=""
+      />
+
+      <div
+          class="absolute right-0 bottom-0"
+          style="
+                    background: rgba(0, 0, 0, 0.51);
+                    border-radius: 3px;
+                    padding: 7px 12px;
+                "
+          (click)="downloadFile(item?.thumbnail)"
+          [pTooltip]="'Download'"
+          [tooltipPosition]="'top'"
+          [tooltipDisabled]="!isDesktop"
+      >
+        <img
+            src="/assets/images/pitch-card-svg/download-icon.svg"
+            class="z-1"
+            alt="download"
+        />
+      </div>
+
+      <div
+          class="delete-image-button"
+          (click)="deleteImage(uploadedFiles.indexOf(item?.thumbnail))"
+      >
+        &#10006;
+      </div>
+    </div>
+  </ng-template>
+</p-galleria>
+
+<p-dialog
+    class="modal-window doc-view"
+    [(visible)]="showPdf"
+    [modal]="true"
+    [blockScroll]="true"
+    [draggable]="false"
+    [dismissableMask]="true"
+    [resizable]="false"
+    [showHeader]="true"
+    [style]="{
+        width: '90%',
+        maxWidth: isTablet ? '80%' : 'unset',
+        height: '90%',
+        display: showViaDocViewer() ? 'block' : 'grid'
+    }"
+    appendTo="body"
+    styleClass="pdf-modal"
+>
+  <p-header class="modal-header"> Your Resume preview</p-header>
+  <ngx-doc-viewer
+      [url]="form.value.resumeFileUrl"
+      *ngIf="showViaDocViewer(); else imageViewer"
+      class="resume-modal"
+      googleCheckContentLoaded="true"
+      googleCheckInterval="2000"
+      style="height: 100%"
+      viewerUrl="https://docs.google.com/gview?url=%URL%&embedded=true"
+      (error)="errorLoad($event)"
+  ></ngx-doc-viewer>
+  <ng-template #imageViewer>
+    <div class="resume-image-modal" *ngIf="form">
+      <img [src]="form.value.resumeFileUrl" alt="resume image"/>
+    </div>
+  </ng-template>
+</p-dialog>

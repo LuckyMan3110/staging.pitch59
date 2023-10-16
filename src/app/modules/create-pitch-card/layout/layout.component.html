@@ -1,0 +1,309 @@
+<app-sidebar
+    *ngIf="mobileMode"
+    [(visible)]="displaySidebar"
+    position="left"
+    styleClass="create-pitch-sidebar"
+    [baseZIndex]="3000"
+>
+  <h1>Set Up</h1>
+  <div class="stepper-container">
+    <app-stepper
+        *ngIf="service.loaded"
+        [items]="items"
+        (stepClicked)="goToSection($event)"
+        [current]="service.currentStep"
+        [isMobile]="true"
+    ></app-stepper>
+  </div>
+</app-sidebar>
+<app-sidebar
+    *ngIf="mobileMode"
+    [(visible)]="displayPitchCardView"
+    [fullScreen]="true"
+    styleClass="create-pitch-sidebar full-view"
+>
+  <div class="pitch-card-wrapper moble-sidebar">
+    <app-search-result-thumbnail
+        [scale]="0.8"
+        [businessDetails]="business"
+        [demo]="true"
+        (companyImages)="handlePitchCardTitleClick($event)"
+    >
+    </app-search-result-thumbnail>
+  </div>
+</app-sidebar>
+<div *ngIf="!appLoader" [hidden]="service.loaded" class="layout-loader">
+  <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+</div>
+<div class="body-gradient">
+  <div class="create-container container">
+    <div class="wrapper-section">
+      <div class="main-section" *ngIf="service.loaded">
+        <div class="progress-section" #progressWrapper>
+          <app-progress-bar
+              class="progress-bar"
+              *ngIf="service.loaded"
+              [totalSteps]="items.length"
+              [filledSteps]="completedStepsNumber"
+              (viewPitchCard)="togglePitchCardView($event)"
+          ></app-progress-bar>
+          <div class="lower-mobile-section">
+            <div
+                class="bars-menu"
+                (click)="
+                                toggleProgressMenu(); $event.stopPropagation()
+                            "
+            >
+              <i class="pi pi-bars"></i>
+            </div>
+            <div class="section-name">
+              {{ steplabel }}
+            </div>
+            <div class="view-pitchcard" (click)="onViewPitchCard()">
+              <i class="pi pi-id-card"></i>
+            </div>
+          </div>
+          <app-stepper
+              class="business-stepper"
+              *ngIf="service.loaded"
+              [items]="items"
+              (stepClicked)="goToSection($event)"
+              [current]="service.currentStep"
+              [disabledMode]="congratStep"
+          >
+          </app-stepper>
+        </div>
+        <div class="main-form" id="main-form">
+          <div class="central-content">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+        <div class="navigation-footer">
+          <div
+              class="navigation-footer-message"
+              *ngIf="service.errorMessageForCardDeclied"
+          >
+            {{ service.errorMessageForCardDeclied }}
+          </div>
+          <div class="navigation-footer-buttons">
+            <div class="back-button-wrapper">
+              <span class="pi pi-chevron-left"></span>
+              <div
+                  class="back-button"
+                  (click)="
+                                    congratStep
+                                        ? backFromCongrats()
+                                        : PrevSection()
+                                "
+              >
+                back
+              </div>
+            </div>
+            <div *ngIf="!service.IsLastSection">
+              <div
+                  tabindex="15"
+                  class="button-simple shock-pink sm-35"
+                  (click)="NextSection()"
+              >
+                {{
+                service.tileRequiredState
+                    ? 'Save & Next'
+                    : 'Save'
+                }}
+              </div>
+            </div>
+            <div
+                style="width: 200px"
+                *ngIf="service.IsLastSection"
+                tabindex="100"
+                class="button-simple shock-pink sm-35"
+                (click)="
+                                congratStep ? saveAndExit() : finishAndSubmit()
+                            "
+                [ngClass]="{ disabled: !allStepsCompleted }"
+            >
+              {{ congratStep ? 'Exit' : 'Finish' }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+          class="pitchcard-view-section"
+          #pitchCardWrapper
+          *ngIf="!mobileMode && loaded"
+      >
+        <div
+            class="business-information {{ businessType }}"
+            *ngIf="service.loaded"
+        >
+          {{
+          getBusinessTypeValue(businessType) | titlecase
+          }}
+          PitchCard
+        </div>
+        <div
+            [ngStyle]="{
+                        'margin-bottom':
+                            service.currentStep === service.lastSectionIndex ||
+                            service.currentStep === 4
+                                ? '1.5rem'
+                                : '0'
+                    }"
+        >
+          <app-search-result-thumbnail
+              #previewCard
+              [businessDetails]="business"
+              [demo]="true"
+              [scale]="scaleFactor"
+              (companyImages)="handlePitchCardTitleClick($event)"
+          ></app-search-result-thumbnail>
+          <div
+              class="pitchcard-preview-download"
+              *ngIf="business.businessStatus === 2"
+          >
+            <a (click)="downloadPC()"> Download PitchCard Image </a>
+          </div>
+          <div
+              class="search-toggle"
+              *ngIf="
+                            business.businessStatus === 1 ||
+                            business.businessStatus === 2
+                        "
+              (click)="handlePitchCardStatus()"
+          >
+            <div
+                class="status"
+                [ngClass]="{
+                                active: business.accountStatus,
+                                inactive: !business.accountStatus
+                            }"
+            >
+              <span class="toogler"></span>
+            </div>
+            <span>Display on Search</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-pitchcard-modals-wrapper
+    [uniqueId]="uniqueId"
+></app-pitchcard-modals-wrapper>
+<p-dialog
+    styleClass="scroll-modal"
+    class="congratulations-modal"
+    [(visible)]="showCongratulationsWindow"
+    [blockScroll]="true"
+>
+  <app-new-congratulations-page
+      [isModal]="true"
+      (closeModal)="showCongratulationsWindow = false"
+  ></app-new-congratulations-page>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="showCongratulationsJobCard"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '480px', width: '100%' }"
+>
+  <div class="text-center mb-30 mt-20">
+    <h1 class="font-semibold no-margins">Done</h1>
+    <h2 class="no-margins">Your Job Card is now active</h2>
+  </div>
+
+  <div class="mb-30">
+    <button
+        class="button-simple shock-pink lg-50 margin-centered"
+        [routerLink]="'/account/employer-portal'"
+    >
+      BACK TO EMPLOYER PORTAL
+    </button>
+  </div>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="paymentApprovedModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '480px', width: '100%' }"
+    [closable]="true"
+>
+  <app-payment-approve-content
+      *ngIf="requestStatus"
+      [requestStatus]="requestStatus"
+      (closeEvent)="paymentApprovedModal = false"
+  ></app-payment-approve-content>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="showAutofillModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{
+        minWidth: '300px',
+        width: isMobile ? '100%' : '50%',
+        maxWidth: '900px'
+    }"
+    appendTo="body"
+>
+  <div *ngIf="showAutofillModal && service?.loaded">
+    <div class="modal-header">
+      <p
+          class="description text-center mt-2"
+          [ngClass]="{ 'text-base px-2': !isMobile }"
+      >
+        Would you like us to autofill the information we have already
+        collected?<br/>
+        (You can change this information at any time.)
+      </p>
+    </div>
+
+    <app-progress-bar
+        class="progress-bar fake"
+        [totalSteps]="autofillItems.length"
+        [filledSteps]="defaultCompletedStepsNumber"
+    ></app-progress-bar>
+    <div class="mt-3">
+      <app-stepper
+          [items]="autofillItems"
+          [isMobile]="isMobile"
+          [justView]="true"
+      ></app-stepper>
+    </div>
+
+    <div class="modal-footer mt-2 mb-4">
+      <div class="grid align-items-center justify-content-center">
+        <div class="mr-2">
+          <button
+              class="button-simple bg-darkgray full-width"
+              style="width: 115px"
+              (click)="showAutofillModal = false"
+          >
+            NO, THANKS
+          </button>
+        </div>
+        <button
+            class="button-simple shock-pink full-width"
+            style="max-width: 115px"
+            (click)="doAutofillBusiness(); showAutofillModal = false"
+        >
+          YES, PLEASE
+        </button>
+      </div>
+    </div>
+  </div>
+</p-dialog>

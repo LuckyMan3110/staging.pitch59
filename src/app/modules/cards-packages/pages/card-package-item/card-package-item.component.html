@@ -1,0 +1,54 @@
+<div
+    class="card-container"
+    [ngClass]="{ comingSoon: package.comingSoon && !teamPackagesLayout }"
+    [ngStyle]="{
+        border: teamPackagesLayout ? '1px solid' + package.packageColor : 'none'
+    }"
+>
+  <div
+      class="shoulder-strap"
+      *ngIf="package.comingSoon && !teamPackagesLayout"
+  >
+    coming soon
+  </div>
+  <div
+      class="underlay"
+      *ngIf="package.comingSoon && !teamPackagesLayout"
+  ></div>
+  <div
+      class="card-header"
+      [ngStyle]="{ 'background-color': package.packageColor }"
+  >
+    <div class="card-type" *ngIf="package.type === 'service'">
+      nonprofit
+    </div>
+    <div class="card-type" *ngIf="package.type === 'basic'">
+      Bus.{{ package.type }}
+    </div>
+    <div
+        class="card-type"
+        *ngIf="package.type !== 'basic' && package.type !== 'service'"
+    >
+      {{ package.type }}
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="card-price">
+      ${{ package.monthPrice }}/mo
+      <span>(${{ package.totalPrice }} billed annual)</span>
+    </div>
+
+    <ul class="card-description">
+      <div>
+        <li *ngFor="let property of package.packageDescription">
+                    <span
+                        [ngStyle]="{ color: package.packageColor }"
+                        class="list-item"
+                    >✔</span
+                    >
+          <span>{{ property }}</span>
+        </li>
+            </div>
+        </ul>
+    </div>
+</div>

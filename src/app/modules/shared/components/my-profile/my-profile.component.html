@@ -1,0 +1,126 @@
+<div class="profile-wrap">
+    <div class="header">
+        <div class="welcome-row">
+            <h3>Welcome</h3>
+            <a [routerLink]="['/account', 'settings']">
+                <div
+                    class="settings"
+                    pTooltip="Account Settings"
+                    tooltipPosition="top"
+                ></div>
+            </a>
+        </div>
+        <div *ngIf="userModelLoading" class="loader">
+          <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+        </div>
+        <div class="welcome-row">
+          <div>
+            <h3 *ngIf="!userModelLoading" class="full-name">
+              {{ fullName }}
+            </h3>
+            <span *ngIf="!userModelLoading" class="email">
+                    {{
+              userModel.emailId ? userModel.emailId : 'Profile Email'
+              }}
+                </span>
+          </div>
+          <div
+              class="add-new-pitchcard-mob"
+              pTooltip="Create New PitchCard"
+              tooltipPosition="top"
+              (click)="createPitchCard()"
+          >
+            <i class="pi pi-plus"></i>
+          </div>
+        </div>
+    </div>
+  <ul class="body">
+    <li
+        class="menu-item"
+        *ngFor="let item of menuItems; let i = index"
+        [ngClass]="{ 'mb-15': !isMenuCollapsed && isMobile }"
+    >
+      <div
+          class="menu-body"
+          [ngClass]="{
+                    'disable-on-mob': i === 2 && blockEmployerPortalLink
+                }"
+          (click)="
+                    i === 2 && blockEmployerPortalLink
+                        ? desktopOnlyItem(item)
+                        : ''
+                "
+      >
+        <a
+            [routerLink]="['/account', item.split(' ').join('-')]"
+            routerLinkActive="active"
+            #rla="routerLinkActive"
+            [ngClass]="{ hide: !rla.isActive && isMenuCollapsed }"
+        >
+          <img
+              class="list-style"
+              src="{{
+                            imageSource + item.split(' ').join('-') + '.svg'
+                        }}"
+              alt=""
+          />
+
+          <span
+          >{{
+            item.indexOf('pitchcards') !== -1
+                ? item.slice(0, item.indexOf('pitchcards')) +
+                'PitchCards'
+                : item
+            }}
+                    </span>
+        </a>
+
+        <span
+            *ngIf="
+                        i === 2 && blockEmployerPortalLink && !isMenuCollapsed
+                    "
+            class="pi pi-desktop green"
+        ></span>
+
+        <div
+            class="add-new-pitchcard"
+            pTooltip="Create New PitchCard"
+            tooltipPosition="top"
+            *ngIf="item.indexOf('pitchcards') !== -1"
+            (click)="createPitchCard()"
+        >
+          <i class="pi pi-plus"></i>
+        </div>
+      </div>
+        </li>
+        <li class="menu-item">
+            <a
+                [routerLink]="['/account', 'settings']"
+                routerLinkActive="active"
+                #rla="routerLinkActive"
+                [ngClass]="{ hide: !rla.isActive || !isMenuCollapsed }"
+            >
+              <img
+                  class="list-style"
+                  src="{{ imageSource + 'settings-sidebar.svg' }}"
+                  alt=""
+              />
+              <span>Settings</span>
+            </a>
+        </li>
+    <span
+        *ngIf="isMobile"
+        class="collapse-button"
+        (click)="handleMenu()"
+        [ngClass]="{ 'bottom-indent': isMenuCollapsed }"
+    >
+            <i
+                [ngClass]="{
+                    'fa-chevron-up': !isMenuCollapsed,
+                    'fa-chevron-down': isMenuCollapsed
+                }"
+                class="fa"
+            ></i>
+        </span>
+  </ul>
+</div>

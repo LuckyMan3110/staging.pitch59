@@ -1,0 +1,15 @@
+<video
+    #target
+    id="video"
+    class="video-js vjs-16-9"
+    playsinline
+    [poster]="posterUrl"
+    [ngClass]="{ mirrored: isVideoMirrored }"
+    (timeupdate)="onTimeUpdate($event)"
+    muted="muted"
+    autoplay
+    allowfullcreen="true"
+    disablePictureInPicture
+    preload="metadata"
+    webkit-playsinline="true"
+></video>

@@ -1,0 +1,119 @@
+<div class="contact-modal">
+    <form [formGroup]="contactForm">
+        <div class="header">
+            <h2 class="no-margins">Talk to a representative</h2>
+        </div>
+        <div class="contact-modal-item">
+            <div class="form-label">
+                <label translate>First Name*</label>
+            </div>
+
+            <div class="form-control">
+                <div class="col-12 no-padding">
+                  <input
+                      class="new-input-green ng-untouched ng-pristine ng-valid contact-form__input"
+                      type="text"
+                      formControlName="firstName"
+                      minlength="3"
+                  />
+                </div>
+            </div>
+        </div>
+        <div class="contact-modal-item">
+            <div class="contact-modal-item">
+                <div class="form-label">
+                    <label translate>Last Name*</label>
+                </div>
+
+                <div class="form-control">
+                  <div class="col-12 no-padding">
+                    <input
+                        class="new-input-green ng-untouched ng-pristine ng-valid contact-form__input"
+                        type="text"
+                        formControlName="lastName"
+                        minlength="3"
+                    />
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="contact-modal-item">
+            <div class="contact-modal-item">
+                <div class="form-label">
+                    <label translate>Phone Number*</label>
+                </div>
+
+                <div class="form-control">
+                    <div class="col-12 no-padding">
+                      <p-inputMask
+                          styleClass="new-input-green novalidate"
+                          autocomplete="tel"
+                          type="tel"
+                          size="30"
+                          inputmode="tel"
+                          formControlName="mobileNumber"
+                          mask="(999) 999-9999"
+                      >
+                      </p-inputMask>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contact-modal-item">
+            <div class="contact-modal-item">
+              <div class="form-label">
+                <label>Email*</label>
+              </div>
+
+                <div class="form-control">
+                  <div class="col-12 no-padding">
+                    <input
+                        class="new-input-green ng-untouched ng-pristine ng-valid contact-form__input"
+                        type="text"
+                        pInputText
+                        formControlName="emailId"
+                    />
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="contact-modal-item">
+            <div class="contact-modal-item">
+                <div class="form-label">
+                    <label>Company Name*</label>
+                </div>
+
+                <div class="form-control">
+                  <div class="p-col-12 no-padding">
+                    <input
+                        class="new-input-green ng-untouched ng-pristine ng-valid contact-form__input"
+                        type="text"
+                        formControlName="companyName"
+                        minlength="3"
+                    />
+                  </div>
+                </div>
+            </div>
+        </div>
+        <h5 class="phone-number">Or call us at: (832) 412-4070</h5>
+        <div class="contact-modal-buttons">
+          <div class="contact-modal-buttons__item">
+            <button
+                class="button-simple lg-20 bg-darkgray white no-margins full-width"
+                (click)="onCancelButtonClick()"
+            >
+              {{ 'CANCEL' | uppercase }}
+            </button>
+          </div>
+          <div class="contact-modal-buttons__item">
+            <button
+                class="button-simple lg-20 shock-pink uppercase full-width"
+                [disabled]="contactForm.invalid"
+                (click)="onContactButtonClick()"
+            >
+              Contact Me
+            </button>
+          </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,454 @@
+<div class="step-form" *ngIf="positionForm" [formGroup]="positionForm">
+  <h1>Position Details</h1>
+
+  <div class="business-details-form">
+    <div class="layout-card grid-column">
+            <span class="p-float-label">
+                <p-autoComplete
+                    #jobAutocomplete
+                    (completeMethod)="suggestPositions($event)"
+                    (keypress)="applyUserTagForPositions($event)"
+                    (keyup.enter)="applyUserTagForPositions($event)"
+                    (onHide)="applyUserTagForPositions(null)"
+                    (onBlur)="updateFieldOnBlur('positions')"
+                    [suggestions]="positionsSuggestions"
+                    [minLength]="MIN_CHARS_FOR_SEARCH_INIT"
+                    [maxlength]="MAX_COUNT_OF_CHARS"
+                    [multiple]="false"
+                    [delay]="800"
+                    [tabindex]="1"
+                    id="jobTitle"
+                    styleClass="new-autocomplete-blue sm"
+                    field="name"
+                    formControlName="positions"
+                >
+                </p-autoComplete>
+                <label for="jobTitle">Job Title *</label>
+
+                <span
+                    class="error-sign"
+                    *ngIf="positionForm.controls?.positions?.errors?.maxLength"
+                >
+                    Position title should be up to
+                  {{ MAX_COUNT_OF_CHARS }} chars.
+                </span>
+            </span>
+
+      <span class="p-float-label">
+                <p-multiSelect
+                    styleClass="new-multiselect-gold sm"
+                    [options]="workTypesSuggestions"
+                    [filter]="false"
+                    [showHeader]="false"
+                    [showToggleAll]="false"
+                    (onBlur)="updateFieldOnBlur('workTypes')"
+                    (onPanelHide)="updateFieldOnBlur('workTypes')"
+                    optionLabel="name"
+                    ariaFilterLabel="Select All"
+                    filterPlaceHolder="Select All"
+                    formControlName="workTypes"
+                    id="workTypes"
+                    defaultLabel="Employment Type *"
+                    [tabindex]="2"
+                >
+                </p-multiSelect>
+            </span>
+
+      <div
+          class="grid justify-content-center align-items-baseline no-margins"
+      >
+        <div style="width: 36%">
+                    <span class="p-float-label">
+                        <p-dropdown
+                            [options]="compensationTypesDropDown"
+                            optionLabel="value.name"
+                            formControlName="compensationType"
+                            (onBlur)="updateFieldOnBlur('compensationType')"
+                            [tabindex]="3"
+                            placeholder="Frequency *"
+                            class="new-input-blue sm"
+                        >
+                        </p-dropdown>
+                    </span>
+        </div>
+
+        <div style="width: 32%; padding: 0.5em">
+                    <span class="p-float-label add-prefix">
+                        <span class="currency-code">&#36;</span>
+                        <input
+                            class="new-input-blue borders-box xs"
+                            formControlName="minCompensationAmount"
+                            id="minCompensationAmount"
+                            min="0"
+                            max="999999999999"
+                            maxlength="12"
+                            tabindex="4"
+                            type="text"
+                            size="30"
+                            pInputText
+                            placeholder="Minimum *"
+                            (input)="blockSymbols($event)"
+                            (keydown)="onPaste($event, 'minCompensationAmount')"
+                            (blur)="
+                                minMaxValidation(
+                                    $event,
+                                    'minCompensationAmount'
+                                );
+                                updateFieldOnBlur('minCompensationAmount')
+                            "
+                        />
+                    </span>
+        </div>
+
+        <div style="width: 32%; padding: 0.5em">
+                    <span class="p-float-label add-prefix">
+                        <span class="currency-code">&#36;</span>
+                        <input
+                            class="new-input-blue borders-box xs"
+                            formControlName="maxCompensationAmount"
+                            id="maxCompensationAmount"
+                            min="0"
+                            max="999999999999"
+                            maxlength="12"
+                            tabindex="5"
+                            type="text"
+                            size="30"
+                            pInputText
+                            placeholder="Maximum *"
+                            (input)="blockSymbols($event)"
+                            (keydown)="onPaste($event, 'maxCompensationAmount')"
+                            (blur)="
+                                minMaxValidation(
+                                    $event,
+                                    'maxCompensationAmount'
+                                );
+                                updateFieldOnBlur('maxCompensationAmount')
+                            "
+                        />
+                    </span>
+        </div>
+      </div>
+
+      <span class="p-float-label">
+                <p-checkbox
+                    [tabindex]="6"
+                    formControlName="isHideSalary"
+                    name="isHideSalary"
+                    label="Hide salary information"
+                    class="checkbox-address"
+                    binary="true"
+                    (onChange)="updateFieldOnBlur('isHideSalary')"
+                >
+                </p-checkbox>
+            </span>
+
+      <span class="p-float-label">
+                <input
+                    [maxLength]="150"
+                    (blur)="updateFieldOnBlur('compensationDescription')"
+                    formControlName="compensationDescription"
+                    autocomplete="new-password"
+                    class="new-input-blue sm"
+                    id="compensationDescription"
+                    pInputText
+                    tabindex="7"
+                    type="text"
+                />
+
+                <label for="compensationDescription"
+                >Compensation Description
+                  {{
+                  positionForm.get('isHideSalary')?.value ? '*' : ''
+                  }}</label
+                >
+            </span>
+
+      <span class="p-float-label">
+                <p-multiSelect
+                    styleClass="new-multiselect-gold sm"
+                    [options]="benefitsSuggestions"
+                    [filter]="false"
+                    [showHeader]="false"
+                    [showToggleAll]="false"
+                    (onBlur)="updateFieldOnBlur('benefits')"
+                    (onPanelHide)="updateFieldOnBlur('benefits')"
+                    optionLabel="name"
+                    ariaFilterLabel="Select All"
+                    filterPlaceHolder="Select All"
+                    formControlName="benefits"
+                    defaultLabel="Additional Benefits"
+                    [tabindex]="8"
+                    id="benefits"
+                >
+                </p-multiSelect>
+            </span>
+    </div>
+
+    <div class="layout-card grid-column">
+            <span class="p-float-label" style="margin-top: 1rem">
+                <p-checkbox
+                    [tabindex]="9"
+                    name="isRemote"
+                    formControlName="isRemote"
+                    label="This is a remote position"
+                    class="checkbox-address"
+                    (onChange)="updateFieldOnBlur('isRemote')"
+                    binary="true"
+                >
+                </p-checkbox>
+            </span>
+
+      <span class="p-float-label">
+                <input
+                    class="new-input-blue sm"
+                    tabindex="10"
+                    placeholder=""
+                    id="jobAddress"
+                    type="text"
+                    size="30"
+                    pInputText
+                    autocomplete="new-password"
+                    formControlName="jobAddress"
+                    appSearchLocation
+                    (setAddress)="updateAddress($event)"
+                    (blur)="updateFieldOnBlur('jobAddress')"
+                />
+                <label for="jobAddress"
+                >Address of Work Location
+                  {{ !positionForm.get('isRemote')?.value ? '*' : '' }}</label
+                >
+
+                <div
+                    class="form-errors"
+                    *ngIf="positionForm.controls.jobAddress.errors"
+                >
+                    <div
+                        *ngIf="positionForm.controls.jobAddress.errors.notFound"
+                    >
+                        No location
+                    </div>
+                </div>
+            </span>
+
+      <span class="p-float-label">
+                <p-autoComplete
+                    [tabindex]="11"
+                    dropdownMode="current"
+                    (completeMethod)="filterCities($event)"
+                    (onClear)="clearCityList($event, 'city')"
+                    (onBlur)="updateFieldOnBlur('jobCity')"
+                    [dropdown]="false"
+                    [delay]="350"
+                    [minLength]="2"
+                    [size]="30"
+                    [suggestions]="filteredCitiesList"
+                    #cityField
+                    autoHighlight="true"
+                    autocomplete="address-level2"
+                    field="label"
+                    formControlName="jobCity"
+                    id="jobCity"
+                    styleClass="new-autocomplete-blue sm"
+                >
+                </p-autoComplete>
+
+                <label for="jobCity"
+                >City
+                  {{ !positionForm.get('isRemote')?.value ? '*' : '' }}</label
+                >
+
+                <div
+                    class="form-errors"
+                    *ngIf="positionForm.controls.jobCity.errors"
+                >
+                    <div
+                        *ngIf="
+                            positionForm.controls.jobCity.errors.pattern ||
+                            positionForm.controls.jobCity.errors.notFound
+                        "
+                        translate
+                    >
+                        Invalid City
+                    </div>
+                </div>
+            </span>
+
+      <div class="two-fields-row">
+                <span class="p-float-label">
+                    <p-autoComplete
+                        [tabindex]="12"
+                        (completeMethod)="filterStates($event)"
+                        (onClear)="clearCityList($event, 'state')"
+                        (onBlur)="updateFieldOnBlur('jobState')"
+                        [dropdown]="true"
+                        dropdownMode="current"
+                        [minLength]="2"
+                        [size]="30"
+                        [suggestions]="filteredStatesList"
+                        #stateNames
+                        autoHighlight="true"
+                        field="label"
+                        autocomplete="address-level1"
+                        formControlName="jobState"
+                        id="jobState"
+                        styleClass="new-autocomplete-blue sm"
+                    >
+                    </p-autoComplete>
+
+                    <label for="jobState"
+                    >State
+                      {{
+                      !positionForm.get('isRemote').value ? '*' : ''
+                      }}</label
+                    >
+
+                    <div
+                        class="form-errors"
+                        *ngIf="positionForm.controls.jobState.errors"
+                    >
+                        <div
+                            *ngIf="
+                                positionForm.controls.jobState.errors.pattern ||
+                                positionForm.controls.jobState.errors.notFound
+                            "
+                            translate
+                        >
+                            Invalid State
+                          {{ positionForm.get('jobState').value | json }}
+                        </div>
+                    </div>
+                </span>
+
+        <span class="p-float-label">
+                    <input
+                        class="new-input-blue sm"
+                        autocomplete="postal-code"
+                        tabindex="13"
+                        id="jobZip"
+                        type="tel"
+                        inputmode="tel"
+                        size="30"
+                        maxlength="5"
+                        pInputText
+                        formControlName="jobZip"
+                        (input)="blockSymbols($event)"
+                        (keydown)="onPaste($event, 'jobZip')"
+                        (blur)="updateFieldOnBlur('jobZip')"
+                    />
+
+                    <label for="jobZip"
+                    >Zip Code
+                      {{
+                      !positionForm.get('isRemote')?.value ? '*' : ''
+                      }}</label
+                    >
+
+                    <div
+                        class="form-errors"
+                        *ngIf="positionForm.controls.jobZip.errors"
+                    >
+                        <div
+                            *ngIf="positionForm.controls.jobZip.errors.pattern"
+                            translate
+                        >
+                            Invalid Zip Code
+                        </div>
+                    </div>
+                </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="business-details-form">
+    <div class="layout-card grid-column" style="width: 100%">
+      <div class="form-control">
+        <div class="grid align-items-center no-margins">
+          <p-inputSwitch
+              name="requireApplicants"
+              tabindex="14"
+              formControlName="requireOtherApplicationMethod"
+              (onChange)="
+                            updateFieldOnBlur('requireOtherApplicationMethod')
+                        "
+          >
+          </p-inputSwitch>
+
+          <label class="ml-1 font-light text-base"
+          >Redirect applicants to apply at:</label
+          >
+
+          <div class="ml-1 col-4 p-0">
+            <input
+                class="new-input-blue lightgray borders-box xs"
+                #extLinkInput
+                formControlName="otherApplicationLink"
+                tabindex="15"
+                type="text"
+                pInputText
+                (change)="updateFieldOnBlur('otherApplicationLink')"
+                (keyup.delete)="
+                                positionForm.get('otherApplicationLink').reset()
+                            "
+                (input)="addPrefix('otherApplicationLink')"
+                [placeholder]="
+                                'Enter application link' +
+                                (positionForm.get(
+                                    'requireOtherApplicationMethod'
+                                )?.value
+                                    ? '*'
+                                    : '')
+                            "
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="business-details-form">
+    <div class="layout-card grid-column full-width" style="width: 100%">
+      <div class="form-control">
+        <label for="positionRequirements">
+          <h3>
+            Position Requirements
+            {{
+            positionForm.get('showRequirements').value
+                ? '*'
+                : ''
+            }}
+          </h3>
+
+          <span class="p-float-label">
+                        <p-checkbox
+                            name="requireApplicants"
+                            formControlName="showRequirements"
+                            label="Require applicants to acknowledge requirements"
+                            tabindex="16"
+                            (onChange)="
+                                updateControlsValidation(
+                                    'showRequirements',
+                                    'positionRequirements'
+                                )
+                            "
+                            binary="true"
+                        >
+                        </p-checkbox>
+                    </span>
+        </label>
+
+        <p-editor
+            formControlName="positionRequirements"
+            class="w-12"
+            #editor
+            [styleClass]="'pitch-editor'"
+            [placeholder]="'Input Position Requirements'"
+            [tabIndex]="17"
+            (onTextChange)="
+                        updateFieldOnType($event, 'positionRequirements')
+                    "
+        >
+        </p-editor>
+      </div>
+    </div>
+  </div>
+</div>

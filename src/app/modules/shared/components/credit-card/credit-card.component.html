@@ -1,0 +1,35 @@
+<div
+    class="card card--front"
+    *ngIf="_cardDetails"
+    [ngClass]="{ mini: miniSize, middle: midSize }"
+>
+  <div class="card__header">
+    <img
+        class="chip"
+        src="/assets/images/card-logos/card-chip.png"
+        alt="chip"
+    />
+    <img
+        class="card__logo"
+        *ngIf="logoUrl"
+        [src]="logoUrl"
+        [alt]="_cardDetails.brand"
+    />
+    <i
+        *ngIf="allowRemoveCard"
+        class="pi pi-times red"
+        style="color: #f36"
+        (click)="deleteCard()"
+    ></i>
+  </div>
+  <div class="card__number">XXXX XXXX XXXX {{ _cardDetails.last4 }}</div>
+  <div class="card__footer">
+    <div class="card__expiry-date">
+      <span>EXPIRES</span><span>{{ MM }}/{{ YY }}</span>
+    </div>
+    <div class="card__cvv">
+      <div class="card__cvv-label">CVV</div>
+      <div class="card__cvv-value text-right">***</div>
+    </div>
+  </div>
+</div>

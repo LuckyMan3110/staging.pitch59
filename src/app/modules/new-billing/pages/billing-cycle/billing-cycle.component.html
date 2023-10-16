@@ -1,0 +1,207 @@
+<div class="content" *ngIf="pricingProducts" [formGroup]="form">
+  <div class="billing-view-item">
+    <div class="header-section text-center">
+      <h1>Select a Billing Cycle</h1>
+    </div>
+
+    <div class="grid justify-content-even no-margins">
+      <div
+          class="billing-block bg-white text-center"
+          *ngFor="let type of paymentFrequencyOptions; let i = index"
+      >
+        <div class="price-wrap" *ngIf="pricingProducts">
+          <div class="price-content">
+            <div
+                class="price mt-15"
+                *ngIf="
+                                type.value === billingFrequencyModel.Monthly &&
+                                monthlyPlan
+                            "
+                [ngClass]="{ green: monthlyPlan?.price === 0 }"
+            >
+              <h2 class="no-margins">
+                {{
+                monthlyPlan.price !== 0
+                    ? '&#x24;' + monthlyPlan.price + '/Mo'
+                    : 'FREE'
+                }}
+              </h2>
+              <p>Billed Monthly, no contract</p>
+            </div>
+
+            <div
+                class="price decorate"
+                *ngIf="
+                                type.value === billingFrequencyModel.Annual &&
+                                approveEmail &&
+                                annuallyPlan.referralDiscount > 0 &&
+                                annuallyPlan.price > 0
+                            "
+            >
+              <h2 class="no-margins">
+                &#x24;{{ annuallyPlan.price }}/Year
+              </h2>
+            </div>
+            <div
+                class="price green mt-15"
+                [ngClass]="{
+                                green:
+                                    approveEmail &&
+                                    annuallyPlan.referralDiscount > 0
+                            }"
+                *ngIf="type.value === billingFrequencyModel.Annual"
+            >
+              <h2
+                  class="no-margins"
+                  *ngIf="
+                                    approveEmail &&
+                                    annuallyPlan.referralDiscount > 0
+                                "
+              >
+                1st Year{{
+                annuallyPlan.price -
+                annuallyPlan.referralDiscount >
+                0
+                    ? ' &#x24;' +
+                    (
+                        annuallyPlan.price -
+                        annuallyPlan.referralDiscount
+                    ).toFixed(0)
+                    : ' FREE'
+                }}
+              </h2>
+              <h2 class="no-margins" *ngIf="!approveEmail">
+                &#x24;{{ annuallyPlan.price }}/Year
+              </h2>
+              <p>
+                {{
+                approveEmail
+                    ? 'Limited-Time Referral Discount'
+                    : 'Billed Annually, no contract'
+                }}
+              </p>
+            </div>
+          </div>
+
+          <div
+              class="button-simple shock-pink lg-50 margin-centered"
+              (click)="goToPage('/billing-page/virtual-video', type)"
+          >
+            Select
+          </div>
+        </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="referral-section">
+        <div class="back-btn pointer" (click)="goToPage('/cards-packages')">
+            <span class="arrow-back"></span>
+            <span>Back</span>
+        </div>
+        <span class="mr-2">Referred by: </span>
+      <div class="input-block lightgray">
+        <div
+            class="text-ellipsis"
+            [pTooltip]="approveEmail"
+            [tooltipPosition]="'top'"
+            [tooltipDisabled]="
+                    !approveEmail ||
+                    (isDesktop && approveEmail?.length < 37) ||
+                    (isTablet && approveEmail?.length < 30) ||
+                    (isMobile && approveEmail?.length < 20)
+                "
+        >
+          {{ approveEmail ? approveEmail : '[Email of referrer]' }}
+        </div>
+        <img
+            class="pointer"
+            *ngIf="isEditableEmail"
+            src="/assets/images/my-account-images/team-page/team-edit-default.svg"
+            alt="Edit referrer"
+            (click)="handleReferralModal()"
+        />
+      </div>
+    </div>
+
+  <p-dialog
+      [(visible)]="handleReferralEmail"
+      [blockScroll]="true"
+      [draggable]="false"
+      [modal]="true"
+      [closeOnEscape]="false"
+      [resizable]="false"
+      [dismissableMask]="false"
+      [style]="{ minWidth: '300px', maxWidth: '400px', width: '100%' }"
+      [closable]="true"
+      styleClass="billing-modal"
+      appendTo="body"
+  >
+    <div class="form-layout-wrap" style="padding: 10px">
+      <div
+          class="p-dialog-titlebar-icon pi pi-times pointer"
+          (click)="acceptReferralModal()"
+      ></div>
+      <p-header class="modal-title"
+      ><h2 class="no-margins" translate>
+        lbl_edit_referral_email
+      </h2></p-header
+      >
+      <div class="modal-body">
+        <div class="form-field mb-15">
+          <input
+              #referralInput
+              type="text"
+              class="text-ellipsis pointer new-input-blue"
+              formControlName="referralEmail"
+              placeholder="test@test.com"
+              pInputText
+          />
+          <div
+              class="form-errors input-error"
+              *ngIf="
+                            (referralEmail.invalid &&
+                                (referralEmail.dirty ||
+                                    referralEmail.touched)) ||
+                            wrongRefEmail ||
+                            yourOwnEmail
+                        "
+          >
+            <div *ngIf="wrongRefEmail">
+              {{ 'err_account_not_found' | translate }}
+            </div>
+            <div *ngIf="yourOwnEmail">
+              {{ 'err_your_own_email' | translate }}
+            </div>
+            <div *ngIf="referralEmail?.errors?.pattern" translate>
+              err_invalid_emailId
+            </div>
+          </div>
+                </div>
+
+                <div class="grid">
+                  <div class="col-3">
+                    <button
+                        class="button-simple bg-darkgray sm-35 w-100 mr-25"
+                        (click)="acceptReferralModal()"
+                        translate
+                    >
+                      label_cancel
+                    </button>
+                  </div>
+
+                  <div class="col-3">
+                    <button
+                        class="button-simple shock-pink sm-35 w-100"
+                        translate
+                        [disabled]="!referralEmail.valid"
+                        (click)="updateReferralEmail()"
+                    >
+                      label_save_As_favorite
+                    </button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </p-dialog>
+</div>

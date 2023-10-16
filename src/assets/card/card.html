@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <link href="/assets/card/modals/style-modals.css" rel="stylesheet" />
+    <link href="/assets/card/doc-viewer/docviewer.css" rel="stylesheet" />
+    <link href="/assets/card/media.css" rel="stylesheet" />
+    <link href="/assets/card/style.css" rel="stylesheet" />
+    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+    <link href="https://unpkg.com/video.js@7.12.1/dist/video-js.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.15/swiper-bundle.min.js"></script>
+    <script src="/assets/card/card.js"></script>
+    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+    <script src="https://unpkg.com/video.js@7.12.1/dist/video.min.js"></script>
+    *|META_TAGS|*
+    <title>*|TITLE|*</title>
+  </head>
+
+  <body>
+    <div class="banner" id="main" data-dismiss="modal">
+      <div class="wrapper hidden">
+        <div class="swiper-container cards-slider" id="cards-slider">
+          *|PITCH_CARD|*
+        </div>
+      </div>
+      *|PREVIEW-BOTTOM|*
+      <div id="modal_dropdown" class="modal dropdown">
+        <div class="modal-window small dropdown">
+          <div class="contact-menu-container">
+            <div class="contact-menu">
+              <ul>
+                *|PHONE|* *|EMAIL|* *|DIRECTIONS-LI|*
+                <li
+                  data-target="modal-authentification-choose"
+                  data-toggle="modal"
+                  data-type="save"
+                  data-id="id"
+                >
+                  <div>
+                    <img
+                      rel="preload"
+                      class="contact-menu-icon"
+                      src="/assets/card/img/referral-outline.svg"
+                      alt="Referral"
+                      data-target="modal-authentification-choose"
+                      data-toggle="modal"
+                      data-type="save"
+                      data-id="id"
+                    />
+                  </div>
+                  <div class="cm-content">
+                    <span class="cm-title"
+                          data-target="modal-authentification-choose"
+                          data-toggle="modal"
+                          data-type="save"
+                          data-id="id">Contact Me</span>
+                    <br />
+                    <span class="cm-value"
+                          data-target="modal-authentification-choose"
+                          data-toggle="modal"
+                          data-type="save"
+                          data-id="id">Request contact from company</span>
+                  </div>
+                </li>
+                *|CALENDAR-LINK|*
+                <li
+                  class="cm-review"
+                  data-target="modal-authentification-choose"
+                  data-toggle="modal"
+                  data-type="save"
+                  data-id="id"
+                >
+                  <div>
+                    <img
+                      rel="preload"
+                      class="contact-menu-icon"
+                      src="/assets/card/img/review-outline.svg"
+                      alt="Review"
+                      data-target="modal-authentification-choose"
+                      data-toggle="modal"
+                      data-type="save"
+                      data-id="id"
+                    />
+                  </div>
+                  <div class="cm-content">
+                    <span class="cm-title"
+                          data-target="modal-authentification-choose"
+                          data-toggle="modal"
+                          data-type="save"
+                          data-id="id"
+                    >Leave a Video Review</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="contact-menu-mob">
+            *|PHONE-CALL-MOBILE|*
+            *|EMAIL-MOBILE|*
+            *|DIRECTIONS-LI-MOBILE|*
+            <li
+                    data-target="modal-authentification-choose"
+                    data-toggle="modal"
+                    data-type="save"
+                    data-id="id"
+            >
+              <div class="contact-icon">
+                <img
+                        rel="preload"
+                        src="/assets/card/img/callbacks.svg"
+                        alt="Referral"
+                        data-target="modal-authentification-choose"
+                        data-toggle="modal"
+                        data-type="save"
+                        data-id="id"
+                />
+              </div>
+              <div>
+                    <span class="contact-title"
+                          data-target="modal-authentification-choose"
+                          data-toggle="modal"
+                          data-type="save"
+                          data-id="id">Contact Me</span>
+              </div>
+            </li>
+            *|CALENDAR-LI-MOBILE|*
+            <li
+                    class="cm-review"
+                    data-target="modal-authentification-choose"
+                    data-toggle="modal"
+                    data-type="save"
+                    data-id="id"
+            >
+              <div class="contact-icon">
+                <img
+                        rel="preload"
+                        src="/assets/card/img/uploadicon.svg"
+                        alt="Review"
+                        data-target="modal-authentification-choose"
+                        data-toggle="modal"
+                        data-type="save"
+                        data-id="id"
+                />
+              </div>
+              <div>
+                    <span class="contact-title"
+                          data-target="modal-authentification-choose"
+                          data-toggle="modal"
+                          data-type="save"
+                          data-id="id"
+                    >Leave a Video Review</span>
+              </div>
+            </li>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div id="reviews" class="modal" >
+        <div class="modal-window reviews">
+          <div class="close video-close" data-dismiss="modal" data-review="review">
+            <span data-dismiss="modal" data-review="review">&times;</span>
+          </div>
+          <div class="reviews-container">
+            <div class="reviews-header" >
+              <img
+                id="reviewsCompanyLogo"
+                *|REVIEW-LOGO-VIEW|*
+                class="company-logo"
+                src="*|LOGO-URL|*"
+                alt="Logo"
+              />
+              <div class="company-label">
+                <div class="label-first">*|VIDEO-REVIEWS-TITLE|*</div>
+                <div class="label-second">
+                  <span id="reviewsBsName"></span>
+                </div>
+              </div>
+            </div>
+            <div class="reviews-body">
+              <div class="summary-container" id="summaryContainer">
+                <div class="tag-categories" id="tagCategories"></div>
+                <div class="summary-rating">
+                  <div class="rating-service">
+                    <span class="rating-text">Customer Service</span>
+                    <div class="rating-stars" id="serviceRate"></div>
+                  </div>
+
+                  <div class="rating-box bd-green" id="ratingBox">
+                    <div class="box-top green" id="averageRate"></div>
+                    <div class="box-bottom bg-green">out of 5</div>
+                  </div>
+
+                  <div class="rating-quality">
+                    <span class="rating-text">Quality</span>
+                    <div class="rating-stars" id="qualityRate"></div>
+                  </div>
+                </div>
+                <div
+                  class="button-simple bg-shock-pink"
+                  id="simpleBtn"
+                  data-target="modal-authentification-choose"
+                  data-toggle="modal"
+                  data-type="save"
+                  data-id="id"
+                >
+                  *|REVIEW-BUTTON-LABEL|*
+                </div>
+              </div>
+            </div>
+            <div class="reviews-slider-block">
+              <div class="reviews-slider-wrap">
+                <div class="swiper-container reviews-slider">
+                  <div class="swiper-wrapper" id="reviewsSlider"></div>
+                  <div class="swiper-pagination reviews-bullets" id="reviewBullets"></div>
+                </div>
+              </div>
+              <div class="swiper-button-prev prev preview-left"></div>
+              <div class="swiper-button-next next preview-right"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="modal-authentification-choose"
+        data-toggle="modal"
+        data-type="auth-choice"
+        data-id="id"
+        class="modal"
+      >
+        <div id="authModal" class="modal-window small">
+          <div class="close video-close" data-close="modal-authentification-choose" data-dismiss="modal">
+            <snap
+              id="authClose"
+              data-close="modal-authentification-choose"
+              data-dismiss="modal"
+              >&times;</snap
+            >
+          </div>
+          <div id="bodyAuth" class="modal-body">
+            <h2>
+              Great choice! Please log in or create your free account to
+              continue.
+            </h2>
+            <h4>(Signing up is quick, we promise!)</h4>
+            <div class="auth-button-block">
+              <button
+                class="green-btn"
+                id="toLoginModal"
+                data-target="modal-login"
+                data-toggle="modal"
+              >
+                LOG IN
+              </button>
+              <button
+                class="bg-shock-pink"
+                id="toSignupModal"
+                data-target="modal_dialog_1"
+                data-toggle="modal"
+              >
+                SIGN UP
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="job-modal-authentification-choose"
+        data-toggle="modal"
+        data-type="job-auth-choice"
+        data-id="id"
+        class="modal"
+      >
+        <div id="jobAuthModal" class="modal-window small">
+          <div class="close video-close" data-dismiss="modal">
+            <snap
+              id="jobAuthClose"
+              data-dismiss="modal"
+            >
+              &times;
+            </snap>
+          </div>
+          <div class="job-auth-left">*|MOCK_RESUME_PITCH_CARD|*</div>
+          <div class="job-auth-right">
+            <div class="job-auth-text-block">
+              <h1>WELCOME TO PITCH59!</h1>
+              <p>
+                To apply for this position you will need a FREE Resume PitchCard. If
+                you don’t have one, it takes less than 10 minutes to create and will
+                be yours to use when you apply for any position, forever.
+                Sign up or log in to get started!
+              </p>
+            </div>
+            <div class="job-auth-button-block">
+              <button
+                class="button-simple bg-darkgrey"
+                id="toLoginModal"
+                data-target="modal-login"
+                data-toggle="modal"
+              >LOG IN</button>
+              <button
+                class="button-simple bg-shock-pink"
+                id="toSignupModal"
+                data-target="modal_dialog_1"
+                data-toggle="modal"
+              >SIGN UP</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="modal_dialog_1"
+        data-toggle="modal"
+        data-type="save"
+        data-id="id"
+        class="modal"
+      >
+        <div id="signUp" class="modal-window medium save-sign-in">
+          <div class="close video-close" data-close="modal_dialog_1" data-dismiss="modal">
+            <span
+              id="signUpClose"
+              data-close="modal_dialog_1"
+              data-dismiss="modal"
+              >&times;</span
+            >
+          </div>
+          <div id="headerSignUp" class="header-modal">
+            <img
+              rel="preload"
+              src="*|BASE-URL|*/assets/images/logo/pitch59-logo-gray.svg"
+              alt="Brand"
+            />
+            <h2>Sign up real quick - it’s free!</h2>
+          </div>
+          <div id="bodySignUp" class="modal-body">
+            <form id="signUpForm">
+              <div
+                class="input-container-sgnUpPop form-field line-with-button"
+              >
+                <span class="form-control ui-float-label">
+                  <input
+                    id="firstName"
+                    type="text"
+                    maxlength="20"
+                    size="30"
+                    class="new-input-gold full-width"
+                    placeholder="First Name"
+                  />
+                </span>
+              </div>
+              <div
+                class="input-container-sgnUpPop form-field line-with-button"
+              >
+                <span class="form-control ui-float-label">
+                  <input
+                    id="lastName"
+                    type="text"
+                    maxlength="20"
+                    size="30"
+                    class="new-input-gold full-width"
+                    placeholder="Last Name"
+                  />
+                </span>
+              </div>
+              <div
+                class="input-container-sgnUpPop form-field line-with-button"
+              >
+                <span class="form-control ui-float-label">
+                  <input
+                    id="emailId"
+                    type="text"
+                    class="new-input-gold full-width"
+                    placeholder="Email Address"
+                  />
+                </span>
+                <button id="otpEmailCode" type="button" class="small hide">
+                  Email Code
+                </button>
+              </div>
+              <div
+                class="input-container-sgnUpPop form-field line-with-button"
+              >
+                <span class="form-control ui-float-label">
+                  <input
+                    maxlength="5"
+                    id="zipCode"
+                    type="text"
+                    class="new-input-gold full-width"
+                    placeholder="Zip Code"
+                  />
+                </span>
+              </div>
+              <div
+                class="input-container-sgnUpPop form-field line-with-button"
+              >
+                <span class="form-control ui-float-label">
+                  <input
+                    id="contactNumber"
+                    maxlength="14"
+                    type="text"
+                    class="new-input-gold full-width mobile"
+                    placeholder="(999) 999-9999"
+                  />
+                </span>
+                <button id="otpTextCode" type="button" disabled class="small">
+                  Text Code
+                </button>
+              </div>
+              <div
+                class="input-container-sgnUpPop form-field line-with-button"
+              >
+                <span class="form-control ui-float-label">
+                  <input
+                    id="otpCode"
+                    maxlength="6"
+                    type="text"
+                    class="new-input-gold full-width"
+                    placeholder="Enter Code"
+                  />
+                </span>
+                <button id="otpVerify" type="button" class="small hide">
+                  Verify
+                </button>
+              </div>
+              <div
+                class="input-container-sgnUpPop form-field line-with-button"
+              >
+                <span class="form-control ui-float-label">
+                  <div class="sprite eye pos-eye"></div>
+                  <input
+                    id="password"
+                    type="password"
+                    class="new-input-gold full-width"
+                    placeholder="Password"
+                  />
+                </span>
+              </div>
+              <div
+                class="input-container-sgnUpPop form-field line-with-button"
+              >
+                <span class="form-control ui-float-label">
+                  <div class="sprite eye pos-eye"></div>
+                  <input
+                    id="password-confirm"
+                    type="password"
+                    class="new-input-gold full-width"
+                    placeholder="Confirm Password"
+                  />
+                </span>
+              </div>
+              <div
+                class="input-container-sgnUpPop form-field line-with-button"
+              >
+                <span class="form-control ui-float-label">
+                  <input
+                    id="refemailId"
+                    type="text"
+                    class="new-input-gold full-width"
+                    placeholder="Email Address of Referrer"
+                  />
+                </span>
+              </div>
+              <div class="terms-text">
+                <label class="checkbox" for="terms">
+                  <span class="checkbox-control">
+                    <input type="checkbox" name="checkbox" id="terms" />
+                    <img
+                      src="*|BASE-URL|*/assets/images/checkbox-mark.svg"
+                      alt="Yellow tick"
+                    />
+                  </span>
+                </label>
+                <span class="radio-label"> </span>
+                <span>
+                  By signing up, you confirm that you accept the
+                  <a href="*|BASE-URL|*/terms-and-conditions" class="link"
+                    >Terms of Service
+                  </a>
+                  and
+                  <a href="*|BASE-URL|*/privacy-policy" class="link">
+                    Privacy Policy</a
+                  >
+                </span>
+              </div>
+              <div class="submit">
+                <button
+                  id="signUpBtn"
+                  type="button"
+                  class="new-style-gold-button-l"
+                  data-id="*|ID|*"
+                >
+                  Sign up
+                </button>
+              </div>
+              <div class="para" style="padding: 0">
+                Already have an account?
+                <a id="loginTrigger" href="#" class="link">Log in</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div
+        id="modal-login"
+        data-toggle="modal"
+        data-type="save"
+        data-id="id"
+        class="modal"
+      >
+        <div id="login" class="modal-window small save-login">
+          <div class="close video-close" data-close="modal-login" data-dismiss="modal">
+            <span
+              id="loginClose"
+              data-close="modal-login"
+              data-dismiss="modal"
+            >
+              &times;
+            </span>
+          </div>
+          <div id="headerLogin" class="header-modal no-margin">
+            <h2>Log in</h2>
+          </div>
+          <div id="bodyLogin" class="modal-body">
+            <form id="loginForm">
+              <div class="input-container-sgnUpPop form-field">
+                <span class="form-control ui-float-label">
+                  <input
+                    id="emailAddress"
+                    type="text"
+                    class="new-input-gold full-width"
+                    placeholder="First Name"
+                  />
+                </span>
+              </div>
+              <div class="input-container-sgnUpPop form-field">
+                <span class="form-control ui-float-label password-eye-wrap">
+                  <div class="sprite eye pos-eye"></div>
+                  <input
+                    id="pass"
+                    type="password"
+                    class="new-input-gold full-width"
+                    placeholder="Password"
+                  />
+                </span>
+              </div>
+              <div class="form-errors"></div>
+              <div class="submit flex-center">
+                <button id="loginBtn" type="submit" class="primary-btn" data-card-type="*|BUSINESS-TYPE|*"data-id="*|BUSINESS-ID|*">
+                  Log in
+                </button>
+              </div>
+              <div class="para" style="padding: 0">
+                Need an account?
+                <a id="signUpTrigger" href="#" class="link">Sign Up</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal_dialog_2" class="modal">
+        <div class="modal-window medium more-info-wrapper *|IS-JOB-INFO|*">
+          <div class="close video-close" data-dismiss="modal">
+            <span data-dismiss="modal">&times;</span>
+          </div>
+          <div class="information">
+            <h2>*|MORE-INFO-TITLE|*</h2>
+          </div>
+          <div class="modal-body more-info-body">*|MORE-INFO|*</div>
+        </div>
+      </div>
+
+      <div id="modal_dialog_3" class="modal">
+        <div class="modal-window small">
+          <div class="close video-close" data-dismiss="modal">
+            <span data-dismiss="modal">&times;</span>
+          </div>
+          <div class="share-modal-wrapper">
+            <div class="header-modal">
+              <span>Share</span>
+            </div>
+            <div class="share-special">
+              <span
+                class="chat"
+                data-toggle="modal"
+                data-target="modal_send_link_via_sms"
+              >
+                <a id="chat" href="#*|PHONE|*"></a>
+              </span>
+              <span class="fb">
+                <a
+                  id="fb"
+                  href="https://www.facebook.com/sharer/sharer.php?u=*|URI-LINK|*&src=sdkpreparse"
+                  target="_blank"
+                >
+                  <img src="/assets/card/img/fb.svg" alt="Share on Facebook" />
+                </a>
+              </span>
+              <span class="twitter">
+                <a
+                  id="twitter"
+                  href="https://twitter.com/intent/tweet?url=*|URI-LINK|*%3FuserId%3DGAIYBAbRoVh&
+                    text=I%20really%20like%20this%20company%20and%20thought%20you%20might%20want%20to%20check%20them%20out%20too.%20Have%20a%20great%20day!&&"
+                  target="_blank"
+                >
+                  <img src="/assets/card/img/twitter.svg" alt="Tweet This" />
+                </a>
+              </span>
+              <span class="linkidn">
+                <a
+                  id="linkidn"
+                  href="https://www.linkedin.com/shareArticle?url=*|URI-LINK|*%3FuserId%3DGAIYBAbRoVh&&summary=I%20really%20like%20this%20company%20and%20thought%20you%20might%20want%20to%20check%20them%20out%20too.%20Have%20a%20great%20day"
+                  target="_blank"
+                >
+                  <img
+                    src="/assets/card/img/linkidn.svg"
+                    alt="Share on LinkedIn"
+                  />
+                </a>
+              </span>
+              <span class="mail">
+                <a
+                  id="mail"
+                  href="mailto:?subject=You've received a PitchCard!&body=I really like this company and thought you might want to check them out too. Have a great day!%0D%0A*|SHARED-LINK|*"
+                >
+                  <img src="/assets/card/img/mail.svg" alt="Share on Email" />
+                </a>
+              </span>
+            </div>
+            <div class="qr-code">
+              <img src="*|QR-URL|*" alt="qr-code-for-company">
+              <a class="download-link" href="*|QR-URL|*" download="qr-code.png" download>
+                DOWNLOAD
+              </a>
+            </div>
+            <div class="share-copy">
+              <div class="copy-label" id="copy-button">
+                <img src="/assets/card/img/copy.svg" alt="" />
+              </div>
+              <input id="copy" type="text" value="*|SHARED-LINK|*" />
+            </div>  
+          </div>
+        </div>
+      </div>
+
+      <div id="modal_send_link_via_sms" class="modal">
+        <div class="modal-window small">
+          <span class="close video-close" data-dismiss="modal" data-close="sendSms"
+            >&times;</span
+          >
+          <div class="header-modal">
+            <span>Share via SMS</span>
+          </div>
+          <div class="modal-body">
+            <span class="form-control ui-float-label">
+              <input
+                id="sendSmsNumber"
+                maxlength="14"
+                type="text"
+                class="new-input-gold full-width mobile"
+                placeholder="(999) 999-9999"
+              />
+            </span>
+            <span id="sendSmsStatus"></span>
+            <div class="submit">
+              <button
+                id="sendSmsLink"
+                type="button"
+                class="new-style-gold-button-l"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="modal_dialog_slider"
+        class="modal modal-g"
+        data-g="data-g"
+        data-pictures='*|PICTURE-URLS|*'
+        data-thumbnails='*|THUMBNAIL-URLS|*'
+      >
+        <div class="modal-window large gallery-window">
+          <span
+            class="close"
+            data-close="gallery"
+            data-dismiss="modal"
+            data-g="data-g"
+            >&times;</span
+          >
+          <div class="swiper-container real-gallery">
+            <div class="swiper-wrapper" id="real-gallery"></div>
+
+            <div class="swiper-button-prev swiper-photo-prev"></div>
+            <div class="swiper-button-next swiper-photo-next"></div>
+          </div>
+          <div class="swiper-container gallery-thumbs">
+            <div class="swiper-wrapper" id="gallery-thumbs"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-doc-viewer" class="modal">
+        <div class="modal-window *|RESUME-VIEW-CLASS|*">
+          <div>
+            <div class="header-viewer">
+              <span>Resumé Preview</span>
+              *|RESUME-DOWNLOAD|*
+              <span class="close" data-dismiss="modal">&times;</span>
+            </div>
+
+            *|RESUME-UNAVAILABLE|*
+
+            <div class="container">
+              <div class="overlay-popout-google">
+                *|RESUME|*
+                *|RESUME-IMAGE|*
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="modal-video" class="modal">
+        <div class="modal-window video-dialog">
+          <div class="close video-close" data-dismiss="modal">
+            <span data-dismiss="modal">&times;</span>
+          </div>
+          <video
+            class="video-js vjs-big-play-centered"
+            id="my-player"
+            controls
+            autoplay
+            width="800"
+            height="auto"
+            preload="auto"
+            webkit-playsinline="true"
+            disablePictureInPicture="true"
+            data-video="*|VIDEO-URL|*"
+          >
+          </video>
+        </div>
+      </div>
+      <div id="modal-what-is-pitch-video" class="modal">
+        <div class="modal-window video-dialog">
+          <div
+            class="close video-close"
+            data-dismiss="modal"
+            data-close="what-is-pitch-video"
+          >
+            <span data-dismiss="modal" data-close="what-is-pitch-video">&times;</span>
+          </div>
+          <video
+            class="video-js vjs-big-play-centered"
+            id="what-is-pitch-player"
+            controls
+            autoplay
+            width="800"
+            height="auto"
+            preload="auto"
+            webkit-playsinline="true"
+            disablePictureInPicture="true"
+            data-video="https://stream.mux.com/M3C00pyabzoEOMISZPlHc5RW2nDt3keit.m3u8"
+          >
+          </video>
+        </div>
+        </div>
+      </div>
+      <div id="modal-reviews-video" class="modal">
+        <div class="modal-window video-dialog">
+          <div
+            class="close video-close"
+            data-dismiss="modal"
+            data-close="reviews-video"
+          >
+            <span data-dismiss="modal" data-close="reviews-video">&times;</span>
+          </div>
+          <video
+            class="video-js vjs-big-play-centered"
+            id="my-reviews-player"
+            controls
+            autoplay
+            width="800"
+            height="auto"
+            preload="auto"
+            webkit-playsinline="true"
+            disablePictureInPicture="true"
+          >
+          </video>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

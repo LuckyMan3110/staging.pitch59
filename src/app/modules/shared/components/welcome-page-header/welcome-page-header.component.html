@@ -1,0 +1,281 @@
+<div class="app-main-header" [ngClass]="{'bg-black': isMobile}">
+  <div class="logo-container">
+    <a (click)="scrollTop()" class="p-0 m-0" [href]="'/welcome'">
+      <img
+          class="header-logo"
+          src="../../../../../assets/images/logo/pitch59-logo-white.svg"
+          alt="{{ 'lbl_img_alt_logo' | translate }}"
+      />
+    </a>
+  </div>
+
+  <div class="business-container grid align-items-center" *ngIf="isDesktop" >
+    <button class="button-simple mr-3 business-header bg-transparent gradient-border" routerLinkActive="active" [routerLink]="'/welcome'">BUSINESS</button>
+    <button class="button-simple ml-1 resume-header bg-transparent gradient-border" routerLinkActive="active" [routerLink]="'/jobs'">JOB SEEKERS</button>
+  </div>
+
+  
+  <div class="profile-container">
+    <div class="business-mobile-container mt-0 mr-2" *ngIf="isMobile" >
+      <button *ngIf="isBusiness" (click)="isBusiness = false" class="text-xs font-semibold button-simple business-header business-g6t-bg" routerLinkActive="active" [routerLink]="'/welcome'">BUSINESS</button>
+      <button *ngIf="!isBusiness" (click)="isBusiness = true" class="text-xs font-semibold button-simple resume-header resume-g6t-bg" routerLinkActive="active" [routerLink]="'/jobs'">JOB SEEKERS</button>
+    </div>
+    <div class="grid align-items-center mt-0 search-btn"
+      routerLink="/search"
+      routerLinkActive="active"
+      #rla="routerLinkActive"
+      [ngClass]="{active: rla.isActive}"
+      (click)='refreshSearch()'>
+      <div
+        class="search-icon"
+        *ngIf="searchPage"
+      >
+      </div>
+      <span
+        translate
+        class="search-text"
+        *ngIf="isDesktop"
+      >
+        label_Search
+      </span>
+    </div>
+    <span
+      class="pricing-btn"
+      [routerLink]="bannerConfig.createBtnLink"
+      translate
+      routerLinkActive="active"
+      #rla="routerLinkActive"
+    >
+            label_pricing
+        </span>
+
+    <span
+        *ngIf="signedIn && isDesktop"
+        class="employer-portal-btn"
+        routerLink="/account/employer-portal"
+        translate
+        routerLinkActive="active-link"
+        #rla="routerLinkActive"
+        (click)="desktopOnlyItem('label_employer_portal')"
+    >
+            label_employer_portal
+        </span>
+    <span
+        *ngIf="!signedIn && isDesktop"
+        class="employer-portal-btn"
+        (click)="goToPage('/sign-up')"
+        translate
+    >
+            label_employer_portal
+        </span>
+    <span
+        *ngIf="!isDesktop"
+        class="employer-portal-btn"
+        (click)="
+                signedIn
+                    ? desktopOnlyItem('Employer Portal')
+                    : setNavigateUrl('sign-up')
+            "
+        translate
+    >
+            label_employer_portal
+        </span>
+    <span
+        class="sign-in-up-btn"
+        (click)="goToPage('/sign-up')"
+        translate
+        routerLinkActive="active"
+        #rla="routerLinkActive"
+        [ngClass]="{ active: rla.isActive }"
+        *ngIf="!signedIn"
+    >
+            label_sign_up
+        </span>
+    <span
+        class="sign-in-up-btn"
+        (click)="goToPage('/sign-in', { serviceurl: serviceurl })"
+        translate
+        *ngIf="!signedIn"
+        routerLinkActive="active"
+        #rla="routerLinkActive"
+        [ngClass]="{ active: rla.isActive }"
+    >
+            label_sign_in
+        </span>
+    <div
+        *ngIf="!signedIn"
+        class="burger-btn"
+        (click)="notAuthorizedMenu.toggle($event)"
+    >
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+    </div>
+    <!-- <div class="greeting-sign" *ngIf="signedIn">
+      <span>Welcome</span><br/>
+      <span>{{ userFirstName ? userFirstName : 'User' }}</span>
+    </div> -->
+    <div
+        class="profile-photo-container"
+        (click)="menu.toggle($event)"
+        *ngIf="signedIn"
+    >
+      <img
+          class="profile-photo"
+          [ngClass]="{
+                    'no-padding':
+                        profilePictureThumbnailUrl !== defaultProfileUrl
+                }"
+          [src]="profilePictureThumbnailUrl"
+          alt="profile_photo"
+      />
+      <div class="arrow-down-container">
+        <div class="arrow-down"></div>
+      </div>
+    </div>
+    <p-overlayPanel
+        class="modal-menu-wrapper"
+        styleClass="openpanel-header-menu"
+        #notAuthorizedMenu
+        [dismissable]="true"
+        [appendTo]="elementToAppend"
+        [baseZIndex]="2000"
+        [style]="{
+                position: 'fixed',
+                marginTop: hasSmartBanner() ? '90px' : '15px'
+            }"
+        [autoZIndex]="false"
+    >
+      <div class="menu-container">
+        <ul class="body" #menuItemsForGuests>
+          <li>
+            <a href="{{ setDownloadSourceLink() }}" target="_blank">
+              <img src="assets/images/download-icon.svg" alt=""/>
+              <span>Download App</span>
+            </a>
+          </li>
+          <li *ngFor="let item of unauthorizedItems">
+            <a
+                routerLink="{{ item.route }}"
+                (click)="(item.command)"
+                routerLinkActive="active"
+                #rla="routerLinkActive"
+                translate
+            >
+              <img
+                  class="list-style"
+                  src="{{ item.icon }}"
+                  alt=""
+              />
+              <span>{{ item.label }}</span>
+            </a>
+          </li>
+        </ul>
+        <div class="footer" #footerForGuestUsers>
+          <div
+              class="sign-btn login-btn"
+              (click)="goToPage('/sign-in')"
+              translate
+          >
+            label_sign_in
+          </div>
+          <div
+              class="sign-btn login-btn"
+              (click)="goToPage('/sign-up')"
+              translate
+          >
+            label_sign_up
+          </div>
+        </div>
+      </div>
+    </p-overlayPanel>
+    <p-overlayPanel
+        class="modal-menu-wrapper"
+        styleClass="openpanel-header-menu"
+        (onShow)="onResized()"
+        #menu
+        [dismissable]="true"
+        [appendTo]="elementToAppend"
+        [style]="{
+                position: 'fixed',
+                marginTop: hasSmartBanner() ? '90px' : '15px'
+            }"
+        [autoZIndex]="false"
+    >
+      <div class="menu-container">
+        <div class="header">
+          <div class="welcome-row">
+            <h3>Welcome</h3>
+            <a
+                [routerLink]="['/account', 'settings']"
+                (click)="menu.hide()"
+            >
+              <div
+                  class="settings"
+                  [pTooltip]="'Account Settings'"
+                  [tooltipPosition]="'bottom'"
+              ></div>
+            </a>
+          </div>
+          <h3 class="fullName">
+            {{ userFullName ? userFullName : 'User Name' }}
+          </h3>
+          <span class="email">
+                        {{ emailId ? emailId : 'User Email' }}
+                    </span>
+        </div>
+        <ul class="body" #menuItemsForAuthUser>
+          <li
+              *ngFor="let item of items; let i = index"
+              [ngClass]="{
+                            'disable-on-mob': i === 2 && blockEmployerPortalLink
+                        }"
+              (click)="
+                            i === 2 && blockEmployerPortalLink
+                                ? desktopOnlyItem(item.label)
+                                : ''
+                        "
+          >
+            <a
+                [routerLink]="[item.route]"
+                routerLinkActive="active"
+                #rla="routerLinkActive"
+            >
+              <img
+                  class="list-style"
+                  src="{{ item.icon }}"
+                  alt=""
+              />
+              <span>{{ item.label }}</span>
+            </a>
+
+            <span
+                *ngIf="i === 2 && blockEmployerPortalLink"
+                class="pi pi-desktop green"
+            ></span>
+
+            <span
+                class="add-new-pitchcard pointer"
+                pTooltip="Create New PitchCard"
+                tooltipPosition="top"
+                *ngIf="item.route.includes('my-pitchcards')"
+                [routerLink]="'/select-pitchcards'"
+            >
+                            <i class="pi pi-plus"></i>
+                        </span>
+          </li>
+        </ul>
+        <div class="footer">
+          <div
+              class="sign-btn logout-btn"
+              (click)="doSignOut()"
+              translate
+              #footerForAuthUser
+          >
+            Logout
+          </div>
+        </div>
+      </div>
+    </p-overlayPanel>
+  </div>
+</div>

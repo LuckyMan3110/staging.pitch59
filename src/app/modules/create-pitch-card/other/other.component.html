@@ -1,0 +1,151 @@
+<form class="step-form" [formGroup]="form">
+  <h1>Other</h1>
+  <div class="layout-card" style="padding: 10px">
+    <h3 *ngIf="businessType !== 'resume' && businessType !== 'service'">
+      What services do you provide? *
+    </h3>
+    <span
+        class="p-float-label categories-input"
+        *ngIf="businessType !== 'resume' && businessType !== 'service'"
+    >
+            <p-autoComplete
+                formControlName="businessTags"
+                [suggestions]="tagsSuggestions"
+                (completeMethod)="suggestTags($event)"
+                [minLength]="3"
+                placeholder="category tags"
+                field="name"
+                [multiple]="true"
+                (keypress)="applyUserTag($event)"
+            >
+                <ng-template let-selectedTag pTemplate="selectedItem">
+                    <span
+                        class="p-autocomplete-token-label"
+                        [ngStyle]="{
+                            backgroundColor:
+                                (selectedTag.status === 1 || !selectedTag.id) &&
+                                '#bab8b8'
+                        }"
+                    >
+                        {{ selectedTag.name }}
+                    </span>
+                </ng-template>
+            </p-autoComplete>
+            <div
+                class="error-sign tag-error"
+                *ngIf="form.controls.businessTags.errors"
+            >
+                {{ 'err_required_subcaetgory_of_selected_categ' | translate }}
+            </div>
+            <div
+                class="error-sign tag-error"
+                *ngIf="showNotApprovedTagsMessage()"
+            >
+                Gray category tags will be submitted for approval.
+            </div>
+        </span>
+    <h3 style="margin-top: 15px" *ngIf="businessType !== 'resume'">
+      Are you a member of a Pitch59 Partner Organization? (Optional)
+    </h3>
+    <span class="p-float-label" *ngIf="businessType !== 'resume'">
+            <input
+                class="new-input-blue sm"
+                tabindex="1"
+                id="sponsorCode"
+                type="text"
+                size="30"
+                pInputText
+                appNoWhiteSpace
+                formControlName="sponsorCode"
+            />
+            <label for="memberCode">Enter Code</label>
+        </span>
+    <h3>Would you please refer us? (Optional)</h3>
+    <span class="note"
+    >Refer a friend and when they create a PitchCard you’ll receive a
+            $10 gift card to Grub Hub!</span
+    >
+    <div class="ref-wrapper">
+      <div
+          class="referral-container"
+          *ngFor="let control of referralForm.controls; let i = index"
+      >
+        <div class="referral" [formGroup]="control">
+          <h3>Referral #{{ i + 1 }}</h3>
+          <span class="p-float-label">
+                        <input
+                            [(ngModel)]="control.referName"
+                            style="text-transform: capitalize"
+                            appNoWhiteSpace
+                            autocomplete="off"
+                            class="new-input-blue sm"
+                            formControlName="referName"
+                            id="referName"
+                            pInputText
+                            size="30"
+                            tabindex="{{ (i + 1) * 3 - 1 }}"
+                            type="text"
+                        />
+                        <label for="referName">Name</label>
+                    </span>
+          <span class="p-float-label">
+                        <input
+                            [(ngModel)]="control.referEmail"
+                            appNoWhiteSpace
+                            autocomplete="off"
+                            class="new-input-blue sm"
+                            formControlName="referEmail"
+                            id="referEmail"
+                            pInputText
+                            size="30"
+                            tabindex="{{ (i + 1) * 3 }}"
+                            type="text"
+                        />
+                        <label for="referEmail">Email</label>
+                    </span>
+          <span class="p-float-label">
+                        <p-inputMask
+                            [(ngModel)]="control.referPhone"
+                            [autocomplete]="'tel'"
+                            [tabindex]="(i + 1) * 3 + 1"
+                            [unmask]="true"
+                            formControlName="referPhone"
+                            id="referPhone"
+                            mask="(999) 999-9999"
+                            styleClass="new-input-blue sm"
+                            type="tel"
+                            size="30"
+                            inputmode="tel"
+                        >
+                        </p-inputMask>
+                        <label for="referPhone">Phone #</label>
+                    </span>
+          <div class="error-sign" *ngIf="control.errors">
+            {{ control.errors.error }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ref-button-block">
+      <button
+          class="toggle-button"
+          *ngIf="!isRefferalActive"
+          (click)="addReferralOnClick($event)"
+      >
+        + Referral
+      </button>
+      <div
+          class="button-simple shock-pink sm-35"
+          *ngIf="!isRefferalActive"
+          (click)="sendReferrals()"
+          [ngClass]="{
+                    disabled:
+                        referralForm.controls.length === 0 ||
+                        !referralForm.controls[0].valid
+                }"
+      >
+        Send Invitations
+      </div>
+    </div>
+  </div>
+</form>

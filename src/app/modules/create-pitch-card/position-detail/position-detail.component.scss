@@ -1,0 +1,90 @@
+@import '../../../styles/variables';
+
+:host {
+  width: 100%;
+}
+
+.business-details-form {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin: 2rem 0;
+
+  .layout-card {
+    padding: 20px;
+
+    textarea {
+      margin-top: 1rem;
+      border-radius: 6px;
+    }
+  }
+
+  & > * {
+    width: 48%;
+    padding: 10px;
+  }
+
+  @media (max-width: 992px) {
+    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+    & {
+      flex-direction: column;
+    }
+    & > * {
+      box-shadow: none;
+      width: auto;
+    }
+  }
+}
+
+.step-form {
+  h1 {
+    margin: 0;
+    @media (max-width: 767px) {
+      display: none;
+    }
+  }
+
+  .two-fields {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  textarea.description-area {
+    width: 100%;
+    border: 2px solid #25afb5;
+    margin-top: 5px;
+    padding: 8px;
+    height: 116px !important;
+
+    &.error {
+      border: 2px solid $stateErrorTextColor;
+    }
+  }
+
+  .form-control label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .add-prefix {
+    position: relative;
+
+    input {
+      padding: 0 13px !important;
+    }
+
+    .currency-code {
+      position: absolute;
+      left: 6px;
+      top: 4px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    h1 {
+      margin-top: 0;
+    }
+  }
+}

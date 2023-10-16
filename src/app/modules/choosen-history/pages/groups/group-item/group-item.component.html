@@ -1,0 +1,191 @@
+<div class="group-item-wrapper">
+  <h1>[GROUP NAME]</h1>
+  <div *ngIf="!appLoader && !tableLoaded" class="table-loader">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+  <p-table
+      class="members-table-container"
+      [value]="groupMembers"
+      *ngIf="tableLoaded"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>User Name</th>
+        <th>User Email</th>
+        <th>User Contact</th>
+        <th>User Role</th>
+        <th>Controls</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-member class="table-body">
+            <tr class="member-row">
+              <td class="member-name">
+                <img
+                    class="profile-photo"
+                    [src]="
+                            member.profilePictureThumbnailUrl
+                                ? member.profilePictureThumbnailUrl
+                                : 'assets/images/image.png'
+                        "
+                    alt=""
+                />
+                <span>{{ member.firstName }} {{ member.lastName }}</span>
+              </td>
+              <td class="member-email">
+                {{ member.emailId }}
+              </td>
+              <td class="member-contact">
+                {{ member.contactNumber | phone : member.contactNumber }}
+              </td>
+              <td class="member-role">
+                    <span [class]="userRolesList[member.role]">{{
+                      userRolesList[member.role]
+                      }}</span>
+              </td>
+                <td class="controls">
+                  <div>
+                    <div
+                        pTooltip="Edit"
+                        tooltipPosition="top"
+                        class="edit-button"
+                    ></div>
+                    <div
+                        class="remove-button"
+                        (click)="handleRemoveModal(member)"
+                    >
+                      &#10006;
+                    </div>
+                  </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <div class="new-user-panel" *ngIf="tableLoaded">
+        <div class="search-panel">
+            <input
+                class="search-input"
+                type="email"
+                placeholder="Enter user email"
+                [(ngModel)]="newUserInput"
+                (ngModelChange)="this.newUserErrors.input = null"
+            />
+          <div class="input-error" *ngIf="newUserErrors.input">
+            *{{ newUserErrors.input }}
+          </div>
+            <div class="role-select">
+              <p-autoComplete
+                  [style]="{ width: '100%' }"
+                  class="pitchcards-auto-complete role"
+                  placeholder="Select Role"
+                  [(ngModel)]="newUserRole"
+                  [suggestions]="allUserRoles"
+                  field="name"
+                  (completeMethod)="handleRolesDropdowd($event)"
+                  (onSelect)="this.newUserErrors.select = null"
+                  [dropdown]="true"
+              >
+              </p-autoComplete>
+              <div class="select-error" *ngIf="newUserErrors.select">
+                *{{ newUserErrors.select }}
+              </div>
+            </div>
+        </div>
+      <div class="control-panel">
+        <div class="new-user-btn" (click)="addUserToGroup(groupId)">
+          + Add User
+        </div>
+      </div>
+    </div>
+</div>
+<p-dialog
+    class="remove-modal"
+    [(visible)]="removeModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ paddingTop: '10px', maxWidth: '800px' }"
+    (onHide)="removingUser = null"
+>
+  <p-header class="modal-title"> Do you sure?</p-header>
+  <div class="modal-body">
+    <div class="remove-list">
+      Remove
+      {{
+      removingUser &&
+      removingUser.firstName + ' ' + removingUser.lastName
+      }}
+      from group ?
+    </div>
+    <div class="controls-container">
+      <div
+          class="delete"
+          (click)="
+                    removeUserFromGroup(
+                        removingUser.organizationId,
+                        removingUser.id
+                    )
+                "
+      >
+        Remove
+      </div>
+      <div class="cancel">Cancel</div>
+    </div>
+  </div>
+</p-dialog>
+<p-dialog
+    class="invite-modal"
+    [(visible)]="inviteModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ paddingTop: '10px', maxWidth: '800px' }"
+    (onHide)="clearInviteModalInfo()"
+>
+  <p-header class="modal-title"> User Invite</p-header>
+  <div class="modal-body">
+    <div class="invite-form">
+            <span
+            >The user with the specified email was not found. You can invite
+                the user, just entered the user's details below:
+            </span>
+      <div class="invite-input">
+        <label for="email">Email</label>
+        <input
+            id="email"
+            [disabled]="true"
+            type="email"
+            [(ngModel)]="inviteEmail"
+        />
+      </div>
+      <div class="invite-input">
+                <span *ngIf="inviteError" class="invite-error"
+                >*The name is required</span
+                >
+        <label for="invite-name">Invite Name</label>
+        <input
+            id="invite-name"
+            type="text"
+            [(ngModel)]="inviteName"
+            (ngModelChange)="inviteError = false"
+        />
+      </div>
+      <span style="margin-top: 20px"
+      >The user will be added to the group after invite
+                acceptance</span
+      >
+    </div>
+        <div class="controls-container">
+          <div class="invite" (click)="inviteUserSubmit()">
+            <i
+                *ngIf="modalLoader"
+                style="font-size: 1.2rem"
+                class="fa fa-spinner fa-pulse fa-5x fa-fw"
+            ></i>
+            {{ !modalLoader && 'Invite' }}
+          </div>
+          <div class="later" (click)="inviteModal = false">Later</div>
+        </div>
+    </div>
+</p-dialog>

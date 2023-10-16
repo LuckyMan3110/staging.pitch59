@@ -1,0 +1,16 @@
+.search-tab {
+  background-size: cover;
+  border-radius: 6px;
+  border: 1px solid;
+  padding: 5px 0;
+  width: 100%;
+  font-size: 14px;
+}
+
+.tab-button {
+  padding: 0.5rem 0.5rem 0.5rem 0 !important;
+
+  &:last-child {
+    padding: 0.5rem 0 !important;
+  }
+}

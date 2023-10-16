@@ -1,0 +1,232 @@
+@import 'src/app/styles/variables';
+.page-header {
+  h1 {
+    font-size: 2.5em;
+  }
+
+  h2 {
+    font-size: 1.75em;
+  }
+}
+.applicant-viewer-modal {
+  display: grid;
+}
+.page-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  color: $white;
+  height: 100%;
+
+  .page-search {
+    input {
+      background-color: #fff;
+      border: unset;
+      border-radius: 4px;
+      padding: 10px 12px 10px;
+    }
+
+    .search {
+      font-size: 24px;
+      right: 12px;
+      top: 5px;
+    }
+  }
+
+  .status-selector {
+    padding-top: 20px;
+  }
+
+  .applicants-block {
+    border: 1.5px solid white;
+    border-radius: 6px;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    overflow-y: scroll;
+    min-height: 500px;
+  }
+
+  .list-style {
+    .applicants-block-edit {
+      img {
+        height: 25px;
+        width: 25px;
+      }
+    }
+
+    li {
+      color: $white !important;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      text-indent: 30px;
+      position: relative;
+    }
+
+    .list-style-item {
+      padding: 10px 12px;
+
+      &:hover {
+        background: rgba(196, 196, 196, 0.09);
+        border: 1px solid $teamMainBorderColor;
+        border-radius: 6px;
+        padding: 9px 11px;
+      }
+    }
+  }
+
+  .page-statuses-content {
+    .applicants-block-edit {
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    h3 {
+      font-size: 1.5em;
+    }
+  }
+
+  .chat-section {
+    margin-top: 50px;
+  }
+
+  .applicant-list-box-rejected-status {
+    width: 15px;
+    height: 15px;
+    margin: 0 -4px -2px 0;
+  }
+
+  .applicantListBoxItem {
+    padding: 5px;
+    width: 100%;
+  }
+
+  .applicant-status-selector-rejected {
+    width: 15px;
+    height: 15px;
+    margin: 0 -4px -2px -4px;
+  }
+
+  .show-rejected-applicants-checkbox {
+    padding-top: 15px;
+  }
+
+  .applicants-swiper-container {
+    display: grid;
+    grid-template-columns: 1fr 360px 1fr;
+  }
+
+  .applicant-pitchcard-container {
+    grid-template-rows: 25px 1fr;
+  }
+
+  .reject-applicant-button-container {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 10px;
+  }
+
+  .applicant-viewer-body {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) minmax(470px, 700px) minmax(
+                200px,
+                    1fr
+            );
+  }
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  width: 100%;
+
+  span {
+    min-width: 10px;
+    min-height: 10px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+  }
+
+  .rejected-status {
+    max-width: 11px;
+    width: 11px;
+  }
+
+  span.no-tag-class {
+    border: 1px solid white;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+
+  &:hover {
+    span.no-tag-class {
+      border: 1px solid black;
+    }
+  }
+}
+
+.applicant-swiper-button-prev,
+.applicant-swiper-button-next {
+  align-self: center;
+  justify-self: center;
+  justify-content: center;
+}
+
+.noApplicantFilterMatches {
+  display: grid;
+  grid-template-columns: 250px;
+  font-weight: bold;
+  font-size: 1.5em;
+  padding-top: 120px;
+  text-align: center;
+  justify-content: center;
+}
+
+.ats-header {
+  color: white;
+}
+
+.applicants-block-edit img {
+  width: 25px;
+  height: 25px;
+  padding-bottom: 8px;
+}
+
+.page-search input {
+  margin: 15px 0 20px 0;
+}
+
+.status-selector ng-select {
+  padding-bottom: 20px;
+}
+
+.applicantListBox {
+  font-size: 1.125em;
+  color: red;
+}
+
+#reject-icon {
+  background-color: transparent;
+  display: flex;
+  justify-content: flex-end;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+
+  svg {
+    fill: red;
+    width: 24px;
+    height: 24px;
+  }
+
+  &:hover {
+    background-color: red;
+
+    svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+  }
+}

@@ -1,0 +1,119 @@
+<div
+    [attr.id]="id"
+    [hidden]="!isVisible"
+    class="p-carousel p-widget p-carousel-horizontal"
+    [ngStyle]="style"
+    [class]="styleClass"
+>
+  <div class="p-carousel-header" *ngIf="headerFacet">
+    <ng-content select="p-header"></ng-content>
+  </div>
+  <div *ngIf="isDebug">
+    <div class="p-carousel-header debug-info">
+      {{ this.currentIndex }}/{{ this.value?.length }} ({{
+      this.displayMirror
+      }}) ({{ this.currentOffset }} )({{ this.mirrorOffset }})
+    </div>
+    <div class="p-carousel-header debug-info">
+            <span
+                *ngFor="let item of visibleItems; let index = index"
+                [ngStyle]="{ color: isCentralSlide(index) ? 'red' : 'white' }"
+            >[{{ item.index }}]</span
+            >
+    </div>
+        <div class="p-carousel-header debug-info">
+          <div style="transform: rotateX(90deg)">{{ '<=>' }}</div>
+        </div>
+    <div class="p-carousel-header debug-info">
+            <span
+                *ngFor="let item of mirrorItems; let index = index"
+                [ngStyle]="{ color: isCentralSlide(index) ? 'red' : 'white' }"
+            >[{{ item.index }}]</span
+            >
+    </div>
+    <div>
+      <div class="button-simple bg-gold" (click)="calculateTransform()">
+        calculateTransform
+      </div>
+      <div
+          class="button-simple bg-gold"
+          (click)="calculateTransformMirror()"
+      >
+        calculateTransformMirror
+      </div>
+    </div>
+    </div>
+    <div [class]="contentClasses()" #carouselContainer>
+        <div class="p-carousel-container">
+          <div #itemsContainerWrapper class="p-carousel-items-content">
+            <button
+                #prevButton
+                [hidden]="(!circular && currentIndex === 0) || isMobile"
+                class="p-carousel-prev p-button p-widget p-state-default p-corner-all"
+                (click)="navNext('backward')"
+            >
+                    <span
+                        class="p-carousel-prev-icon pi pi-chevron-left"
+                    ></span>
+            </button>
+            <div
+                #itemsContainer
+                class="p-carousel-items-container coverflow p-carousel-items-coverflow"
+                (touchend)="onTouchEnd($event)"
+                (touchstart)="onTouchStart($event)"
+                (touchmove)="onTouchMove($event)"
+            >
+              <div
+                  *ngFor="let item of visibleItems; let index = index"
+                  [id]="'item-' + item.index"
+                  class="p-carousel-item p-carousel-item-active"
+              >
+                <ng-container
+                    *ngTemplateOutlet="
+                                itemTemplate;
+                                context: { $implicit: item }
+                            "
+                ></ng-container>
+              </div>
+            </div>
+            <div
+                #mirrorsContainer
+                class="p-carousel-mirrors-container p-carousel-items-container p-carousel-mirrors-wrapper coverflow"
+                (touchend)="onTouchEnd($event)"
+                (touchstart)="onTouchStart($event)"
+                (touchmove)="onTouchMove($event)"
+            >
+              <div
+                  *ngFor="let item of mirrorItems; let index = index"
+                  [id]="'mirror-' + item.index"
+                  class="p-carousel-item p-carousel-item-mirror"
+              >
+                <ng-container
+                    *ngTemplateOutlet="
+                                itemTemplate;
+                                context: { $implicit: item }
+                            "
+                ></ng-container>
+              </div>
+            </div>
+            <button
+                #nextButton
+                [hidden]="
+                        (!circular &&
+                            currentIndex === this._value.length - 1) ||
+                        isMobile
+                    "
+                class="p-carousel-next p-button p-widget p-state-default p-corner-all"
+                (click)="navNext('forward')"
+            >
+                    <span
+                        class="p-carousel-next-icon pi pi-chevron-right"
+                    ></span>
+            </button>
+          </div>
+        </div>
+    </div>
+    <div class="p-carousel-footer" *ngIf="footerFacet">
+        <ng-content select="p-footer"></ng-content>
+    </div>
+</div>

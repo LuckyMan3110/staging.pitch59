@@ -1,0 +1,1161 @@
+<div class="pitch-cards-wrapper">
+    <div class="pitch-cards-header">
+      <h1>
+        {{
+        selectedPitchCards.length
+            ? selectedPitchCards.length + ' / ' + pitchCardsNumber
+            : pitchCardsNumber
+        }}
+        PitchCards
+      </h1>
+      <div class="header-control-panel" #headerControlPanel>
+        <div
+            class="btn pause"
+            [pTooltip]="
+                    selectedPitchCards[0]?.content?.isPotentialPause
+                        ? 'Pause Subscription'
+                        : 'You have already paused this PitchCard recently. You can pause again after your next charge.'
+                "
+            [tooltipPosition]="
+                    selectedPitchCards[0]?.content?.isPotentialPause
+                        ? 'top'
+                        : 'bottom'
+                "
+            [ngClass]="{
+                    disabled: !selectedPitchCards[0]?.content?.isPotentialPause
+                }"
+            [disabled]="!selectedPitchCards[0]?.content?.isPotentialPause"
+            *ngIf="
+                    selectedPitchCards.length &&
+                    !selectedPitchCards[0].organizationId &&
+                    selectedPitchCards[0].type !== 'folder' &&
+                    selectedPitchCards.length === 1 &&
+                    selectedPitchCards[0]?.content?.businessStatus !== 4 &&
+                    selectedPitchCards[0]?.content?.businessType !== 'resume' &&
+                    !noFolders
+                "
+            (click)="
+                    selectedPitchCards[0]?.content?.isPotentialPause
+                        ? handlePauseModal(
+                              selectedPitchCards[0].content.businessId
+                          )
+                        : null
+                "
+        ></div>
+        <div
+            class="btn resume"
+            pTooltip="Resume"
+            tooltipPosition="top"
+            *ngIf="
+                    selectedPitchCards.length &&
+                    selectedPitchCards.length === 1 &&
+                    selectedPitchCards[0]?.content?.businessStatus === 4 &&
+                    selectedPitchCards[0]?.content?.businessType !== 'resume' &&
+                    !noFolders
+                "
+            (click)="
+                    handleResumeModal(
+                        selectedPitchCards[0]?.content?.businessId
+                    )
+                "
+        ></div>
+        <div
+            class="btn move"
+            pTooltip="Move To"
+            tooltipPosition="top"
+            *ngIf="selectedPitchCards.length && !noFolders"
+            (click)="handleMoveToModal()"
+        ></div>
+        <div
+            class="btn change"
+            pTooltip="Edit"
+            tooltipPosition="top"
+            *ngIf="
+                    selectedPitchCards.length === 1 &&
+                    selectedPitchCards[0].type === 'folder'
+                "
+            (click)="handleDetailsFolderModal('edit')"
+        ></div>
+        <div
+            class="btn remove"
+            pTooltip="Remove"
+            tooltipPosition="top"
+            *ngIf="selectedPitchCards.length"
+            (click)="handleRemoveModal()"
+        ></div>
+        <div
+            *ngIf="!isOrganizationFolder"
+            class="new-folder-btn mr-0"
+            (click)="plusMenu.toggle($event)"
+        ></div>
+        <p-overlayPanel
+            class="modal-menu-wrapper"
+            styleClass="openpanel-header-menu"
+            (onShow)="onResized()"
+            #plusMenu
+            [dismissable]="true"
+            [style]="{ marginTop: hasSmartBanner() ? '95px' : '20px' }"
+            [appendTo]="elementToAppend"
+            [baseZIndex]="2000"
+            [autoZIndex]="false"
+        >
+          <div class="menu-container">
+            <ul #plusItemsMenu class="mt-2">
+              <li
+                  *ngFor="let item of plusMenuItems; let i = index"
+                  (click)="item.method()"
+              >
+                <div class="flex align-items-center mb-2 pointer">
+                  <img
+                      class="list-style mr-2 w-1rem"
+                      src="{{ item.icon }}"
+                      alt=""
+                  />
+                  <span class="text-base font-semibold">{{
+                    item.label
+                    }}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </p-overlayPanel>
+      </div>
+    </div>
+    <div class="folders-links">
+        <span *ngFor="let link of folderPath">
+            <span class="indicator" *ngIf="link.id"> ></span>
+            <span
+                class="link"
+                [ngClass]="{ selected: link.id && link.id === +folderIdParam }"
+                [routerLink]="[
+                    link.id
+                        ? '/account/my-pitchcards/' + link.id
+                        : '/account/my-pitchcards'
+                ]"
+            >{{ link.name }}</span
+            >
+        </span>
+    </div>
+  <div class="body" #pitchCardsWrapper>
+    <h2
+        *ngIf="noPitchCardsAvailable && !showPitchCardsLoader"
+        class="no-available-message"
+    >
+      No PitchCards Available
+    </h2>
+    <div
+        *ngIf="!appLoader"
+        [hidden]="!showPitchCardsLoader"
+        class="pitchCards-loader"
+    >
+      <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+    </div>
+    <div
+        class="card-container"
+        *ngFor="let pitchCard of myPitchCardsList"
+        [ngClass]="{ withStatus: pitchCard.type !== 'folder' }"
+        (contextmenu)="onRightClick($event, pitchCard)"
+        oncontextmenu="return false;"
+    >
+      <div
+          *ngIf="pitchCard.type !== 'folder'"
+          [class]="
+                    'status-line ' +
+                    businessStatusList[pitchCard.content?.businessStatus]
+                "
+      >
+        {{
+        pitchCard.content?.businessStatus !==
+        businessStatusList.PaymentFailed
+            ? businessStatusList[pitchCard.content?.businessStatus]
+            : 'Active'
+        }}
+      </div>
+      <div
+          class="mark-container"
+          [ngClass]="{ folder: pitchCard.type === 'folder' }"
+          *ngIf="
+                    pitchCard.role === FolderContentRole.Owner &&
+                    !pitchCard?.organizationId
+                "
+          (click)="selectPitchCard(pitchCard)"
+      >
+        <div
+            class="selected-mark"
+            [ngClass]="{ selected: checkSelectedPitchCards(pitchCard) }"
+        ></div>
+      </div>
+      <div
+          *ngIf="
+                    (!pitchCard.content?.accountStatus &&
+                        pitchCard.type !== 'folder') ||
+                    (pitchCard.content?.businessStatus ===
+                        businessStatusList.Suspended &&
+                        pitchCard.type !== 'folder') ||
+                    (pitchCard.content?.businessStatus ===
+                        businessStatusList.PaymentFailed &&
+                        pitchCard.type !== 'folder')
+                "
+          class="draft-card-background"
+          (click)="
+                    mobileMode
+                        ? handleMobileContextBusiness(pitchCard)
+                        : onBusinessSelect(pitchCard.content)
+                "
+      ></div>
+      <div
+          *ngIf="
+                    (pitchCard.type !== 'folder' &&
+                        pitchCard.content?.businessStatus ===
+                            businessStatusList.Suspended) ||
+                    (pitchCard.type !== 'folder' &&
+                        pitchCard.content?.businessStatus ===
+                            businessStatusList.PaymentFailed)
+                "
+          (click)="
+                    mobileMode
+                        ? handleMobileContextBusiness(pitchCard)
+                        : onBusinessSelect(pitchCard.content)
+                "
+          class="suspended-label"
+      >
+        <div class="suspended-icon"></div>
+        <div class="suspended-content">
+          <h3 class="no-margins">
+            {{
+            pitchCard.content?.businessStatus ===
+            businessStatusList.Suspended
+                ? 'PAST DUE'
+                : 'PAYMENT FAILED'
+            }}
+          </h3>
+          <p class="no-margins">Update Billing Info</p>
+        </div>
+      </div>
+
+      <app-search-result-thumbnail
+          class="pitch-card"
+          *ngIf="pitchCard.type === 'content'; else folderType"
+          (click)="
+                    mobileMode
+                        ? handleMobileContextBusiness(pitchCard)
+                        : onBusinessSelect(pitchCard.content)
+                "
+          [businessDetails]="pitchCard.content"
+          #businessCard
+          [scale]="scaleFactor"
+          [disabled]="true"
+      >
+      </app-search-result-thumbnail>
+      <ng-template #folderType>
+        <app-pitchcard-folder-thumbnail
+            *ngIf="!mobileMode; else folderTypeMobile"
+            [scaleFactor]="scaleFactor"
+            [pitchCardFolder]="pitchCard"
+            (openFolder)="handleFolderOpen($event)"
+        >
+        </app-pitchcard-folder-thumbnail>
+      </ng-template>
+      <ng-template #folderTypeMobile>
+        <app-pitchcard-folder-thumbnail
+            [scaleFactor]="scaleFactor"
+            [pitchCardFolder]="pitchCard"
+            (click)="handleMobileContextBusiness(pitchCard)"
+        ></app-pitchcard-folder-thumbnail>
+      </ng-template>
+        </div>
+    </div>
+</div>
+
+<p-dialog
+    class="new-folder-modal"
+    [(visible)]="detailsFolderModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="false"
+    [style]="{ paddingTop: '10px', maxWidth: '800px', margin: '20px' }"
+    (onHide)="clearModalOptions()"
+>
+  <p-header class="modal-title">
+    {{ detailsFolderMode === 'create' ? 'Create' : 'Edit' }} Pocket
+  </p-header>
+  <div class="new-folder-wrapper">
+    <div
+        [hidden]="!showCreateLoader"
+        class="pitchCards-loader"
+        style="top: 35%; position: absolute"
+    >
+      <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+    </div>
+    <div *ngIf="modalErrors.newFolderName" class="nameError">
+      {{ modalErrors.newFolderName }}*
+    </div>
+    <input
+        #folderNameInput
+        class="new-folder-input"
+        [ngClass]="{ error: modalErrors.newFolderName }"
+        type="text"
+        [(ngModel)]="newFolderName"
+        (ngModelChange)="modalErrors.newFolderName = null"
+        placeholder="Enter pocket name"
+    />
+    {{ folderNameInput.focus() }}
+    <div
+        class="colors-wrapper"
+        [ngClass]="{ error: modalErrors.newFolderColor }"
+    >
+      <div *ngIf="modalErrors.newFolderColor" class="colorsError">
+        {{ modalErrors.newFolderColor }}*
+      </div>
+      <div
+          *ngFor="let color of myFoldersColors"
+          class="color"
+          [ngClass]="{ selected: color === newFolderColor }"
+          (click)="selectNewFolderColor(color)"
+      >
+        <div [ngStyle]="{ 'background-color': color }"></div>
+      </div>
+    </div>
+    <button class="create-btn" (click)="newFolderSubmit()">
+      {{ detailsFolderMode === 'create' ? 'Create' : 'Edit' }}
+    </button>
+  </div>
+</p-dialog>
+
+<p-dialog
+    class="move-to-modal"
+    [(visible)]="moveToModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{
+        paddingTop: '10px',
+        width: '100%',
+        maxWidth: '1080px',
+        minHeight: '495px'
+    }"
+>
+  <p-header class="modal-title">
+    Move
+    {{ contextMenuPitchCard ? 1 : selectedPitchCards.length }}
+    Item{{ selectedPitchCards.length > 1 ? 's' : '' }} To:
+  </p-header>
+  <div class="path-links">
+        <span *ngFor="let link of modalFolderPath">
+            <span class="indicator" *ngIf="link.id">></span>
+            <span
+                class="link"
+                [ngClass]="{
+                    selected: link.id && link.id === +modalFolderIdParam
+                }"
+                (click)="handleOpenModalFolder(link.id)"
+            >{{ link.name }}</span
+            >
+        </span>
+  </div>
+  <div
+      class="folder-carousel"
+      *ngIf="allFolders.length; else thisFolderEmpty"
+  >
+    <p-carousel
+        #carousel
+        [value]="allFolders"
+        [numVisible]="numVisible"
+        [numScroll]="numScroll"
+        [responsiveOptions]="responsiveOptions"
+    >
+      <ng-template let-folder pTemplate="item">
+        <app-pitchcard-folder-thumbnail
+            class="folder"
+            [scaleFactor]="moveToModal ? 0.4 : scaleFactor"
+            [pitchCardFolder]="folder"
+            [onlyFolder]="true"
+            (addContent)="addContentToFolder($event)"
+            (openFolder)="handleOpenModalFolder($event)"
+            [folderLoader]="moveLoader"
+        >
+        </app-pitchcard-folder-thumbnail>
+      </ng-template>
+    </p-carousel>
+  </div>
+  <ng-template #thisFolderEmpty>
+    <div class="this-folder-empty">This pocket is empty.</div>
+  </ng-template>
+  <div
+      class="current-folder-button"
+      *ngIf="currentFolderButton"
+      (click)="addContentToFolder(currentFolderButton.id)"
+  >
+    <div
+        style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            "
+    >
+      <span>Current Pocket</span>
+      <span>"{{ currentFolderButton && currentFolderButton.name }}"</span>
+    </div>
+    <span class="icon"></span>
+  </div>
+</p-dialog>
+
+<p-dialog
+    class="analytics-modal"
+    [(visible)]="analyticsModal"
+    [blockScroll]="false"
+    [draggable]="false"
+    [modal]="true"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{
+        minWidth: '300px',
+        maxWidth: '600px',
+        width: '35%',
+        'border-radius': '6px',
+        margin: '0 20px'
+    }"
+    (onHide)="resetAnalyticsData()"
+    styleClass="dialog"
+    appendTo="body"
+>
+  <app-analytic-reports
+      *ngIf="analyticsModal"
+      [product]="
+            contextMenuPitchCard?.content ? contextMenuPitchCard.content : null
+        "
+      [maxDateValue]="maxDateValue"
+  ></app-analytic-reports>
+</p-dialog>
+
+<p-dialog
+    class="remove-modal"
+    *ngIf="removeModal"
+    [(visible)]="removeModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ paddingTop: '10px', maxWidth: '800px' }"
+>
+  <p-header class="modal-title"> Do you want to remove?</p-header>
+  <div class="modal-body">
+    <div
+        [hidden]="!showRemoveLoader"
+        class="pitchCards-loader"
+        style="left: 40%; bottom: 40%; position: absolute"
+    >
+      <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+    </div>
+    <div class="remove-list">
+      <div *ngIf="removeList.pitchCards && !contextMenuPitchCard">
+        {{ removeList.pitchCards }} PitchCard{{
+        removeList.pitchCards > 1 ? 's' : ''
+        }}
+      </div>
+      <div *ngIf="removeList.folders && !contextMenuPitchCard">
+        {{ removeList.folders }} Pocket{{
+        removeList.folders > 1 ? 's' : ''
+        }}
+      </div>
+      <div *ngIf="contextMenuPitchCard">
+        {{
+        contextMenuPitchCard.type === 'folder'
+            ? 'Pocket '
+            : 'PitchCard'
+        }}" {{ contextMenuPitchCard.name.replace('*pipe*', ' | ') }}"
+      </div>
+    </div>
+    <div
+        class="checkbox-container"
+        *ngIf="
+                (removeList.folders && !contextMenuPitchCard) ||
+                (contextMenuPitchCard && contextMenuPitchCard.type === 'folder')
+            "
+    >
+      <p-checkbox
+          [(ngModel)]="removeWithContent"
+          name="removeWithContent"
+          [binary]="true"
+      >
+      </p-checkbox>
+      <span
+      >Remove pocket{{
+        selectedPitchCards.length > 1 ? 's' : ''
+        }}
+        with content</span
+      >
+    </div>
+    <div class="controls-container w-12">
+      <div class="delete" (click)="removeFolderSubmit()">
+        <span class="icon"></span>
+        Remove Item{{ selectedPitchCards.length > 1 ? 's' : '' }}
+      </div>
+      <div class="cancel" (click)="handleRemoveModal()">
+        <span>X</span>
+        Cancel
+      </div>
+    </div>
+    </div>
+</p-dialog>
+
+<p-dialog
+    class="access-modal"
+    *ngIf="accessModal"
+    [(visible)]="accessModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="false"
+    [style]="{
+        paddingTop: '10px',
+        maxWidth: '1000px',
+        minHeight: '200px',
+        width: '100%'
+    }"
+>
+  <p-header class="modal-title"> Manage your PitchCards access</p-header>
+  <div class="modal-body">
+    <div class="table-title">Users with access:</div>
+    <div class="table-container">
+      <p-table class="access-table" [value]="folderContentUsers">
+        <ng-template pTemplate="body" let-user>
+          <tr
+              style="position: absolute; left: 45%"
+              [hidden]="userTableLoaded"
+          >
+            <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+          </tr>
+          <tr class="user-row" *ngIf="userTableLoaded">
+            <td
+                class="full-name"
+                [style]="
+                                isMobile ? { width: 'auto !important' } : ''
+                            "
+            >
+              <img
+                  class="profile-photo"
+                  [src]="
+                                    user.profilePictureThumbnailUrl ||
+                                    '/assets/images/default_profile.png'
+                                "
+                  alt="profile_photo"
+              />
+              <span
+              >{{ user.firstName }} {{ user.lastName }}</span
+              >
+            </td>
+            <td
+                [style]="
+                                isMobile ? { width: 'auto !important' } : ''
+                            "
+            >
+              {{ user.emailId }}
+            </td>
+            <td
+                class="contact"
+                [style]="
+                                isMobile ? { width: 'auto !important' } : ''
+                            "
+            >
+              {{ user.contactNumber }}
+            </td>
+            <td
+                class="role"
+                [style]="
+                                isMobile ? { width: 'auto !important' } : ''
+                            "
+            >
+                            <span [class]="userRolesList[user.role]">{{
+                              userRolesList[user.role]
+                              }}</span>
+            </td>
+            <td
+                class="settings"
+                [style]="
+                                isMobile ? { width: 'auto !important' } : ''
+                            "
+            >
+                            <span
+                                class="btn"
+                                *ngIf="
+                                    contextMenuPitchCard?.role ===
+                                    FolderContentRole.Owner
+                                "
+                                [ngClass]="{
+                                    disable: myProfileUserId === user.id,
+                                    pointer: myProfileUserId !== user.id
+                                }"
+                                [ngStyle]="{
+                                    opacity:
+                                        myProfileUserId === user.id
+                                            ? '0.5'
+                                            : '1'
+                                }"
+                                (click)="
+                                    removeUserFromFolderContent(
+                                        user.id,
+                                        user.organizationId
+                                            ? user.organizationId
+                                            : ''
+                                    )
+                                "
+                            >
+                                <span class="icon remove"></span>Remove
+                            </span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div
+        class="new-user-panel"
+        *ngIf="
+                userTableLoaded &&
+                contextMenuPitchCard?.role === FolderContentRole.Owner
+            "
+    >
+      <div class="search-panel">
+        <div class="search-input">
+          <input
+              type="text"
+              pInputText
+              [(ngModel)]="newUserEmail"
+              [pattern]="emailPattern"
+              placeholder="Enter email of Editor to provide access"
+              class="new-input-blue"
+          />
+        </div>
+            </div>
+      <div class="button-container">
+        <div
+            class="button-simple shock-pink sm-35"
+            (keyup.enter)="addUserToBusinessByEmail()"
+            (click)="addUserToBusinessByEmail()"
+        >
+          + Add {{ userRolesList[userRolesList.Editor] }}
+        </div>
+      </div>
+        </div>
+    </div>
+</p-dialog>
+
+<div class="bottom-sidebar">
+  <app-sidebar
+      [(visible)]="selectedPitchCards.length"
+      [dismissible]="false"
+      [position]="'bottom'"
+      [modal]="false"
+      [style]="{ height: '50px' }"
+      [showCloseIcon]="false"
+  >
+    <div class="control-wrapper">
+      <div class="selected">
+        {{ selectedPitchCards.length }}
+      </div>
+      <div
+          class="btn pause"
+          pTooltip="Pause Subscription"
+          tooltipPosition="top"
+          [ngClass]="{
+                    disabled: !selectedPitchCards[0]?.content?.isPotentialPause
+                }"
+          [disabled]="!selectedPitchCards[0]?.content?.isPotentialPause"
+          *ngIf="
+                    selectedPitchCards.length &&
+                    selectedPitchCards.length === 1 &&
+                    selectedPitchCards[0]?.content?.businessStatus !== 4 &&
+                    selectedPitchCards[0]?.content?.businessType !== 'resume' &&
+                    !noFolders
+                "
+          (click)="
+                    selectedPitchCards[0]?.content?.isPotentialPause
+                        ? handlePauseModal(
+                              selectedPitchCards[0]?.content.businessId
+                          )
+                        : null
+                "
+      ></div>
+      <div
+          class="btn resume"
+          pTooltip="Resume Subscription"
+          tooltipPosition="top"
+          *ngIf="
+                    selectedPitchCards.length &&
+                    selectedPitchCards.length === 1 &&
+                    selectedPitchCards[0]?.content?.businessStatus === 4 &&
+                    selectedPitchCards[0]?.content?.businessType !== 'resume' &&
+                    !noFolders
+                "
+          (click)="
+                    handleResumeModal(selectedPitchCards[0].content.businessId)
+                "
+      ></div>
+      <div
+          class="btn move"
+          pTooltip="Move To"
+          tooltipPosition="top"
+          *ngIf="selectedPitchCards.length && !noFolders"
+          (click)="handleMoveToModal()"
+      ></div>
+      <div
+          class="btn change"
+          pTooltip="Edit"
+          tooltipPosition="top"
+          *ngIf="
+                    selectedPitchCards.length === 1 &&
+                    selectedPitchCards[0].type === 'folder'
+                "
+          (click)="handleDetailsFolderModal('edit')"
+      ></div>
+      <div
+          class="btn remove"
+          pTooltip="Remove"
+          tooltipPosition="top"
+          *ngIf="selectedPitchCards.length"
+          (click)="handleRemoveModal()"
+      ></div>
+    </div>
+        <span class="close-icon" (click)="selectedPitchCards = []">X</span>
+    </app-sidebar>
+</div>
+
+<div class="preview-pitchcard-dialog">
+  <p-dialog
+      *ngIf="pitchCardPreviewMode"
+      [(visible)]="pitchCardPreviewMode"
+      [modal]="true"
+      [blockScroll]="true"
+      [draggable]="false"
+      [dismissableMask]="true"
+      [resizable]="false"
+      [showHeader]="true"
+      (onHide)="clearPitchCardOnPreview()"
+      styleClass="preview-pitchcard"
+  >
+    <div class="dialog-content">
+      <app-search-result-thumbnail
+          #businessCard
+          [businessDetails]="pitchCardOnPreview"
+          [scale]="mobileMode ? 0.8 : 1"
+          (companyImages)="handlePitchCardTitleClick($event)"
+      >
+      </app-search-result-thumbnail>
+    </div>
+  </p-dialog>
+</div>
+
+<p-confirmDialog
+    class="resume-confirmation"
+    [blockScroll]="true"
+    acceptLabel="Resume"
+    rejectLabel="Cancel"
+    header="Resume your PitchCard Subscription?"
+    key="resume"
+></p-confirmDialog>
+
+<p-confirmDialog
+    class="resume-confirmation"
+    [blockScroll]="true"
+    acceptLabel="Finish"
+    header="PitchCard Subscription Successfully Resumed"
+    key="resumed"
+></p-confirmDialog>
+
+<p-dialog
+    [styleClass]="'pause-dialog'"
+    [blockScroll]="true"
+    [(visible)]="pauseModal"
+    [modal]="true"
+    [draggable]="false"
+    [dismissableMask]="true"
+    [resizable]="false"
+    acceptLabel="Pause"
+    rejectLabel="Cancel"
+    header="Pause Your PitchCard Subscription"
+    key="pause"
+    [style]="{ width: '45vw', fontSize: '1.125rem' }"
+    (onShow)="onModalShow($event, pauseModalElem)"
+    #pauseModalElem
+>
+  <div class="pause-dialog-content-wrapper">
+    <div class="pause-calendar-wrapper">
+      <p-calendar
+          [inline]="true"
+          styleClass="simple-calendar"
+          [defaultDate]="currentDate"
+          [maxDate]="maxPauseDate"
+          [minDate]="currentDate"
+          inputId="pauseRange"
+          [style]="{
+                    width: '100%',
+                    maxWidth: '360px',
+                    minHeight: '240px'
+                }"
+          [(ngModel)]="pauseDate"
+          (onSelect)="onSelectPauseDate($event)"
+      ></p-calendar>
+      <span [ngClass]="{ 'mt-3': isMobile }"
+      >PitchCard Resume Date: {{ formattedPauseDate }}</span
+      >
+    </div>
+    <div
+        style="
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                padding-left: 2rem;
+            "
+    >
+      <ul class="pause-unordered-list">
+        <li>
+          Your subscription will be paused immediately, and will be
+          resumed on the date you select (up to 6 months).
+        </li>
+        <li>
+          The remaining balance in your subscription will resume after
+          the pause period.
+        </li>
+        <li>
+          Your PitchCard will be hidden from search, sharing and
+          pockets during the pause period.
+        </li>
+        <li>You can resume your subscription at any time.</li>
+        <li>
+          You will be able to pause your subscription again on the
+          first day of the next billing cycle.
+        </li>
+      </ul>
+    </div>
+    </div>
+  <p-footer
+      [style]="{ display: 'flex', border: 'none' }"
+      [ngStyle]="{ 'flex-direction': isMobile ? 'space-around' : 'center' }"
+  >
+    <button class="button-simple bg-darkgray uppercase footer-button">
+      Cancel
+    </button>
+    <button
+        class="button-simple shock-pink uppercase footer-button"
+        (click)="handlePauseSubscription(true, businessIdToPause)"
+    >
+      Pause
+    </button>
+  </p-footer>
+</p-dialog>
+
+<p-confirmDialog
+    class="resume-confirmation"
+    [blockScroll]="true"
+    acceptLabel="Finish"
+    header="PitchCard Subscription Successfully Paused"
+    key="paused"
+></p-confirmDialog>
+
+<div class="context-wrapper">
+  <app-context-menu
+      *ngIf="contextMenu"
+      [x]="contextMenuX"
+      [y]="contextMenuY"
+      [isVisible]="contextMenu"
+  >
+    <div class="context-menu-container">
+      <div
+          class="btn view"
+          *ngIf="
+                    contextMenuPitchCard &&
+                    contextMenuPitchCard.type !== 'folder'
+                "
+          (click)="handleViewPitchCard()"
+      >
+        <div class="icon view"></div>
+        <span>View PitchCard</span>
+      </div>
+      <div
+          class="btn status"
+          *ngIf="
+                    contextMenuPitchCard &&
+                    contextMenuPitchCard.type !== 'folder' &&
+                    (contextMenuPitchCard.content?.businessStatus === 1 ||
+                        contextMenuPitchCard.content?.businessStatus === 2)
+                "
+          (click)="handlePitchCardStatus()"
+      >
+        <div
+            class="status"
+            [ngClass]="{
+                        active: contextMenuPitchCard.content.accountStatus,
+                        inactive: !contextMenuPitchCard.content.accountStatus
+                    }"
+        >
+          <span class="toogler"></span>
+        </div>
+        <span>Display on Search</span>
+      </div>
+      <div
+          class="btn request"
+          *ngIf="
+                    contextMenuPitchCard &&
+                    contextMenuPitchCard.type !== 'folder' &&
+                    contextMenuPitchCard.content?.businessStatus === 7
+                "
+          (click)="handleRequestApproval()"
+      >
+        <div class="icon request"></div>
+        <span>Request Approval</span>
+      </div>
+
+      <!--            <div class="btn access" -->
+      <!--                *ngIf='contextMenuPitchCard && !contextMenuPitchCard.organizationId'-->
+      <!--                (click)="handleAccessModal()">-->
+      <!--                <div class="icon access"></div>-->
+      <!--                <span>Editors</span>-->
+      <!--            </div>-->
+
+      <div
+          class="btn edit"
+          *ngIf="
+                    contextMenuPitchCard &&
+                    contextMenuPitchCard.type === 'folder'
+                "
+          (click)="handleDetailsFolderModal('edit')"
+      >
+        <div class="icon edit"></div>
+        <span>Edit</span>
+      </div>
+      <div
+          class="btn moveTo"
+          *ngIf="
+                    contextMenuPitchCard &&
+                    !contextMenuPitchCard.organizationId &&
+                    contextMenuPitchCard.role === FolderContentRole.Owner
+                "
+          (click)="handleMoveToModal()"
+      >
+        <div class="icon moveTo"></div>
+        <span>Move To</span>
+      </div>
+      <div
+          class="btn pause"
+          [pTooltip]="
+                    contextMenuPitchCard.content.isPotentialPause
+                        ? 'Pause Subscription'
+                        : 'You have already paused this PitchCard recently. You can pause again after your next charge.'
+                "
+          tooltipPosition="bottom"
+          tooltipZIndex="top"
+          [disabled]="!contextMenuPitchCard.content.isPotentialPause"
+          [ngClass]="{
+                    disabled: !contextMenuPitchCard.content.isPotentialPause
+                }"
+          *ngIf="
+                    contextMenuPitchCard &&
+                    contextMenuPitchCard.type !== 'folder' &&
+                    !contextMenuPitchCard.organizationId &&
+                    contextMenuPitchCard.content.businessStatus !== 4 &&
+                    contextMenuPitchCard.content.businessType !== 'resume'
+                "
+          (click)="
+                    contextMenuPitchCard.content.isPotentialPause
+                        ? handlePauseModal(
+                              contextMenuPitchCard.content.businessId
+                          )
+                        : null
+                "
+      >
+        <div class="icon pause"></div>
+        <span>Pause Subscription</span>
+      </div>
+      <div
+          class="btn resume"
+          *ngIf="
+                    contextMenuPitchCard &&
+                    contextMenuPitchCard.type !== 'folder' &&
+                    contextMenuPitchCard.content.businessStatus === 4
+                "
+          (click)="
+                    handleResumeModal(contextMenuPitchCard.content.businessId)
+                "
+      >
+        <div class="icon resume"></div>
+        <span>Resume Subscription</span>
+      </div>
+      <div
+          class="btn analytics"
+          *ngIf="
+                    contextMenuPitchCard &&
+                    contextMenuPitchCard.type !== 'folder'
+                "
+          (click)="handleAnalyticsModal()"
+      >
+        <div class="icon analytics"></div>
+        <span>Analytics</span>
+      </div>
+
+      <div
+          class="btn remove"
+          *ngIf="
+                    contextMenuPitchCard &&
+                    contextMenuPitchCard.role === FolderContentRole.Owner
+                "
+          (click)="handleRemoveModal()"
+      >
+        <div class="icon remove"></div>
+        <span>Remove</span>
+      </div>
+    </div>
+    </app-context-menu>
+</div>
+
+<div class="mobile-context-menu">
+  <app-sidebar
+      [(visible)]="mobileContextMenu"
+      [dismissible]="true"
+      [position]="'bottom'"
+      [modal]="true"
+      [style]="{ height: 'auto', display: 'flex', flexDirection: 'column' }"
+      [showCloseIcon]="false"
+  >
+    <div class="control-wrapper" *ngIf="mobileContextMenuPitchCard">
+      <div
+          class="context-btn header"
+          (click)="
+                    mobileContextMenuPitchCard.type === 'folder'
+                        ? handleFolderOpen(mobileContextMenuPitchCard.id)
+                        : handleViewPitchCard()
+                "
+      >
+        {{
+        mobileContextMenuPitchCard.type === 'folder'
+            ? 'Open Pocket'
+            : 'View PitchCard'
+        }}
+      </div>
+      <div class="body">
+        <div
+            class="context-btn"
+            *ngIf="mobileContextMenuPitchCard.type !== 'folder'"
+            (click)="
+                        onBusinessSelect(mobileContextMenuPitchCard.content)
+                    "
+        >
+          Edit PitchCard
+        </div>
+        <div
+            class="context-btn request"
+            *ngIf="
+                        mobileContextMenuPitchCard.content?.businessStatus ===
+                            7 && mobileContextMenuPitchCard.type !== 'folder'
+                    "
+            (click)="handleRequestApproval()"
+        >
+          Request Approval
+        </div>
+        <div
+            class="context-btn moveTo"
+            *ngIf="
+                        mobileContextMenuPitchCard &&
+                        mobileContextMenuPitchCard.role ===
+                            FolderContentRole.Owner &&
+                        !mobileContextMenuPitchCard?.organizationId
+                    "
+            (click)="handleMoveToModal()"
+        >
+          Move To
+        </div>
+        <div
+            class="context-btn pause"
+            [disabled]="
+                        !mobileContextMenuPitchCard.content.isPotentialPause
+                    "
+            [ngClass]="{
+                        disabled:
+                            !mobileContextMenuPitchCard.content.isPotentialPause
+                    }"
+            *ngIf="
+                        mobileContextMenuPitchCard &&
+                        mobileContextMenuPitchCard.type !== 'folder' &&
+                        mobileContextMenuPitchCard.content.businessStatus !==
+                            4 &&
+                        mobileContextMenuPitchCard.content.businessType !==
+                            'resume' &&
+                        !mobileContextMenuPitchCard?.organizationId
+                    "
+            (click)="
+                        mobileContextMenuPitchCard.content.isPotentialPause
+                            ? handlePauseModal(
+                                  mobileContextMenuPitchCard.content.businessId
+                              )
+                            : null
+                    "
+        >
+          Pause Subscription
+        </div>
+        <div
+            class="context-btn resume"
+            *ngIf="
+                        mobileContextMenuPitchCard &&
+                        mobileContextMenuPitchCard.type !== 'folder' &&
+                        mobileContextMenuPitchCard.content.businessStatus ===
+                            4 &&
+                        !mobileContextMenuPitchCard?.organizationId
+                    "
+            (click)="
+                        handleResumeModal(
+                            mobileContextMenuPitchCard.content.businessId
+                        )
+                    "
+        >
+          Resume Subscription
+        </div>
+        <div
+            class="context-btn status"
+            *ngIf="
+                        mobileContextMenuPitchCard.type !== 'folder' &&
+                        (mobileContextMenuPitchCard.content?.businessStatus ===
+                            1 ||
+                            mobileContextMenuPitchCard.content
+                                ?.businessStatus === 2) &&
+                        !mobileContextMenuPitchCard?.organizationId
+                    "
+            (click)="handlePitchCardStatus()"
+        >
+          {{
+          mobileContextMenuPitchCard.content.accountStatus
+              ? 'Make Non-Searchable'
+              : 'Make Searchable'
+          }}
+        </div>
+
+        <!--                <div class="context-btn editors" *ngIf="!mobileContextMenuPitchCard?.organizationId"-->
+        <!--                    (click)="handleAccessModal()">-->
+        <!--                    Editors-->
+        <!--                </div>-->
+
+        <div
+            class="context-btn remove"
+            *ngIf="
+                        mobileContextMenuPitchCard &&
+                        mobileContextMenuPitchCard.role ===
+                            FolderContentRole.Owner &&
+                        !mobileContextMenuPitchCard?.organizationId
+                    "
+            (click)="handleRemoveModal()"
+        >
+          Remove
+        </div>
+      </div>
+        </div>
+    </app-sidebar>
+</div>
+
+<app-pitchcard-modals-wrapper
+    [uniqueId]="uniqueId"
+    *ngIf="pitchCardPreviewMode"
+></app-pitchcard-modals-wrapper>
+
+<app-back-to-the-top-button></app-back-to-the-top-button>

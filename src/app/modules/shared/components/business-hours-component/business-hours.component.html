@@ -1,0 +1,106 @@
+<div class="controls">
+  <div class="add-business-hours-btn" (click)="addHours()">
+    + business hours
+  </div>
+</div>
+<p-table
+    class="business-hours-table"
+    [value]="workingHoursForm.controls"
+    *ngIf="!isMobile; else mobileBusinessHours"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 125px">
+        {{ isDesktop ? 'Open' : 'Open/Close' }}
+      </th>
+      <th *ngIf="isDesktop" style="width: 125px">Close</th>
+      <th *ngFor="let day of _weekDays">{{ day }}</th>
+      <th class="remove-column"></th>
+    </tr>
+  </ng-template>
+    <ng-template pTemplate="body" let-hours let-i="rowIndex">
+        <tr class="table-row" [formGroup]="hours">
+            <td class="with-left-border with-right-border">
+                <div class="tablet-open-hours">
+                    <app-time-picker
+                        [hours]="hours.value.openHours"
+                        [minutes]="hours.value.openMinutes"
+                        [hoursField]="'openHours'"
+                        [minutesField]="'openMinutes'"
+                        (timeChange)="onTimePickerChanges($event, hours)"
+                    ></app-time-picker>
+                </div>
+                <div class="tablet-close-hours">
+                  <app-time-picker
+                      *ngIf="isTablet"
+                      [hours]="hours.value.closeHours"
+                      [minutes]="hours.value.closeMinutes"
+                      [hoursField]="'closeHours'"
+                      [minutesField]="'closeMinutes'"
+                      (timeChange)="onTimePickerChanges($event, hours)"
+                  ></app-time-picker>
+                </div>
+            </td>
+            <td class="with-right-border" *ngIf="isDesktop">
+              <app-time-picker
+                  [hours]="hours.value.closeHours"
+                  [minutes]="hours.value.closeMinutes"
+                  [hoursField]="'closeHours'"
+                  [minutesField]="'closeMinutes'"
+                  (timeChange)="onTimePickerChanges($event, hours)"
+              ></app-time-picker>
+            </td>
+            <td *ngFor="let day of _weekDays">
+                <p-checkbox
+                    class="checkbox"
+                    binary="true"
+                    [formControl]="hours.controls[day]"
+                >
+                </p-checkbox>
+            </td>
+            <td class="remove-column with-right-border">
+                <div (click)="removeHours(i)">&times;</div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+<ng-template #mobileBusinessHours>
+    <div
+        class="mobile-business-hours"
+        *ngFor="let hours of workingHoursForm.controls; index as i"
+        [formGroup]="hours"
+    >
+        <div class="hours-container">
+            <app-time-picker
+                class="mobile-open-hours"
+                [hours]="hours.value.openHours"
+                [minutes]="hours.value.openMinutes"
+                [hoursField]="'openHours'"
+                [minutesField]="'openMinutes'"
+                (timeChange)="onTimePickerChanges($event, hours)"
+            ></app-time-picker>
+            <app-time-picker
+                class="mobile-close-hours"
+                [hours]="hours.value.closeHours"
+                [minutes]="hours.value.closeMinutes"
+                [hoursField]="'closeHours'"
+                [minutesField]="'closeMinutes'"
+                (timeChange)="onTimePickerChanges($event, hours)"
+            ></app-time-picker>
+        </div>
+        <div class="days-container">
+            <div class="week-day-container" *ngFor="let day of _weekDays">
+              <span class="day-label">{{ day }}</span>
+                <p-checkbox
+                    class="checkbox"
+                    binary="true"
+                    [formControl]="hours.controls[day]"
+                >
+                </p-checkbox>
+            </div>
+        </div>
+        <div class="remove-btn">
+          <div (click)="removeHours(i)">&times;</div>
+        </div>
+    </div>
+</ng-template>

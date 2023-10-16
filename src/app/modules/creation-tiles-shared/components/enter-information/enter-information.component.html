@@ -1,0 +1,667 @@
+<form class="step-form" *ngIf="form" [formGroup]="form">
+  <h1
+      *ngIf="
+            service.businessType === pitchCardTypes.Resume ||
+            service.businessType === pitchCardTypes.Service
+        "
+  >
+    Enter Information
+  </h1>
+  <h1
+      *ngIf="
+            service.businessType === pitchCardTypes.Basic ||
+            service.businessType === pitchCardTypes.Employee
+        "
+  >
+    Enter Business Information
+  </h1>
+  <h1
+      *ngIf="
+            service.businessType === pitchCardTypes.Job ||
+            service.businessType === pitchCardTypes.EmployerPortal
+        "
+  >
+    Enter Employer Information
+  </h1>
+
+  <div class="business-details-form">
+    <div class="layout-card grid-column">
+            <span
+                class="p-float-label"
+                *ngIf="service.businessType === pitchCardTypes.Employee"
+            >
+                <input
+                    (blur)="
+                        service.tileRequiredState = form.valid;
+                        createAlias($event.target.value);
+                        calculateIntroTextTemplate()
+                    "
+                    [maxLength]="50"
+                    autocomplete="new-password"
+                    class="new-input-blue sm"
+                    formControlName="title"
+                    id="yourName"
+                    pInputText
+                    tabindex="1"
+                    title
+                    type="text"
+                />
+                <label for="yourName">Your Name *</label>
+            </span>
+      <span class="p-float-label">
+                <input
+                    (blur)="
+                        service.tileRequiredState = form.valid;
+                        service.businessType === pitchCardTypes.Resume ||
+                        service.businessType === pitchCardTypes.Basic ||
+                        service.businessType === pitchCardTypes.Job
+                            ? createAlias($event.target.value)
+                            : updateNameOnBlur();
+                        calculateIntroTextTemplate()
+                    "
+                    [maxLength]="
+                        service.businessType === pitchCardTypes.Service
+                            ? 21
+                            : 35
+                    "
+                    autocomplete="new-password"
+                    class="new-input-blue sm"
+                    [formControlName]="
+                        service.businessType === pitchCardTypes.EmployerPortal
+                            ? 'name'
+                            : 'businessName'
+                    "
+                    id="businessName"
+                    pInputText
+                    tabindex="1"
+                    type="text"
+                />
+                <label
+                    *ngIf="service.businessType === pitchCardTypes.Service"
+                    for="businessName"
+                >Name *
+                </label>
+                <label
+                    *ngIf="service.businessType === pitchCardTypes.Resume"
+                    for="businessName"
+                >Full Name *</label
+                >
+                <label
+                    *ngIf="
+                        service.businessType !== pitchCardTypes.Resume &&
+                        service.businessType !== pitchCardTypes.Service
+                    "
+                    for="businessName"
+                >Business Name *</label
+                >
+
+                <div
+                    class="sprite eye"
+                    *ngIf="
+                        form.value.isHideTitle &&
+                        service.businessType === pitchCardTypes.Employee
+                    "
+                    (click)="toggleNameField()"
+                ></div>
+                <div
+                    class="sprite close-eye"
+                    *ngIf="
+                        !form.value.isHideTitle &&
+                        service.businessType === pitchCardTypes.Employee
+                    "
+                    (click)="toggleNameField()"
+                ></div>
+                <div
+                    class="sprite plus"
+                    *ngIf="
+                        service.businessType === pitchCardTypes.Service &&
+                        !showAdditionalNameField
+                    "
+                    (click)="addAnotherNameField()"
+                ></div>
+                <div
+                    class="form-errors"
+                    *ngIf="
+                        form.controls?.businessName?.errors ||
+                        form.controls?.name?.errors
+                    "
+                >
+                    <div
+                        *ngIf="
+                            form.controls?.businessName?.errors.pattern ||
+                            form.controls?.name?.errors.pattern
+                        "
+                        translate
+                    >
+                        err_invalid_buisnessname
+                    </div>
+                </div>
+            </span>
+      <span class="p-float-label" *ngIf="showAdditionalNameField">
+                <input
+                    (blur)="
+                        service.tileRequiredState = form.valid;
+                        updateNameOnBlur()
+                    "
+                    [maxLength]="21"
+                    autocomplete="new-password"
+                    class="new-input-blue sm"
+                    formControlName="secondBusinessName"
+                    id="secondBusinessName"
+                    pInputText
+                    tabindex="1"
+                    type="text"
+                />
+                <label for="secondBusinessName">Name #2</label>
+                <div
+                    class="pi pi-times absolute right-0 pointer text-xl font-bold bg-white pl-1"
+                    style="top: 40%"
+                    *ngIf="
+                        service.businessType === pitchCardTypes.Service &&
+                        showAdditionalNameField
+                    "
+                    (click)="removeAnotherNameField()"
+                ></div>
+                <div
+                    class="form-errors"
+                    *ngIf="form.controls.secondBusinessName.errors"
+                >
+                    <div
+                        *ngIf="form.controls.secondBusinessName.errors.pattern"
+                        translate
+                    >
+                        err_invalid_buisnessname
+                    </div>
+                </div>
+            </span>
+      <span
+          class="p-float-label"
+          *ngIf="
+                    service.businessType !== pitchCardTypes.Employee &&
+                    service.businessType !== pitchCardTypes.Resume &&
+                    service.businessType !== pitchCardTypes.EmployerPortal
+                "
+      >
+                <input
+                    (blur)="
+                        service.tileRequiredState = form.valid;
+                        service.businessType === pitchCardTypes.Service
+                            ? createAlias($event.target.value)
+                            : updateFieldOnBlur('title');
+                        calculateIntroTextTemplate()
+                    "
+                    [maxLength]="50"
+                    autocomplete="new-password"
+                    class="new-input-blue sm"
+                    [formControlName]="'title'"
+                    [required]="
+                        !!service?.business?.organizationId &&
+                        service.businessType === pitchCardTypes.Service
+                    "
+                    id="title"
+                    pInputText
+                    tabindex="2"
+                    title
+                    type="text"
+                />
+                <label
+                    for="title"
+                    *ngIf="
+                        service.businessType === pitchCardTypes.Service ||
+                        service.businessType === pitchCardTypes.Resume
+                    "
+                >Title
+                  {{
+                  service?.business?.organizationId &&
+                  service.businessType === pitchCardTypes.Service
+                      ? '*'
+                      : ''
+                  }}
+                </label>
+                <label
+                    for="title"
+                    *ngIf="
+                        service.businessType === pitchCardTypes.Basic ||
+                        service.businessType === pitchCardTypes.Job ||
+                        service.businessType === pitchCardTypes.EmployerPortal
+                    "
+                >Your Name</label
+                >
+
+                <div
+                    class="pi pi-eye absolute right-0 pointer text-xl font-bold bg-white pl-1"
+                    style="top: 40%"
+                    *ngIf="
+                        form.value.isHideTitle &&
+                        service.businessType !== pitchCardTypes.EmployerPortal
+                    "
+                    (click)="toggleTitleField()"
+                ></div>
+                <div
+                    class="pi pi-eye-slash absolute right-0 pointer text-xl font-bold bg-white pl-1"
+                    style="top: 40%"
+                    *ngIf="
+                        !form.value.isHideTitle &&
+                        service.businessType !== pitchCardTypes.EmployerPortal
+                    "
+                    (click)="toggleTitleField()"
+                ></div>
+            </span>
+      <span class="p-float-label">
+                <input
+                    autocomplete="new-password"
+                    class="new-input-blue sm"
+                    tabindex="2"
+                    id="email"
+                    type="text"
+                    size="30"
+                    pInputText
+                    formControlName="email"
+                    (blur)="
+                        service.tileRequiredState = form.valid;
+                        updateFieldOnBlur('email')
+                    "
+                />
+                <label
+                    *ngIf="
+                        service.businessType !== pitchCardTypes.Basic &&
+                        service.businessType !== pitchCardTypes.Premium
+                    "
+                >
+                    {{ isOrganization ? 'Company Contact Email' : 'Email' }} *
+                </label>
+                <label
+                    *ngIf="
+                        service.businessType === pitchCardTypes.Basic ||
+                        service.businessType === pitchCardTypes.Premium
+                    "
+                    for="email"
+                >Business Email *</label
+                >
+                <div class="form-errors" *ngIf="form.controls.email.errors">
+                    <div *ngIf="form.controls.email.errors.pattern" translate>
+                        err_invalid_emailId
+                    </div>
+                </div>
+            </span>
+      <span class="p-float-label">
+                <p-inputMask
+                    id="contactNumber"
+                    [tabindex]="3"
+                    mask="(999) 999-9999"
+                    autocomplete="tel"
+                    type="tel"
+                    size="30"
+                    inputmode="tel"
+                    formControlName="contactNumber"
+                    styleClass="new-input-blue sm"
+                    [unmask]="true"
+                    (onBlur)="
+                        service.tileRequiredState = form.valid;
+                        updateFieldOnBlur('contactNumber')
+                    "
+                >
+                </p-inputMask>
+                <label for="contactNumber"
+                >{{
+                  isOrganization
+                      ? 'Business Phone Number'
+                      : 'Phone Number'
+                  }}
+                  *</label
+                >
+                <div
+                    class="form-errors"
+                    *ngIf="form.controls.contactNumber.errors"
+                >
+                    <div
+                        *ngIf="form.controls.contactNumber.errors.pattern"
+                        translate
+                    >
+                        err_required_phone_number
+                    </div>
+                </div>
+            </span>
+      <div
+          class="alias-section"
+          *ngIf="service.businessType !== pitchCardTypes.EmployerPortal"
+      >
+        <p *ngIf="!editAliasMode">Your PitchCard link will be:</p>
+        <p
+            *ngIf="!editAliasMode"
+            class="alias-link non-edit"
+            [ngClass]="
+                        (!form.value.alias || form.value.alias.length < 3) &&
+                        'no-alias'
+                    "
+        >
+          <span>{{ cardUrl }}</span>
+          <span>{{ form.value.alias }}</span>
+        </p>
+        <p *ngIf="editAliasMode" style="margin-block-end: 0">
+          Change your alias below:
+        </p>
+        <div *ngIf="editAliasMode" class="edit-alias">
+          <span class="alias-link">{{ cardUrl }}</span>
+          <input
+              autocomplete="new-password"
+              class="new-input-blue sm"
+              [ngClass]="
+                            (!form.value.alias ||
+                                form.value.alias.length < 3) &&
+                            'invalid-alias'
+                        "
+              tabindex="2"
+              formControlName="alias"
+              id="alias"
+              type="text"
+              size="30"
+              #aliasInput
+              (blur)="
+                            service.tileRequiredState = form.valid;
+                            validateAlias(form.value.alias)
+                        "
+          />
+        </div>
+        <div class="button-block">
+          <div
+              *ngIf="form.controls.alias.errors && form.value.alias"
+              class="flex align-items-center justify-content-center"
+              (click)="validateAlias(form.value.alias)"
+          >
+            <i
+                [ngStyle]="{
+                                color: !availableAlias ? '#ff3366' : '#f2f2f2'
+                            }"
+                class="pi pi-times"
+                pTooltip="Alias is invalid"
+                tooltipPosition="top"
+            >
+            </i>
+          </div>
+          <div
+              *ngIf="!form.controls.alias.errors"
+              class="flex align-items-center justify-content-center"
+              (click)="validateAlias(form.value.alias)"
+          >
+            <i
+                [ngStyle]="{
+                                color: availableAlias ? '#25afb5' : '#f2f2f2'
+                            }"
+                #tick
+                class="pi pi-check"
+                pTooltip="{{
+                                availableAlias
+                                    ? 'Alias is valid'
+                                    : 'Validate alias'
+                            }}"
+                tooltipPosition="top"
+            >
+            </i>
+          </div>
+          <div
+              (click)="toggleEditAliasMode()"
+              class="flex align-items-center justify-content-center"
+              [ngStyle]="{
+                            'border-left': form.value.alias
+                                ? '1px solid #f2f2f2'
+                                : 'none',
+                            'box-sizing': form.value.alias
+                                ? 'content-box'
+                                : 'border-box'
+                        }"
+          >
+            <i
+                class="pi pi-pencil"
+                pTooltip="Change alias"
+                tooltipPosition="top"
+            ></i>
+          </div>
+        </div>
+        <div
+            class="form-errors alias-error"
+            *ngIf="
+                        !form?.value?.alias ||
+                        form?.value?.alias?.length < 3 ||
+                        form?.controls?.alias?.errors
+                    "
+        >
+          <div
+              *ngIf="
+                            form?.value?.alias?.length < 3 &&
+                            form?.value?.alias?.length > 0
+                        "
+          >
+            Alias is too short.
+          </div>
+          <div *ngIf="form.controls?.alias?.errors?.invalid">
+            This alias is taken - please choose another.
+          </div>
+        </div>
+      </div>
+      <span class="p-float-label" *ngIf="isOrganization">
+                <input
+                    class="new-input-blue sm"
+                    tabindex="4"
+                    id="website"
+                    type="text"
+                    size="30"
+                    pInputText
+                    autocomplete="new-password"
+                    appNoWhiteSpace
+                    [formControlName]="'websiteLink'"
+                    (blur)="
+                        service.tileRequiredState = form.valid;
+                        updateFieldOnBlur('websiteLink')
+                    "
+                />
+                <label for="website">Business Website</label>
+            </span>
+    </div>
+    <div class="layout-card grid-column">
+            <span
+                class="p-float-label"
+                *ngIf="
+                    service.businessType !== pitchCardTypes.Resume &&
+                    !isOrganization
+                "
+            >
+                <input
+                    class="new-input-blue sm"
+                    tabindex="4"
+                    id="websiteLink"
+                    type="text"
+                    size="30"
+                    pInputText
+                    autocomplete="new-password"
+                    appNoWhiteSpace
+                    [formControlName]="'websiteLink'"
+                    (blur)="
+                        service.tileRequiredState = form.valid;
+                        updateFieldOnBlur('websiteLink')
+                    "
+                />
+                <label for="websiteLink">Website</label>
+            </span>
+      <span class="p-float-label">
+                <input
+                    class="new-input-blue sm"
+                    tabindex="5"
+                    placeholder=""
+                    id="address"
+                    type="text"
+                    size="30"
+                    pInputText
+                    autocomplete="new-password"
+                    formControlName="address"
+                    appSearchLocation
+                    (setAddress)="updateAddress($event)"
+                    (blur)="
+                        service.tileRequiredState = form.valid;
+                        updateFieldOnBlur('address')
+                    "
+                />
+                <label for="address"
+                >{{
+                  isOrganization ? 'Business Address' : 'Address'
+                  }}
+                  *</label
+                >
+
+                <div class="form-errors" *ngIf="form.controls.address.errors">
+                    <div *ngIf="form.controls.address.errors.notFound">
+                        No location
+                    </div>
+                </div>
+            </span>
+      <span class="p-float-label">
+                <p-autoComplete
+                    (onBlur)="
+                        service.tileRequiredState = form.valid;
+                        updateNameOnBlur()
+                    "
+                    [tabindex]="6"
+                    dropdownMode="current"
+                    (completeMethod)="filterCities($event)"
+                    (onClear)="clearCityList($event, 'city')"
+                    [dropdown]="false"
+                    [delay]="350"
+                    [minLength]="2"
+                    [required]="true"
+                    [size]="30"
+                    [suggestions]="filteredCitiesList"
+                    #cityField
+                    autoHighlight="true"
+                    autocomplete="address-level2"
+                    field="label"
+                    formControlName="city"
+                    id="city"
+                    styleClass="new-autocomplete-blue sm"
+                ></p-autoComplete>
+                <label for="city" translate>City *</label>
+                <div class="form-errors" *ngIf="form.controls.city.errors">
+                    <div
+                        *ngIf="
+                            form.controls.city.errors.pattern ||
+                            form.controls.city.errors.notFound
+                        "
+                        translate
+                    >
+                        Invalid
+                    </div>
+                </div>
+            </span>
+      <div class="two-fields-row">
+                <span class="p-float-label">
+                    <p-autoComplete
+                        (onBlur)="
+                            service.tileRequiredState = form.valid;
+                            updateNameOnBlur()
+                        "
+                        [tabindex]="7"
+                        (completeMethod)="filterStates($event)"
+                        (onClear)="clearCityList($event, 'state')"
+                        [dropdown]="true"
+                        dropdownMode="current"
+                        [minLength]="2"
+                        [required]="true"
+                        [size]="30"
+                        [suggestions]="filteredStatesList"
+                        #stateNames
+                        autoHighlight="true"
+                        field="label"
+                        autocomplete="address-level1"
+                        formControlName="state"
+                        id="state"
+                        styleClass="new-autocomplete-blue sm"
+                    ></p-autoComplete>
+
+                    <label for="state" translate>State *</label>
+                    <div class="form-errors" *ngIf="form.controls.state.errors">
+                        <div
+                            *ngIf="
+                                form.controls.state.errors.pattern ||
+                                form.controls.state.errors.notFound
+                            "
+                            translate
+                        >
+                            Invalid
+                        </div>
+                    </div>
+                </span>
+        <span class="p-float-label">
+                    <input
+                        [tabindex]="8"
+                        class="new-input-blue sm"
+                        autocomplete="postal-code"
+                        type="tel"
+                        inputmode="tel"
+                        id="zip"
+                        size="30"
+                        maxlength="5"
+                        pInputText
+                        formControlName="zip"
+                        (input)="blockChars($event)"
+                        (keydown)="onPaste($event, 'zip')"
+                        (blur)="
+                            service.tileRequiredState = form.valid;
+                            updateFieldOnBlur('zip')
+                        "
+                    />
+
+                    <label for="zip">Zip Code *</label>
+                    <div class="form-errors" *ngIf="form.controls.zip.errors">
+                        <div *ngIf="form.controls.zip.errors.pattern" translate>
+                            Invalid Zip Code
+                        </div>
+                    </div>
+                </span>
+      </div>
+      <div class="p-float-label">
+        <p-checkbox
+            (onBlur)="
+                        service.tileRequiredState = form.valid;
+                        updateNameOnBlur()
+                    "
+            [tabindex]="9"
+            name="hideBusinessAddress"
+            formControlName="isHideAddress"
+            [label]="
+                        service.businessType === pitchCardTypes.Resume
+                            ? 'Hide your address from employers'
+                            : 'Hide your address from customers'
+                    "
+            class="checkbox-address"
+            binary="true"
+        >
+        </p-checkbox>
+      </div>
+    </div>
+  </div>
+
+  <div
+      class="business-details-form"
+      *ngIf="service.businessType !== pitchCardTypes.Job && !isOrganization"
+  >
+    <div
+        class="layout-card grid-column w-12"
+        [ngClass]="{
+                'not-allowed':
+                    !form.get('businessName').value && isDefaultTemplate
+            }"
+    >
+      <app-text-introduction
+          formControlName="introductionOptions"
+          (runReset)="resetOptions()"
+          [extraContactNumber]="contactNumber"
+          [variables]="introTextVariables"
+          [isDefaultTemplate]="isDefaultTemplate"
+          [charLimit]="charLimit"
+          [disabled]="
+                    !form.get('businessName').value && isDefaultTemplate
+                "
+      >
+      </app-text-introduction>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,111 @@
+<div class="w-12">
+  <div
+      class="grid align-items-center justify-content-between mt-2 mb-3 mx-0"
+      [ngClass]="{ 'flex-nowrap': isMobile }"
+  >
+    <div class="grid align-items-center m-0">
+      <h3 class="text-xl mr-1 mb-0 mt-0">TEXT Introduction</h3>
+
+      <div class="grid align-items-center m-0">
+        <div class="new-badge uppercase pointer">New</div>
+        <div
+            class="font-italic text-xs font-light ml-1 mt-0 grid align-items-center"
+        >
+          In partnership with
+          <a
+              href="https://revetize.com/demo_request2"
+              class="text-decoration"
+              target="_blank"
+          >
+            <img
+                src="assets/images/partners/revertize-blue.svg"
+                class="ml-1"
+                alt="revertize"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex align-items-center flex-nowrap">
+      <label>{{ textOptions.isEnabledIntroText ? 'On' : 'Off' }}</label>
+      <p-inputSwitch
+          [(ngModel)]="textOptions.isEnabledIntroText"
+          [disabled]="disabled"
+          (onChange)="onChange(textOptions)"
+          styleClass="scale-08"
+      >
+      </p-inputSwitch>
+    </div>
+
+    <div class="text-xxs" *ngIf="!isMobile">
+      When people select the “TEXT Introduction” option when sharing your
+      PitchCard, this is the default text message they will refer you
+      with.
+    </div>
+  </div>
+
+  <div class="text-xxs mb-2" *ngIf="isMobile">
+    When people select the “TEXT Introduction” option when sharing your
+    PitchCard, this is the default text message they will refer you with.
+  </div>
+
+  <div class="text-normal">
+    Please confirm your mobile number to receive referral texts{{
+    textOptions.isEnabledIntroText ? '*' : ''
+    }}
+  </div>
+  <span class="p-float-label w-6 md:w-4 mb-3">
+        <p-inputMask
+            id="contactNumber"
+            [tabindex]="3"
+            mask="(999) 999-9999"
+            placeholder="(999) 999-9999"
+            autocomplete="tel"
+            type="tel"
+            size="30"
+            inputmode="tel"
+            styleClass="new-input-blue sm"
+            [(ngModel)]="textOptions.extraPhoneNumber"
+            (onBlur)="onChange(textOptions)"
+            [required]="textOptions.isEnabledIntroText"
+            [disabled]="disabled"
+            [unmask]="true"
+        ></p-inputMask>
+    </span>
+  <span class="p-float-label form-field relative">
+        <span
+            class="reset-circle absolute p-2 z-1"
+            [ngClass]="{
+                'bg-green pointer': !_isDefaultTemplate,
+                'bg-gray not-allowed': _isDefaultTemplate
+            }"
+            (click)="resetInit($event)"
+            [pTooltip]="'Reset to default'"
+            [tooltipPosition]="'top'"
+        >
+            <i class="pi pi-refresh color-white"></i>
+        </span>
+
+        <p-editor
+            [(ngModel)]="textOptions.introText"
+            #editor
+            class="w-12"
+            [styleClass]="'pitch-editor with-reset no-options'"
+            [style]="{ height: '100px' }"
+            [required]="textOptions.isEnabledIntroText"
+            [readonly]="disabled"
+            (onTextChange)="onTextEditorChange($event)"
+            (onSelectionChange)="setRetain($event)"
+        >
+            <ng-template pTemplate="header"></ng-template>
+        </p-editor>
+
+        <div
+            class="form-errors"
+            *ngIf="textOptions.textValue?.length > charLimit"
+        >
+            Text should be maximum {{ charLimit }} characters long.
+        </div>
+    </span>
+</div>

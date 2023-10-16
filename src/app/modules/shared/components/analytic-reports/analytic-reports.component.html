@@ -1,0 +1,74 @@
+<div class="team-main-container analytics-wrap no-margins no-padding">
+  <div
+      class="step-header grid align-items-baseline no-margins"
+      [ngClass]="{ 'justify-content-between': product }"
+  >
+    <h2 class="no-margins">Analytics</h2>
+    <div class="text-right w-8" *ngIf="product">
+      <h3 class="text-ellipsis">{{ product.businessName }}</h3>
+      <p class="no-margins">
+        {{
+        getBusinessTypeValue(
+            product?.businessType ? product.businessType : ''
+        )
+        }}
+      </p>
+    </div>
+  </div>
+
+  <div class="step-body mt-15" [formGroup]="reportsForm">
+    <div class="grid justify-content-around align-items-center no-margins">
+      <div class="calendar-block">
+        <div class="calendar-block-label">Start Date</div>
+        <p-calendar
+            formControlName="startDate"
+            [showIcon]="true"
+            styleClass="simple-calendar"
+            [maxDate]="reportsForm.get('endDate').value"
+        ></p-calendar>
+      </div>
+      <div class="calendar-block">
+        <div class="calendar-block-label">End Date</div>
+        <p-calendar
+            formControlName="endDate"
+            [showIcon]="true"
+            styleClass="simple-calendar"
+            [maxDate]="maxDateValue"
+            [minDate]="reportsForm.get('startDate').value"
+        ></p-calendar>
+      </div>
+    </div>
+
+    <ul
+        class="analytics-tabs grid justify-content-between"
+        *ngIf="chartTabs?.length"
+    >
+      <li
+          *ngFor="let tab of chartTabs; let i = index"
+          class="pointer"
+          [ngClass]="{ 'active-tab': tab.active }"
+          (click)="selectChartTab(i, tab)"
+      >
+        {{ tab.name | splitCamelCase }}
+      </li>
+    </ul>
+
+    <div class="chart-wrap" *ngIf="chartData">
+      <p-chart
+          type="bar"
+          [data]="chartData"
+          [options]="chartOptions"
+      ></p-chart>
+    </div>
+    <div
+        class="chart-description text-center mt-10"
+        *ngIf="chartData?.datasets?.length"
+    >
+      {{
+      chartData.datasets[0].label === chartDataModel.VideoViewed
+          ? 'Seconds viewed'
+          : ''
+      }}
+    </div>
+  </div>
+</div>

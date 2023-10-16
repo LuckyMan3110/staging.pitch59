@@ -1,0 +1,950 @@
+@import '../../../../styles/variables';
+
+.search-result-thumbnail {
+  max-width: calc(360px * var(--scale-factor));
+  height: calc(575px * var(--scale-factor));
+  margin: auto;
+  border-radius: calc(8px * var(--scale-factor));
+  box-shadow: 0 1px 5px 0 rgba(212, 212, 212, 0.5),
+  0 2px 13px 0 rgba(0, 0, 0, 0.5);
+  padding: calc(20px * var(--scale-factor));
+  background-color: #fff;
+}
+
+@mixin warning {
+  color: #f36 !important;
+}
+
+@mixin flex-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.thumb-logo-job {
+  padding: calc(14px * var(--scale-factor)) 0 0;
+}
+
+.thumb-logo {
+  padding: calc(7px * var(--scale-factor)) 0;
+  margin: calc(30px * var(--scale-factor)) 0;
+}
+
+.thumb-logo,
+.thumb-logo-job {
+  height: calc(74px * var(--scale-factor));
+
+  img {
+    height: calc(60px * var(--scale-factor));
+    width: auto;
+  }
+
+  h2 {
+    margin: 0;
+    line-height: calc(60px * var(--scale-factor));
+    font-size: calc(32px * var(--scale-factor));
+  }
+
+  &.warning {
+    h2 {
+      line-height: calc(60px * var(--scale-factor));
+      font-size: calc(32px * var(--scale-factor));
+    }
+
+    @include warning();
+  }
+
+  color: $titleColor;
+
+  &.service,
+  &.nonprofit {
+    color: $serviceCardColor;
+  }
+
+  &.resume {
+    color: $resumeCardColor;
+  }
+}
+
+.card-service-title {
+  color: gray;
+  font-size: calc(0.8rem * var(--name-size) * var(--scale-factor));
+  letter-spacing: calc(0.2rem * var(--name-size) * var(--scale-factor));
+  padding-top: calc(42px * var(--scale-factor));
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.cards-names-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: calc(3.3rem * var(--scale-factor));
+  padding: calc(5px * var(--scale-factor)) calc(7px * var(--scale-factor));
+
+  &.warning {
+    span {
+      @include warning();
+    }
+  }
+
+  span {
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .business-title {
+    font-size: calc(21px * var(--name-size) * var(--scale-factor));
+    font-weight: 600;
+    color: #4d4d4d;
+  }
+
+  .business-name {
+    font-size: calc(15px * var(--name-size) * var(--scale-factor));
+    color: #828282;
+    //display: flex;
+    //justify-content: space-evenly;
+    width: 100%;
+  }
+}
+
+.resume-card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: calc(170px * var(--scale-factor));
+  justify-content: space-around;
+
+  a {
+    &.empty {
+      opacity: 0.5;
+    }
+
+    img {
+      height: 2.7rem;
+      width: 2.7rem;
+    }
+  }
+
+  p-dialog {
+    font-size: 1rem;
+  }
+
+  .resume-block {
+    @include flex-centered();
+    height: 66%;
+
+    .resume-btn {
+      @include flex-centered();
+      border: 1px solid $resumeCardColor;
+      border-radius: 4px;
+      padding: 0px calc(50px * var(--scale-factor));
+
+      &.warning {
+        border: 1px solid $stateErrorTextColor;
+      }
+
+      &.unavailable {
+        border: 1px solid $myBusinessBorder;
+        pointer-events: none;
+        cursor: not-allowed;
+
+        span {
+          color: $myBusinessBorder;
+        }
+      }
+
+      span {
+        text-transform: uppercase;
+        font-size: calc(1rem * var(--scale-factor));
+        color: $resumeCardColor;
+
+        &.warning {
+          color: #f36;
+        }
+      }
+
+      &:hover {
+        cursor: pointer;
+        background: #d52c2c66;
+      }
+
+      @media screen and (max-width: 768px) {
+        &:hover {
+          background: none;
+        }
+        &:active {
+          background: #d52c2c66;
+        }
+      }
+    }
+  }
+
+  .person-info-block {
+    @include flex-centered();
+    height: 33%;
+    border-top: 1px solid #dcdcdc;
+    flex-direction: column;
+
+    .business-name {
+      margin-top: calc(4px * var(--scale-factor));
+      font-size: calc(18px * var(--name-size) * var(--scale-factor));
+      font-weight: 600;
+      color: #4d4d4d;
+      //display: flex;
+      //justify-content: space-evenly;
+      width: 100%;
+    }
+
+    .title {
+      font-size: calc(1.1rem * var(--title-size) * var(--scale-factor));
+      color: #828282;
+    }
+  }
+}
+
+.service-card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: calc(170px * var(--scale-factor));
+  justify-content: space-around;
+
+  .logo-block {
+    @include flex-centered();
+    height: 66%;
+  }
+
+  .person-info-block {
+    @include flex-centered();
+    height: 33%;
+    border-top: 1px solid #dcdcdc;
+    flex-direction: column;
+
+    .business-name {
+      margin-top: calc(4px * var(--scale-factor));
+      font-size: calc(18px * var(--name-size) * var(--scale-factor));
+      font-weight: 600;
+      color: #4d4d4d;
+      //display: flex;
+      //justify-content: space-evenly;
+      width: 100%;
+      text-align: center;
+    }
+
+    .title {
+      font-size: calc(1.1rem * var(--title-size) * var(--scale-factor));
+      color: #828282;
+    }
+  }
+}
+
+.job-card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: calc(100px * var(--scale-factor));
+  justify-content: space-around;
+  position: relative;
+  border: 2px solid $jobCardColor;
+  padding: 1px, calc(21px * var(--scale-factor)), 1px,
+  calc(20px * var(--scale-factor));
+  border-radius: calc(6px * var(--scale-factor));
+  color: #444;
+
+  &:hover {
+    background-color: #26b95c66;
+  }
+
+  .key {
+    color: #828282;
+    font-size: calc(1rem * var(--name-size) * var(--scale-factor));
+    width: 36%;
+  }
+
+  .value {
+    font-size: calc(1rem * var(--name-size) * var(--scale-factor));
+    width: auto;
+    max-width: 55%;
+    text-indent: calc(7px * var(--name-size) * var(--scale-factor));
+  }
+
+  .position {
+    font-size: calc(
+            1.4rem * var(--position-title-size) * var(--scale-factor)
+    );
+    font-weight: 700;
+    width: 100%;
+    text-align: center;
+  }
+
+  .job-block-info {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    img {
+      height: calc(22px * var(--scale-factor)) !important;
+      margin: calc(5px * var(--scale-factor));
+      vertical-align: bottom;
+    }
+  }
+}
+
+.resumeMargin {
+  margin-top: calc(4px * var(--scale-factor));
+
+  .video-review {
+    margin-top: calc(11px * var(--scale-factor));
+  }
+}
+
+span.p-dialog-title {
+  font-size: 1rem !important;
+}
+
+.description {
+  margin: 1rem 0.2rem;
+  max-width: fit-content;
+  font-size: 0.9375rem;
+}
+
+.video-review {
+  align-items: center;
+  border-radius: calc(4px * var(--scale-factor));
+  display: flex;
+  justify-content: center;
+  padding: calc(6px * var(--scale-factor)) calc(10px * var(--scale-factor));
+
+  &:hover {
+    background: #52bebe66;
+  }
+
+  &.service:hover,
+  &.nonprofit:hover {
+    background: #f7ce3766;
+  }
+
+  &.resume:hover {
+    background: #d52c2c66;
+  }
+
+  &.job:hover {
+    background: #26b95c66;
+  }
+
+  &:active {
+    filter: brightness(90%);
+  }
+
+  @media screen and (max-width: 768px) {
+    -webkit-tap-highlight-color: transparent;
+    &:hover,
+    &.service:hover,
+    &.nonprofit:hover,
+    &.resume:hover,
+    &.job:hover {
+      background: none;
+    }
+
+    &:active {
+      background: #52bebe66;
+      filter: brightness(100%);
+    }
+    &.service:active,
+    &.nonprofit:active {
+      background: #f7ce3766;
+    }
+    &.resume:active {
+      background: #d52c2c66;
+    }
+    &.job:active {
+      background: #26b95c66;
+    }
+  }
+
+  .head {
+    font-size: calc(17px * var(--scale-factor));
+    font-weight: 500;
+    text-transform: uppercase;
+    color: $titleColor;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+
+    &.service,
+    &.nonprofit {
+      color: $serviceCardColor;
+    }
+
+    &.resume {
+      color: $resumeCardColor;
+    }
+
+    &.job {
+      color: $jobCardColor;
+    }
+  }
+
+  .card-icon {
+    height: calc(1.875rem * var(--scale-factor));
+    margin-right: calc(0.5rem * var(--scale-factor));
+    width: auto;
+  }
+}
+
+.disable-contact,
+.sec-btn {
+  margin: calc(10px * var(--scale-factor)) 0px;
+  font-size: calc(19px * var(--scale-factor));
+  height: calc(40px * var(--scale-factor));
+  padding: calc(10px * var(--scale-factor));
+  text-transform: uppercase;
+  width: 100%;
+  background-position: 0 100%;
+  transition: all 0.4s ease-in-out;
+  text-shadow: 0px 6px 6px rgba(0, 0, 0, 0.15);
+  color: #fff !important;
+
+  &:hover {
+    background-position: 100% 0;
+    transition: all 0.4s ease-in-out;
+  }
+}
+
+.disable-contact {
+  border-radius: calc(4px * var(--scale-factor));
+  font-weight: 500;
+  opacity: 0.4;
+  text-transform: uppercase;
+}
+
+.video-thumbnail {
+  width: calc(320px * var(--scale-factor));
+  height: calc(180px * var(--scale-factor));
+  max-width: 100%;
+  padding: 0;
+  position: relative;
+  background-color: #000;
+  cursor: pointer;
+  z-index: 1;
+  border-radius: calc(4px * var(--scale-factor));
+
+  img {
+    height: 100%;
+    object-fit: cover;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    max-width: 100%;
+    border-radius: calc(4px * var(--scale-factor));
+  }
+
+  .big-video-svg {
+    position: absolute;
+    bottom: calc(8px * var(--scale-factor));
+    right: calc(8px * var(--scale-factor));
+    background: url('/assets/images/pitch-card-svg/play-outline.svg') no-repeat;
+    height: calc(42px * var(--scale-factor));
+    width: calc(42px * var(--scale-factor));
+    background-size: cover;
+
+    &.service,
+    &.nonprofit {
+      background: url('/assets/images/pitch-card-svg/service/play-outline.svg') no-repeat;
+      background-size: cover;
+    }
+
+    &.resume {
+      background: url('/assets/images/pitch-card-svg/resume/play-outline.svg') no-repeat;
+      background-size: cover;
+    }
+
+    &.job {
+      background: url('/assets/images/pitch-card-svg/job/play-outline.svg') no-repeat;
+      background-size: cover;
+    }
+  }
+
+  .video {
+    border-radius: calc(4px * var(--scale-factor));
+  }
+
+  .countdown-timer {
+    color: $white;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    opacity: 1;
+  }
+
+  .fade-out {
+    text-align: center;
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    opacity: 0;
+  }
+
+  &.warning {
+    background-color: transparent;
+
+    svg {
+      min-width: 46px;
+      min-height: 61px;
+    }
+
+    span {
+      display: none;
+    }
+  }
+}
+
+.review-wrap {
+  border-top: 1px solid $borderColor;
+}
+
+.box-wrap .icon-box {
+  border-right: 1px solid $borderColor;
+
+  &:last-child {
+    border-right: 0;
+  }
+}
+
+.gs-save,
+.gs-photos,
+.gs-pricing,
+.gs-share,
+.gs-watch-reviews {
+  color: $titleColor;
+
+  &.service,
+  &.nonprofit {
+    color: $serviceCardColor;
+  }
+
+  &.resume {
+    color: $resumeCardColor;
+  }
+
+  &.job {
+    color: $jobCardColor;
+  }
+
+  cursor: pointer;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.icon-wrap {
+  width: calc(31px * var(--scale-factor));
+  display: flex;
+  justify-content: flex-start;
+}
+
+.gs-save,
+.gs-photos,
+.gs-pricing,
+.gs-share {
+  font-size: calc(16px * var(--scale-factor));
+
+  &:hover {
+    background: #52bebe66;
+  }
+
+  &.service:hover,
+  &.nonprofit:hover {
+    background: #f7ce3766;
+  }
+
+  &.resume:hover {
+    background: #d52c2c66;
+  }
+
+  &.job:hover {
+    background: #26b95c66;
+  }
+
+  &:active {
+    filter: brightness(90%);
+  }
+
+  @media screen and (max-width: 768px) {
+    -webkit-tap-highlight-color: transparent;
+    &:hover,
+    &.service:hover,
+    &.nonprofit:hover,
+    &.resume:hover,
+    &.job:hover {
+      background: none;
+    }
+
+    &:active {
+      background: #52bebe66;
+      filter: brightness(100%);
+    }
+    &.service:active,
+    &.nonprofit:active {
+      background: #f7ce3766 !important;
+    }
+    &.resume:active {
+      background: #d52c2c66 !important;
+    }
+    &.job:active {
+      background: #26b95c66 !important;
+    }
+  }
+}
+
+.gs-icon {
+  height: calc(22px * var(--scale-factor)) !important;
+  margin: calc(5px * var(--scale-factor));
+  object-fit: initial !important;
+  width: auto !important;
+}
+
+.grid-share-container {
+  display: grid;
+  grid-template-areas:
+        'save pricing'
+        'photos share';
+  grid-gap: calc(4px * var(--scale-factor));
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+}
+
+.gs-save,
+.gs-photos,
+.share-button .gs-photos,
+.gs-pricing {
+  align-self: center;
+  border-radius: calc(5px * var(--scale-factor));
+  height: 100%;
+}
+
+.share-button {
+  font-size: calc(1rem * var(--scale-factor));
+  background-image: $basicGradientColor;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: calc(5px * var(--scale-factor));
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white !important;
+  cursor: pointer;
+  background-position: 0 100%;
+  transition: all 0.4s ease-in-out;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+  &:hover {
+    background-position: 100% 0;
+    transition: all 0.4s ease-in-out;
+  }
+
+  &:active {
+    filter: brightness(80%);
+    //transition: all .0s ease-in-out;
+  }
+
+  &.service,
+  &.nonprofit {
+    background-image: $nonprofitGradientColor;
+  }
+
+  &.resume {
+    background-image: $resumeGradientColor;
+  }
+
+  &.job {
+    background-image: $jobGradientColor;
+  }
+}
+
+.leave-a-review {
+  border-radius: calc(4px * var(--scale-factor));
+  font-size: calc(1rem * var(--scale-factor));
+  font-weight: 500;
+  margin: calc(0.875rem * var(--scale-factor)) 0;
+  padding: calc(9px * var(--scale-factor)) calc(12px * var(--scale-factor));
+}
+
+.warning {
+  @include warning();
+
+  .demo-placeholder {
+    width: calc(320px * var(--scale-factor));
+    height: calc(180px * var(--scale-factor));
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: calc(2px * var(--scale-factor)) solid #f36;
+
+    img {
+      width: auto;
+      height: 70%;
+    }
+  }
+}
+
+.card-social-block {
+  display: flex;
+  justify-content: space-around;
+  margin-top: -0.5rem;
+  width: 16rem;
+
+  a {
+    &.empty {
+      opacity: 0.5;
+    }
+
+    img {
+      height: 2.5rem;
+      width: 2.5rem;
+    }
+  }
+}
+
+.contact-menu-container {
+  position: relative;
+  display: none;
+}
+
+.cmc-no-exchange {
+  position: relative;
+  display: none;
+}
+
+.contact-menu {
+  font-weight: 300;
+  position: absolute;
+  color: rgba(0, 0, 0, 1);
+  bottom: 0;
+  width: 100%;
+  background: rgb(227, 254, 255);
+  background: linear-gradient(
+                  45deg,
+                  rgba(227, 254, 255, 0.95) 0%,
+                  rgba(254, 254, 254, 0.95) 100%
+  );
+  margin: 0;
+  padding: 0;
+  border-radius: calc(4px * var(--scale-factor));
+  border: 1px solid #bbbbbb;
+  box-shadow: 2px 3px 10px -2px rgba(0, 0, 0, 0.75);
+  font-size: calc(14px * var(--scale-factor));
+  z-index: 1000;
+
+  ul {
+    flex-direction: row;
+    display: block;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    list-style-type: none;
+    border-bottom: 1px solid #dedede;
+    padding: calc(10px * var(--scale-factor));
+    text-align: center;
+    cursor: pointer;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    .contact-menu-icon {
+      max-height: calc(32px * var(--scale-factor));
+      width: calc(32px * var(--scale-factor));
+      object-fit: contain;
+    }
+
+    &:hover {
+      background-color: #e8ad01;
+      border-radius: 4px;
+    }
+
+    > a {
+      text-decoration: none;
+      width: 100%;
+    }
+
+    > div {
+      align-self: center;
+
+      &:not(:first-child) {
+        flex-grow: 1;
+      }
+    }
+
+    &:active {
+      filter: brightness(90%);
+    }
+  }
+}
+
+.mob-contact-menu {
+  overflow: hidden;
+  padding: 0;
+  border-radius: 0.5em;
+  position: relative;
+  margin: 0 5px;
+
+  li {
+    padding: 0.5em;
+    border-bottom: 1px solid #8f8f8f;
+    margin: 0;
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.75);
+    position: relative;
+
+    &:first-child {
+      border-top-left-radius: 0.5em;
+      border-top-right-radius: 0.5em;
+    }
+
+    &:last-child {
+      border-radius: 0.5em;
+    }
+
+    &.cm-title-video-review {
+      border-bottom-left-radius: 0.5em;
+      border-bottom-right-radius: 0.5em;
+    }
+  }
+
+  li,
+  a {
+    color: $anchorColor;
+    text-decoration: unset;
+
+    span:hover,
+    a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  li:hover {
+    background: #c6d1d9;
+  }
+
+  .contact-icon {
+    font-size: 25px;
+
+    img {
+      width: 30px;
+    }
+  }
+
+  .cm-title-video-review {
+    .contact-icon {
+      color: #d9611c !important;
+    }
+  }
+
+  @media (max-width: 380px) and (max-height: 550px) {
+    li {
+      padding: 0.3em 0.5em;
+    }
+  }
+}
+
+.cm-title {
+  font-weight: 700;
+  font-size: calc(16px * var(--scale-factor));
+  color: black;
+}
+
+.cm-value {
+  color: rgba(0, 0, 0, 1);
+  text-decoration: none;
+  font-size: calc(14px * var(--scale-factor));
+}
+
+.cm-title-video-review {
+  div {
+    span {
+      color: #d9611c !important;
+    }
+  }
+
+  &:hover {
+    background-color: #d9611c !important;
+
+    div {
+      span {
+        color: white !important;
+      }
+    }
+  }
+}
+
+.contact-menu-info {
+  height: auto !important;
+  background-color: unset !important;
+
+  div {
+    &:first-child {
+      align-self: start !important;
+    }
+
+    &:nth-child(2) {
+      padding-left: calc(10px * var(--scale-factor));
+    }
+  }
+}
+
+.cm-info-container {
+  text-align: left;
+}
+
+.video-rotated {
+  transform: rotateY(180deg);
+}
+
+video.video-rotated {
+  &::-webkit-media-controls-panel {
+    transform: rotateY(180deg);
+  }
+}
+
+.coming-soon {
+  background-color: $titleColor;
+  text-transform: initial;
+  color: white;
+  font-size: calc(32px * var(--scale-factor));
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+
+  &.nonprofit,
+  &.service {
+    background-color: $serviceCardColor;
+    color: white !important;
+  }
+
+  &.resume {
+    background-color: $resumeCardColor;
+  }
+
+  &.job {
+    background-color: $jobCardColor;
+  }
+}
+
+.flex-vertical {
+  display: flex;
+  align-items: center;
+}
+
+.firefoxBlur {
+  filter: blur(4px);
+}

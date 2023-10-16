@@ -1,0 +1,7 @@
+<div class="progress-bar-wrapper">
+  <div
+      class="filled"
+      [ngStyle]="{ width: getPercentsProgress().filledPercent + '%' }"
+  ></div>
+  <div class="percents">{{ totalPercents }}%</div>
+</div>

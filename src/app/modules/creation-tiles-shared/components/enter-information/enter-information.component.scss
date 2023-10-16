@@ -1,0 +1,240 @@
+:host {
+  width: 100%;
+}
+
+.business-details-form {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin: 2rem 0;
+
+  .layout-card {
+    padding: 20px;
+  }
+
+  & > * {
+    width: 48%;
+    padding: 10px;
+  }
+
+  @media (max-width: 992px) {
+    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+    & {
+      flex-direction: column;
+    }
+    & > * {
+      box-shadow: none;
+      width: auto;
+    }
+  }
+}
+
+.step-form {
+  h1 {
+    margin: 0;
+    @media (max-width: 767px) {
+      display: none;
+    }
+  }
+
+  .two-fields {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 767px) {
+    h1 {
+      margin-top: 0;
+    }
+  }
+}
+
+.new-input-blue,
+.checkbox-address,
+.two-fields {
+  margin-top: 1rem;
+}
+
+.checkbox-address {
+  align-items: center;
+  display: flex;
+}
+
+.alias-section {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  font-size: 14px;
+  border: 1px solid #cdcdcd;
+  color: #959595;
+
+  .button-simple {
+    height: 30px;
+    border: 1px solid #959595;
+  }
+
+  .alias-link,
+  input {
+    color: #0b0a0a;
+    font-weight: 600;
+    padding-left: 0 !important;
+    font-size: 13px;
+
+    .non-edit {
+      margin-block-start: 0.4rem;
+      margin-block-end: 0.4rem;
+    }
+  }
+
+  p {
+    margin-block-start: 0.2rem;
+    margin-block-end: 0.2rem;
+    overflow-wrap: anywhere;
+  }
+
+  a {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .edit-alias {
+    align-items: center;
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+    @media screen and (max-width: 480px) {
+      align-items: start;
+      flex-direction: column;
+    }
+    @media screen and(min-width: 768px) and (max-width: 1340px) {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .alias-link {
+      padding-top: 0.2rem;
+      padding-bottom: 0.25rem;
+      @media screen and (max-width: 767px) {
+        margin-block-start: 0.2rem;
+      }
+      @media screen and(min-width: 768px) and (max-width: 1340px) {
+        overflow-wrap: anywhere;
+      }
+    }
+
+    input {
+      background: transparent;
+      margin: 0;
+      margin-top: -0.7rem;
+      margin-bottom: -0.1rem;
+    }
+  }
+
+  .invalid-alias {
+    color: #f36;
+    font-size: 13px;
+  }
+}
+
+.review-address-block {
+  border-color: #ff3366;
+  border: 2px solid;
+  font-size: 1rem;
+
+  .p-g {
+    margin-top: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    color: #ff3366;
+  }
+
+  span {
+    font-weight: 600;
+  }
+}
+
+.review-address-block,
+.alias-section {
+  background: #f2f2f2 0% 0% no-repeat padding-box;
+  border-radius: 4px;
+  padding: 0 0.7rem;
+  position: relative;
+}
+
+.button-block {
+  background-color: #787878;
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 3px;
+  color: #f2f2f2;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-evenly;
+  // opacity: 0.5;
+  position: absolute;
+  right: -1px;
+  top: 0;
+  font-size: 1rem;
+
+  & > * {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+.pdf-block {
+  align-items: center;
+  display: flex;
+}
+
+.pdf-block-name {
+  align-items: center;
+  display: flex;
+}
+
+.pi.pi-file-pdf {
+  color: #ff3366;
+  font-size: 2.4rem;
+}
+
+.pdf-filename {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.p-dialog-title,
+.p-dialog-titlebar {
+  font-size: 5rem;
+}
+
+.delete-image-button {
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.sprite {
+  position: absolute;
+  top: 10px;
+  right: 2px;
+  cursor: pointer;
+}
+
+.invalid-alias {
+  border-bottom: 2px solid #f36 !important;
+}
+
+.no-alias {
+  color: #f36;
+}
+
+.alias-error {
+  left: 0;
+  bottom: -1.1rem;
+}
+
+@media (max-width: 767px) {
+  .business-details-form {
+    margin: 0;
+  }
+}

@@ -1,0 +1,515 @@
+/* Main Colors */
+
+@mixin gradient-border($gradientColor, $webkitWhiteMask) {
+  background: $gradientColor;
+  -webkit-mask: $webkitWhiteMask;
+  -webkit-mask-composite: destination-out;
+  background: $gradientColor;
+  mask-composite: exclude;
+}
+
+.bg-black {
+  background: #000 !important;
+}
+
+.bg-darkblue {
+  background: #00101a !important;
+}
+
+.bg-lightblue {
+  background: #004d7f !important;
+}
+
+.bg-blue {
+  background: #279abd !important;
+}
+
+.bg-teal {
+  background: #25afb5 !important;
+}
+
+.bg-darkgray {
+  background: #4d4d4d !important;
+}
+
+.bg-white {
+  background: #ffffff !important;
+}
+
+.bg-gold {
+  background: #e8ad01 !important;
+}
+
+.bg-nonprofit {
+  background: $serviceCardColor !important;
+}
+
+.bg-gray {
+  background: #d6d6d6 !important;
+}
+
+.bg-pink {
+  background: #f36 !important;
+}
+
+.bg-green {
+  background: #25afb5 !important;
+}
+
+.bg-resume-red {
+  background: $resumeCardColor !important;
+}
+
+.bg-job {
+  background: $jobCardColor !important;
+}
+
+.bg-inherit {
+  background: inherit !important;
+}
+
+.green {
+  color: #25afb5 !important;
+}
+
+.pink {
+  color: #f36 !important;
+}
+
+.gold {
+  color: #e8ad01 !important;
+}
+
+.nonprofit {
+  color: $serviceCardColor !important;
+}
+
+.resume-red {
+  color: $resumeCardColor !important;
+}
+
+.green-job {
+  color: $jobCardColor !important;
+}
+
+.darkgray {
+  color: #4d4d4d !important;
+}
+
+.lightgray {
+  color: #a4a4a4 !important;
+}
+
+.bd-job {
+  border-color: $jobCardColor !important;
+}
+
+.bd-green {
+  border-color: #25afb5 !important;
+}
+
+.bd-pink {
+  border-color: #f36 !important;
+}
+
+.bd-gold {
+  border-color: #e8ad01 !important;
+}
+
+.bd-nonprofit {
+  border-color: $serviceCardColor !important;
+}
+
+.bd-darkgray {
+  border-color: #4d4d4d !important;
+}
+
+.bd-resume-red {
+  border-color: $resumeCardColor !important;
+}
+
+.bd-none {
+  border: unset;
+}
+
+/* BUTTONS */
+.button-simple {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: capitalize;
+  border-radius: 4px;
+  margin: 5px 0;
+  height: 40px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1rem;
+  width: max-content;
+  padding: 0 1em;
+  text-align: center;
+  z-index: 1; // Use with gradient border
+
+  &:hover {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+
+  &:active {
+    filter: brightness(90%);
+  }
+
+  &.uppercase {
+    text-transform: uppercase;
+  }
+
+  &.rounded-border {
+    border-radius: 4px;
+    border: 1px solid;
+  }
+
+  &.full-rounded {
+    border-radius: 25px;
+    border: 1px solid;
+  }
+
+  &.full-width {
+    width: 100%;
+  }
+
+  &.sm-25 {
+    font-size: 12px;
+    height: 25px;
+    font-weight: 500;
+    padding: 0 10px;
+  }
+
+  &.sm-30 {
+    font-size: 13px;
+    height: 30px;
+  }
+
+  &.sm-35 {
+    font-size: 14px;
+    height: 35px;
+  }
+
+  &.lg-50 {
+    font-weight: 700;
+    height: 50px;
+    font-size: 1.25rem;
+    padding: 0.2em 2em;
+  }
+
+  &.lg-50-sm-font {
+    font-weight: 700;
+    height: 50px;
+    font-size: 1rem;
+    padding: 0.2em 2em;
+  }
+
+  &.lg-55 {
+    font-weight: 700;
+    height: 55px;
+    font-size: 1.25rem;
+    padding: 0 2em;
+  }
+
+  &.w-100 {
+    width: 100%;
+  }
+
+  &.lg-60 {
+    font-weight: 700;
+    height: 60px;
+    font-size: 1.5rem;
+    padding: 0 2em;
+  }
+
+  &.borders {
+    border: 1px solid;
+  }
+
+  &.disabled,
+  &:disabled {
+    filter: brightness(50%);
+    cursor: auto;
+    pointer-events: none;
+
+    &:hover {
+      box-shadow: none;
+    }
+
+    &:active {
+      filter: brightness(50%);
+    }
+  }
+
+  &.shock-pink {
+    background: $shockPinkGradientColor;
+  }
+
+  &.resume-g6t-bg {
+    background: $resumeGradient;
+  }
+
+  &.business-g6t-bg {
+    background: $basicGradient;
+  }
+
+  &.green {
+    background: #25afb5;
+    color: #fff !important;
+    font-weight: 700;
+  }
+
+  &.gradient-border-pink {
+    position: relative;
+    $bw: 3px; /* border width*/
+    $br: 4px; /* the radius */
+    border: unset;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: $br;
+      padding: $bw;
+      background: linear-gradient(
+                      0deg,
+                      rgba(121, 49, 251, 1) 0%,
+                      rgba(220, 87, 224, 1) 50%,
+                      rgba(242, 96, 218, 1) 100%
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+
+      background: -webkit-linear-gradient(
+                      0deg,
+                      rgba(121, 49, 251, 1) 0%,
+                      rgba(220, 87, 224, 1) 50%,
+                      rgba(242, 96, 218, 1) 100%
+      );
+      mask-composite: exclude;
+    }
+
+    .gradient-border-text {
+      background: linear-gradient(
+                      90.22deg,
+                      #7931fb 0.19%,
+                      #dc57e0 51.06%,
+                      #f260da 99.87%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      p {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  }
+
+  &.gradient-border {
+    position: relative;
+    $bw: 3px; /* border width*/
+    $br: 4px; /* the radius */
+    border: unset;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: $br;
+      padding: $bw;
+    }
+
+    &.resume-g6t::after {
+      @include gradient-border($resumeGradient, $webkitWhiteMask);
+    }
+
+    &.basic-g6t::after {
+      @include gradient-border($basicGradient, $webkitWhiteMask);
+    }
+  }
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+
+  span.arrow-back {
+    background: url('^../../assets/images/arrow-back.svg') no-repeat center;
+    height: 18px;
+    width: 10px;
+    margin-right: 7px;
+  }
+
+  span {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 35px;
+    color: $hrColor;
+  }
+
+  @media screen and (max-width: 767px) {
+    bottom: 35px;
+  }
+}
+
+.button-outline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: capitalize;
+  border-radius: 4px;
+  margin: 5px 0px;
+  height: 40px;
+  cursor: pointer;
+  padding: 10px;
+  color: #fff;
+  font-size: 1rem;
+  border: 1px solid white;
+
+  &:hover {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+
+  &:active {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &-gold {
+    background-color: transparent;
+    border-radius: 4px;
+    border: 1px solid #e7ac28;
+    color: #e7ac28;
+    cursor: pointer;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    height: 2.875rem;
+    margin-top: 2.3125rem;
+    min-width: fit-content;
+    text-transform: uppercase;
+    width: 47%;
+
+    &-m {
+      background-color: transparent;
+      border-radius: 4px;
+      border: 1px solid #e7ac28;
+      color: #e7ac28;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.8125rem;
+      height: 2.4375rem;
+      min-width: fit-content;
+      text-transform: uppercase;
+      width: 25%;
+    }
+  }
+}
+
+.gradient-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: capitalize;
+  border-radius: 4px;
+  margin: 5px 0px;
+  height: 40px;
+  cursor: pointer;
+  padding: 10px;
+  color: #fff;
+  font-size: 1rem;
+  background-image: $basicGradientColor;
+  width: 150px;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: calc(5px * var(--scale-factor));
+  vertical-align: middle;
+  text-transform: capitalize;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+  &.service,
+  &.nonprofit {
+    background-image: $nonprofitGradientColor;
+  }
+
+  &.resume {
+    background-image: $resumeGradientColor;
+  }
+
+  &.job {
+    background-image: $jobGradientColor;
+  }
+
+  &:hover {
+    background-position: 100% 0;
+    transition: all 0.4s ease-in-out;
+  }
+
+  &:focus {
+    transition: all 0.4s ease-in-out;
+    outline: none;
+  }
+
+  &:active {
+    filter: brightness(80%);
+    transition: all 0s ease-in-out;
+  }
+}
+
+img.btn-search {
+  height: 20px;
+  padding-right: 10px;
+}
+
+.button-disabled {
+  filter: brightness(50%);
+}
+
+.arrow-simple-btn {
+  display: flex;
+  align-items: center;
+
+  span.arrow-back {
+    background: url('^../../assets/images/arrow-back.svg') no-repeat center;
+    height: 18px;
+    width: 10px;
+    margin: 0 7px 0 0;
+  }
+
+  span {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    color: #bababa;
+  }
+
+  &.rotate span.arrow-back {
+    transform: rotate(180deg);
+    margin: 0 0 0 7px;
+  }
+
+  @media screen and (max-width: 767px) {
+    bottom: 35px;
+  }
+}
+
+.link {
+  text-decoration: auto;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  &.disabled {
+    color: #bababa;
+  }
+}

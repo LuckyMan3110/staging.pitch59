@@ -1,0 +1,55 @@
+.cointainer {
+  width: calc(6px + 50px * var(--scale-factor));
+  height: calc(6px + 50px * var(--scale-factor));
+  border: 1px solid;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+
+  .top {
+    flex: 4;
+    font-size: calc(6px + 10px * var(--scale-factor));
+    font-weight: 600;
+  }
+
+    .bottom {
+      font-size: calc(5px + 7px * var(--scale-factor));
+      flex: 3;
+      position: relative;
+      color: white;
+      border-bottom-left-radius: 0.36em;
+      border-bottom-right-radius: 0.36em;
+    }
+
+    .bottom:before {
+      position: absolute;
+      top: -8px;
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 8px solid;
+
+      &.bg-green {
+        border-bottom-color: #25afb5;
+      }
+
+        &.bg-gold {
+            border-bottom-color: #e8ad01;
+        }
+
+        &.bg-pink {
+          border-bottom-color: #f36;
+        }
+    }
+
+    .top,
+    .bottom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

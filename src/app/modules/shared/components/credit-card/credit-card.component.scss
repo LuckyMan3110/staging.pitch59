@@ -1,0 +1,125 @@
+.card {
+  display: flex;
+  width: 288px;
+  height: 182px;
+  padding: 1rem;
+  color: #fff;
+  border-radius: 1rem;
+  flex-direction: column;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 4px #00000080;
+  background: -webkit-linear-gradient(
+                  148deg,
+                  rgb(0, 0, 0),
+                  rgb(167, 167, 167),
+                  rgb(0, 0, 0)
+  );
+  background: -moz-linear-gradient(
+                  148deg,
+                  rgb(0, 0, 0),
+                  rgb(167, 167, 167),
+                  rgb(0, 0, 0)
+  );
+  background: linear-gradient(
+                  148deg,
+                  rgb(0, 0, 0),
+                  rgb(167, 167, 167),
+                  rgb(0, 0, 0)
+  );
+  margin: auto;
+
+  &__header {
+    flex: 1;
+    font-size: 2em;
+    display: flex;
+    justify-content: space-between;
+
+    img.chip {
+      width: 15%;
+    }
+
+        i {
+            cursor: pointer;
+        }
+    }
+
+    &__number {
+        letter-spacing: 0.025em;
+        font-size: 22px;
+        flex: 3;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__footer {
+        display: flex;
+      align-items: center;
+      flex: 2;
+      justify-content: space-between;
+    }
+
+  &__logo {
+    max-height: 40px;
+    max-width: 70px;
+  }
+
+  &__expiry-date,
+  &__cvv {
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: 100%;
+    margin-right: 10px;
+    padding: 10px 0;
+  }
+
+    &--front {
+      font-size: 16px;
+      font-weight: 600;
+      text-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
+    }
+}
+.mini {
+    width: 115px;
+    height: 73px;
+    border-radius: 6px;
+    padding: 10px;
+    .card {
+        &__number {
+            font-size: 8px;
+            margin-top: 15%;
+        }
+        &__expiry-date {
+            font-size: 5px;
+        }
+        &__logo {
+            width: 26px;
+        }
+    }
+}
+
+.middle {
+    width: 230px;
+    height: 145px;
+    border-radius: 6px;
+    padding: 13px;
+    .card {
+      &__number {
+        font-size: 1rem;
+      }
+
+      &__expiry-date,
+      &__cvv {
+        font-size: 11px;
+      }
+
+      &__logo {
+        width: 30px;
+      }
+    }
+}

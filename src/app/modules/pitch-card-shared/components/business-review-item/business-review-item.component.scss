@@ -1,0 +1,70 @@
+.review-container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  padding: calc(0.5rem * var(--scale-factor-main));
+  border: 2px solid #cdcdcd;
+  width: calc(340px * var(--scale-factor-main));
+
+  .review-video {
+    position: relative;
+    flex: 5;
+    display: flex;
+    width: calc(320px * var(--scale-factor-main));
+    max-height: calc(180px * var(--scale-factor-main));
+    background-color: black;
+    cursor: pointer;
+    min-height: calc(180px * var(--scale-factor-main));
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .play-icon {
+      width: calc(50px * var(--scale-factor-main));
+      height: calc(50px * var(--scale-factor-main));
+      right: calc(8px * var(--scale-factor-main));
+      bottom: calc(8px * var(--scale-factor-main));
+      position: absolute;
+    }
+  }
+
+    .report-review {
+        cursor: pointer;
+        font-size: calc(2rem * var(--scale-factor-main));
+    }
+
+    .review-info {
+        display: flex;
+        flex-direction: column;
+        flex: 3;
+
+        .user-info {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          font-size: calc(1rem * var(--scale-factor-main));
+
+          .user-name {
+            font-weight: 600;
+            font-size: calc(1.1rem * var(--scale-factor-main));
+          }
+
+          margin: calc(0.5rem * var(--scale-factor-main)) 0;
+        }
+    }
+
+  .new-review-badge {
+    top: -6px;
+    right: 3px;
+    border-radius: 6px;
+    font-size: 18px;
+  }
+
+  .switch-block {
+    right: -5px;
+    bottom: -3rem;
+  }
+}

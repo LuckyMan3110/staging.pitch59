@@ -1,0 +1,36 @@
+<div class="new-pocket-wrapper">
+  <div *ngIf="modalErrors.newPocketName" class="nameError">
+    {{ modalErrors.newPocketName }}*
+  </div>
+  <input
+      #newPocketNameInput
+      class="new-pocket-input"
+      [ngClass]="{ error: modalErrors.newPocketName }"
+      type="text"
+      [(ngModel)]="newPocketName"
+      (ngModelChange)="modalErrors.newPocketName = null"
+      placeholder="Enter Pocket Name"
+  />
+  <div
+      class="colors-wrapper"
+      [ngClass]="{ error: modalErrors.newPocketColor }"
+  >
+    <div *ngIf="modalErrors.newPocketColor" class="colorsError">
+      {{ modalErrors.newPocketColor }}*
+    </div>
+    <div
+        *ngFor="let color of myPocketsColors"
+        class="color"
+        [ngClass]="{ selected: color === newPocketColor }"
+        (click)="selectNewPocketColor(color)"
+    >
+      <div [ngStyle]="{ 'background-color': color }"></div>
+    </div>
+  </div>
+  <button
+      class="button-simple shock-pink create-btn"
+      (click)="newPocketSubmit()"
+  >
+    {{ detailPocketMode === 'create' ? 'Create' : 'Edit' }}
+  </button>
+</div>

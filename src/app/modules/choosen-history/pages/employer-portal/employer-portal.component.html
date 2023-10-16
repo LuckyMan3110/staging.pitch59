@@ -1,0 +1,378 @@
+<div *ngIf="showEmployerPortal && !loading">
+  <div class="employment-portal-wrapper">
+    <div *ngIf="employerPortal" class="employerPortal full-width">
+      <div class="ep-header">
+        <div
+            class="grid justify-content-between full-width no-wrap no-margins custom-border-bottom"
+        >
+          <div
+              class="grid align-items-center no-wrap no-margins"
+              [ngClass]="{
+                            'justify-content-between full-width': isTablet
+                        }"
+              [ngStyle]="{ maxWidth: isDesktop ? '50%' : '' }"
+          >
+            <div class="tp-layout-header-name">
+              <h1
+                  class="text-ellipsis"
+                  [pTooltip]="
+                                    employerPortal?.name
+                                        ? (employerPortal.name | titlecase)
+                                        : 'Employer Portal'
+                                "
+                  [tooltipPosition]="'bottom'"
+              >
+                {{
+                employerPortal?.name
+                    ? (employerPortal.name | titlecase)
+                    : 'Employer Portal'
+                }}
+              </h1>
+            </div>
+
+            <div
+                class="tp-layout-header-actions"
+                *ngIf="actionImages && actionImages.length"
+            >
+              <div *ngFor="let img of actionImages">
+                <div
+                    *ngIf="!img.hide"
+                    class="tp-actions-box pointer"
+                    (click)="handleEPActions(img.id)"
+                    [pTooltip]="img.title"
+                    [tooltipPosition]="'top'"
+                >
+                  <div class="tp-actions" id="{{ img.id }}">
+                    <img
+                        *ngIf="img.src"
+                        rel="preload"
+                        src="{{ img.src }}"
+                        alt="{{ img.title }}"
+                    />
+                    <div
+                        class="tp-actions-icon-error"
+                        *ngIf="
+                                                paymentError &&
+                                                img.id === actionsEnum.Billing
+                                            "
+                    ></div>
+                    <div
+                        class="tp-actions-icon bg-gold rounded-border"
+                        *ngIf="
+                                                !img.src &&
+                                                img.id === actionsEnum.AddNewPCs
+                                            "
+                    >
+                      <span class="pi pi-plus"></span>
+                    </div>
+                    <div
+                        class="tp-actions-icon pi pi-search resume-red"
+                        *ngIf="
+                                                !img.src &&
+                                                img.id ===
+                                                    actionsEnum.SearchResume
+                                            "
+                    ></div>
+
+                    <span>{{ img.title }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid align-items-center no-wrap no-margins">
+            <div class="counter mx-3">
+                            <span class="text-base color-white"
+                            >Total PitchCards:
+                            </span>
+              <span class="text-2xl font-semibold color-white">{{
+                totalPitchCards
+                }}</span>
+            </div>
+            <button
+                class="button-simple shock-pink sm-30"
+                style="width: 30px"
+                [routerLink]="['/select-pitchcards']"
+                [queryParams]="{ orgId: employerPortal.id }"
+            >
+                            <span
+                                class="pi pi-plus"
+                                style="font-size: 20px; font-weight: 400"
+                            ></span>
+            </button>
+          </div>
+        </div>
+
+        <div
+            class="grid justify-content-between align-items-center full-width no-margins pc-features"
+        >
+          <div
+              class="grid align-items-center col-6 xl\:col-5 no-padding no-margins"
+          >
+            <div
+                class="grid align-items-center no-wrap no-padding no-margins"
+                style="width: 38%"
+            >
+              <div class="dropdown-wrap full-width">
+                <p-dropdown
+                    [options]="pitchCardTypes"
+                    optionLabel="label"
+                    [styleClass]="
+                                        'transparent-dropdown ' +
+                                        selectedPitchCardType?.option
+                                    "
+                    [placeholder]="'Job PitchCards'"
+                    [disabled]="
+                                        employerService.businessesLoading
+                                    "
+                    (onChange)="clearSearch()"
+                    [(ngModel)]="selectedPitchCardType"
+                >
+                  <ng-template pTemplate="selectedItem">
+                    <div class="p-helper-clearfix">
+                      <div>
+                        {{
+                        selectedPitchCardType.label +
+                        ' (' +
+                        employerPortal
+                            ?.businessCount[
+                            selectedPitchCardType
+                                .option
+                            ] +
+                        ')'
+                        }}
+                      </div>
+                    </div>
+                  </ng-template>
+                  <ng-template let-item pTemplate="item">
+                    <div class="p-helper-clearfix">
+                      <div
+                          [ngStyle]="{
+                                                    color: item.color
+                                                }"
+                      >
+                        {{
+                        item.label +
+                        ' (' +
+                        employerPortal
+                            ?.businessCount[
+                            item.option
+                            ] +
+                        ')'
+                        }}
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+
+              <div class="tp-layout-header-actions">
+                <div class="tp-actions-box relative">
+                  <img
+                      class="pointer"
+                      src="/assets/images/my-account-images/team-page/team-settings.svg"
+                      alt="Settings"
+                      (click)="handleSettings($event)"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div
+                *ngIf="selectedPitchCards?.length"
+                class="grid align-items-center no-padding no-margins col-6 xl\:col-5 pointer"
+                (click)="showConfirmModal()"
+            >
+              <img
+                  src="assets/images/trash.svg"
+                  alt="Trash"
+                  style="margin: 0 5px 0 10px"
+              />
+              <span class="pink">Delete PitchCard</span>
+            </div>
+          </div>
+
+          <div
+              class="col-5 p-inputgroup tp-search-input no-padding"
+              style="line-height: 1.75"
+          >
+            <div
+                routerLink="/search"
+                [queryParams]="{ types: 'resume' }"
+                class="button-simple borders uppercase col-3 mx-3 my-0 bd-resume-red sm-35"
+            >
+              Recruit
+            </div>
+            <input
+                type="text"
+                pInputText
+                #searchInput
+                [minLength]="3"
+                [placeholder]="
+                                selectedPitchCardType.option === 'job'
+                                    ? 'Search by Position Title'
+                                    : 'Search by name or email'
+                            "
+                (keyup.enter)="searchInit($event.target.value)"
+            />
+
+            <span
+                class="pi pi-search green pointer"
+                (click)="searchInit(searchInput.value)"
+            ></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ep-body" *ngIf="selectedPitchCardType && ID">
+        <app-employer-portal-table
+            [selectedType]="selectedPitchCardType"
+            [organizationID]="ID"
+            [organizationName]="
+                        employerPortal?.name ? employerPortal.name : ''
+                    "
+            (selectedPitchCards)="selectedPitchCards = $event"
+        ></app-employer-portal-table>
+      </div>
+    </div>
+    <div class="welcome-header" *ngIf="!employerPortal && !loading">
+      <div class="welcome-text-row">
+        <div
+            class="welcome-text"
+            [ngStyle]="{ marginTop: !isMobile ? '9%' : '' }"
+        >
+          <img
+              src="../../../../../assets/images/my-account-images/profile-sidebar-images/employer-portal.svg"
+              alt="Teams"
+          />
+
+          <h1>Welcome to Employer Portal!</h1>
+        </div>
+      </div>
+
+      <div class="team-welcome-list">
+        <ul>
+          <li>
+            Useful for any size or type of organization. Create an
+            Employer Portal to manage your PitchCards.
+          </li>
+          <li>
+            Gives Employer Portal administrators the option to pay
+            for and edit all PitchCards.
+          </li>
+          <li>
+            Create new or invite existing PitchCards to join your
+            Employer Portal.
+          </li>
+          <li>
+            Works with all different PitchCards. Add any type of
+            PitchCard to an Employer Portal.
+          </li>
+          <li>
+            Easily manage and organize large Employer Portal and
+            their PitchCards.
+          </li>
+        </ul>
+      </div>
+      <div class="create-new">
+        <button
+            class="button-simple add-full-text lg-50 mb-3"
+            (click)="redirectToPricing()"
+        >
+          Create Employer Portal
+        </button>
+
+        <div
+            class="button-simple full-width no-padding lg-50 gradient-border-pink bg-inherit"
+            (click)="showRequestDemoDialog = true"
+        >
+          <div class="gradient-border-text">
+            <p class="no-margins">REQUEST A DEMO</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modals">
+  <app-employer-modals></app-employer-modals>
+</div>
+
+<app-coming-soon-banner
+    *ngIf="!showEmployerPortal && !loading"
+    [pageTitle]="'Employer Portal'"
+>
+</app-coming-soon-banner>
+
+<p-dialog
+    class="contact-me-dialog"
+    styleClass="pitch-modal"
+    [(visible)]="showRequestDemoDialog"
+    [draggable]="false"
+    [modal]="true"
+    [style]="{
+        width: '100%',
+        maxWidth: '500px',
+        overflow: isMobile ? 'hidden' : 'initial'
+    }"
+    [blockScroll]="false"
+>
+  <app-contact-modal
+      *ngIf="showRequestDemoDialog"
+      (hideModal)="showRequestDemoDialog = false"
+      (submitForm)="onContactModalSubmit($event)"
+  ></app-contact-modal>
+</p-dialog>
+
+<p-dialog
+    class="contact-me-dialog"
+    styleClass="pitch-modal"
+    [(visible)]="showDoneDialog"
+    [draggable]="false"
+    [modal]="true"
+    [style]="{ width: '100%', maxWidth: '300px' }"
+    [blockScroll]="false"
+>
+  <app-done-modal (done)="showDoneDialog = false">
+    <ng-template #content>
+      <p>Great! One of our representatives will reach out to you soon!</p>
+    </ng-template>
+  </app-done-modal>
+</p-dialog>
+
+<p-overlayPanel #settings>
+  <div
+      class="pt-2 px-2 pb-5 bg-white settings-block"
+      [style]="{ marginTop: '80px' }"
+  >
+    <div class="grid justify-content-start align-items-start no-margins">
+      <div class="mt-2" *ngIf="employerPortal">
+        <p-inputSwitch
+            id="auto-approve"
+            styleClass="scale-08"
+            [ngModel]="employerPortal.autoApproveTestimonials"
+            (onChange)="setTestimonialApproveMode()"
+        >
+        </p-inputSwitch>
+      </div>
+      <div class="col-9 p-0 mt-1">
+        <div class="col-10 ml-1 p-0">
+          <label for="auto-approve"
+          >Automatically approve testimonials.</label
+          >
+        </div>
+        <div
+            class="col-12 p-0"
+            *ngIf="!employerPortal?.autoApproveTestimonials"
+        >
+          <p class="pink p-0">
+            (You’ll need to approve each testimonial before it goes
+            live.)
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-overlayPanel>

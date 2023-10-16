@@ -1,0 +1,136 @@
+<section class="section">
+  <div
+      class="welcome-container grid align-items-center justify-content-center"
+  >
+    <div
+        class="grid align-items-start no-margins"
+        [ngClass]="{
+                'justify-content-center': !isMobile,
+                'justify-content-start': isMobile
+            }"
+    >
+      <div class="intro-block">
+        <h2
+            class="no-margins flex justify-content-center"
+            [ngClass]="{ 'text-4xl': isMobile }"
+        >
+          Let’s get started.
+        </h2>
+        <p [ngClass]="{ 'no-margins text-sm': isMobile }">
+          Stand out and be heard by creating your own PitchCards.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section top-down-gradient">
+  <div class="welcome-container">
+    <div
+        class="grid align-items-center justify-content-around tabs-content"
+    >
+      <div
+          class="gradient-block resume-block flex flex-column"
+          [ngClass]="{ 'col-5': !isMobile, 'col-11 p-5 mb-3': isMobile }"
+          [ngStyle]="{ zoom: isMobile ? '96%' : '100%' }"
+      >
+        <div class="gradient-title my-1 mx-0 flex flex-column">
+          <h2 class="text-center no-margins small-text">
+            Job Seeking
+          </h2>
+        </div>
+        <span class="white-subtitle text-3xl my-1 flex flex-column"
+        >Resume PitchCard</span
+        >
+        <span class="font-bold text-5xl my-3">FREE</span>
+
+        <img
+            [src]="'assets/images/welcome/intro-page/resumes.png'"
+            alt="Resume Card"
+        />
+
+        <ul [ngClass]="{ 'line-height-3': isMobile }">
+          <li>
+            Appeal to employers with your elevator pitch and apply
+            to jobs with a single tap.
+          </li>
+          <li>
+            Share, network, and have your PitchCard found on the
+            Resume Carousel.
+          </li>
+          <li>
+            Includes resume, video references, social links, and
+            other important information.
+          </li>
+          <li>
+            Chat with employers and others on the back of your
+            PitchCard through FlipChat.
+          </li>
+        </ul>
+
+        <div class="col-12 margin-centered">
+          <button
+              class="button-simple uppercase full-width resume-g6t font-bold"
+              (click)="setInformationModal()"
+          >
+            GET STARTED
+          </button>
+        </div>
+      </div>
+
+      <div
+          class="gradient-block business-block flex flex-column"
+          [ngClass]="{ 'col-5': !isMobile, 'col-11 p-5': isMobile }"
+          [ngStyle]="{ zoom: isMobile ? '96%' : '100%' }"
+      >
+        <div class="gradient-title my-1 mx-0">
+          <h2 class="text-center no-margins small-text">Business</h2>
+        </div>
+        <span class="white-subtitle text-3xl my-1 flex flex-column"
+        >All other PitchCard types</span
+        >
+        <p class="my-3 text-2xl">
+          Starting at
+          <span class="font-bold text-5xl">$15</span>/month
+        </p>
+
+        <img
+            [src]="'/assets/images/welcome/banners-imgs/carousel-3.png'"
+            alt="Set of Resume Card"
+        />
+
+        <ul [ngClass]="{ 'line-height-3': isMobile }">
+          <li>
+            Includes all PitchCards for selling, hiring, recruiting,
+            networking, and much more.
+          </li>
+          <li>
+            Mix and match any variety of PitchCards to meet your
+            team’s needs.
+          </li>
+          <li>
+            All PitchCards are shareable, searchable, and
+            networkable.
+          </li>
+          <li>
+            Receive messages and notifications from potential sales
+            and recruits through FlipChat.
+          </li>
+        </ul>
+
+        <div class="col-12 margin-centered">
+          <button
+              class="button-simple uppercase full-width basic-g6t font-bold"
+              [routerLink]="'/select-pitchcards'"
+          >
+            GET STARTED
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<p-confirmDialog
+    [styleClass]="isResumeCreated ? 'header-center-y' : ''"
+    key="isResumeExist"
+></p-confirmDialog>

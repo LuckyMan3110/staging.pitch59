@@ -1,0 +1,26 @@
+.otp-input {
+  width: 50px;
+  height: 50px;
+  border: solid #a9a9a9;
+  border-width: 0 0 2px;
+  text-align: center;
+  font-size: 32px;
+
+  &::selection {
+    background: transparent !important;
+  }
+
+  &::-moz-selection {
+    background: transparent !important;
+  }
+
+  &::-webkit-selection {
+    background: transparent !important;
+  }
+}
+
+.ng-otp-input-wrapper {
+  .otp-input:not(:last-child) {
+    margin-right: 0.5em;
+  }
+}

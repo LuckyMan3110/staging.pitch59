@@ -1,0 +1,48 @@
+<div
+    class="pocket-thumbnail"
+    [ngClass]="{
+        notSelected: isNoSelected,
+        selected: !isNoSelected,
+        default: defaultPocket
+    }"
+>
+  <app-search-result-thumbnail
+      *ngIf="pocket.content.length"
+      #businessCard
+      class="pocket-card"
+      [businessDetails]="pocket.content[0].business"
+      [scale]="scale"
+      [disabled]="true"
+  ></app-search-result-thumbnail>
+  <div class="pocket-jacket" [ngStyle]="{ background: pocketGradient }">
+    <div
+        class="org-icon text-ellipsis"
+        style="padding: 0 10px; width: unset"
+    >
+      <div class="full-width">
+        <img
+            class="org-icon"
+            *ngIf="isOrganizationPocket"
+            src="assets/images/my-account-images/team-page/team-icon.svg"
+            alt="team icon"
+        />
+        <img
+            *ngIf="pocket.default && pocket.name === 'New'"
+            src="assets/images/my-account-images/profile-sidebar-images/new-pocket-icon.svg"
+            alt="New pocket"
+        />
+        <img
+            *ngIf="pocket.default && pocket.name === 'Home'"
+            src="assets/images/my-account-images/profile-sidebar-images/home-pocket-icon.svg"
+            alt="Home pocket"
+        />
+      </div>
+      <span>{{
+        pocket.name ? (pocket.name | titlecase) : 'Employer Portal'
+        }}</span>
+    </div>
+    </div>
+    <div class="mark-container" (click)="onSelectPocket()">
+        <div class="selected-mark"></div>
+    </div>
+</div>

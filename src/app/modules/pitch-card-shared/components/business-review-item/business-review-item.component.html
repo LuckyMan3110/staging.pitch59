@@ -1,0 +1,61 @@
+<div
+    class="review-container relative"
+    [ngClass]="{
+        'm-auto': !isOrganization,
+        'mx-auto mb-6 mt-1': isOrganization
+    }"
+>
+  <div class="review-video" (click)="onVideoClick(review?.videoReviewUrl)">
+    <img
+        (load)="calcCover()"
+        #coverImage
+        [ngStyle]="{ 'object-fit': isCoverLandscape ? 'cover' : 'contain' }"
+        class="h-auto"
+        [src]="
+                review?.videoReviewThumbnailUrl + '?time=0&fit_mode=smartcrop'
+            "
+    />
+    <img
+        class="play-icon"
+        [ngStyle]="{ display: !review.isVideoPlaying ? 'block' : 'none' }"
+        src="/assets/images/play-icon.svg"
+    />
+  </div>
+  <div class="review-info">
+    <div class="user-info">
+            <span class="grid flex-column m-0">
+                <span class="user-name">{{ review?.user?.firstName }}</span>
+                <span>{{ createdAt }}</span>
+            </span>
+      <span class="grid align-items-center m-0">
+                <i
+                    class="report-review pi pi-ellipsis-h"
+                    (click)="toggleMenu($event)"
+                ></i>
+            </span>
+    </div>
+  </div>
+
+  <div
+      class="new-review-badge absolute uppercase p-1 bg-pink color-white"
+      *ngIf="isOrganization && review?.isNew"
+  >
+    New
+  </div>
+
+  <div
+      class="grid align-items-center m-0 switch-block absolute"
+      *ngIf="isOrganization && review"
+  >
+    <label class="text-xs" for="approve">Display on PitchCards</label>
+
+    <p-inputSwitch
+        id="approve"
+        styleClass="scale-08"
+        [ngModel]="review.isVisible"
+        [disabled]="review.isOnModeration"
+        (onChange)="setTestimonialVisibility($event.checked)"
+    >
+    </p-inputSwitch>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="grid no-margins no-padding">
+  <div
+      class="col-3 no-padding pointer tab-button"
+      *ngFor="let tab of searchTabs; let i = index"
+  >
+    <div
+        class="search-tab text-center color-white text-ellipsis"
+        (click)="changeSearchType(tab, i)"
+        [ngStyle]="{
+                borderColor: tab.color,
+                backgroundColor: tab.active ? tab.color : ''
+            }"
+    >
+      {{ tab.title }}
+    </div>
+  </div>
+</div>

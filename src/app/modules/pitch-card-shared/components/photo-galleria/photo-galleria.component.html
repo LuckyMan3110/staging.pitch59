@@ -1,0 +1,92 @@
+<p-galleria
+    #galleria
+    class="photo-galleria-wrapper"
+    [ngClass]="{
+        one: images.length === 1,
+        two: images.length === 2,
+        three: images.length === 3,
+        desktop: showThumbnails,
+        mobile: !showThumbnails
+    }"
+    [value]="images"
+    [(visible)]="showGalleria"
+    [containerStyle]="{ 'max-width': '100%', height: '100%', width: '100%' }"
+    [numVisible]="images.length < 5 ? images.length : 5"
+    [circular]="!isMobile"
+    [fullScreen]="true"
+    [baseZIndex]="20200"
+    [showItemNavigators]="isMobile ? images?.length > 1 : images?.length > 2"
+    [showThumbnails]="showThumbnails"
+    (activeIndexChange)="
+        updateCloseBtnStyle(true); setupLoader(true); setGalleryNavigation(true)
+    "
+>
+  <ng-template pTemplate="item" let-item let-index>
+    <img
+        [src]="item?.file ? item.file : ''"
+        *ngIf="!isDocument(item?.thumbnail); else docTemplate"
+        (load)="setupLoader(false); setGalleryNavigation(false)"
+        style="object-fit: contain; display: block; width: 100%"
+        alt=""
+        [ngStyle]="{ height: showThumbnails ? '75vh' : 'auto' }"
+    />
+    <ng-template #docTemplate>
+      <ngx-doc-viewer
+          viewerUrl="https://docs.google.com/guview?rl=%URL%&embedded=true"
+          [url]="item?.thumbnail"
+          (loaded)="
+                    updateCloseBtnStyle();
+                    setupLoader(false);
+                    setGalleryNavigation(false)
+                "
+          googleCheckContentLoaded="true"
+          googleCheckInterval="3000"
+          style="object-fit: contain; display: block; width: 100%; {{
+                    showThumbnails
+                        ? 'height: 75vh'
+                        : !isMobile
+                        ? 'height: auto'
+                        : 'height: 90vh'
+                }}"
+          class="resume-modal"
+      ></ngx-doc-viewer>
+    </ng-template>
+  </ng-template>
+  <ng-template pTemplate="thumbnail" let-item>
+    <div
+        class="grid pb-0 pl-0 pr-0 justify-content-center"
+        style="position: relative"
+    >
+      <img
+          [src]="getFilePreviewSrc(item?.thumbnail)"
+          alt=""
+          style="
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    border-radius: 10px;
+                    padding: 5px;
+                "
+      />
+      <div
+          class="absolute right-0 bottom-0"
+          style="
+                    background: rgba(0, 0, 0, 0.51);
+                    border-radius: 3px;
+                    padding: 7px 12px;
+                "
+          (click)="downloadFile(item?.thumbnail)"
+          [pTooltip]="'Download'"
+          [tooltipPosition]="'top'"
+          [tooltipDisabled]="!isDesktop"
+      >
+        <img
+            src="/assets/images/pitch-card-svg/download-icon.svg"
+            class="z-1"
+            alt="download"
+        />
+      </div>
+    </div>
+  </ng-template>
+</p-galleria>

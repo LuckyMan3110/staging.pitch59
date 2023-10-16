@@ -1,0 +1,41 @@
+@import '../../../../styles/variables';
+
+.analytics-wrap {
+  padding: 0;
+
+  .step-header,
+  .step-body {
+    padding: 0 22px 18px;
+  }
+
+  .step-header {
+    border-bottom: 1px solid $placeHolder;
+    margin-bottom: 15px;
+  }
+
+  .calendar-block {
+    max-width: 150px;
+    text-align: center;
+
+    .calendar-block-label {
+      margin-bottom: 5px;
+    }
+  }
+
+  .analytics-tabs {
+    margin: 30px 0;
+    padding: 0 8px;
+
+    .active-tab {
+      background: $teamMainBorderColor;
+      color: $white;
+      border: 1px solid $teamMainBorderColor;
+    }
+
+    li {
+      border: 1px solid $contentTextColor;
+      border-radius: 6px;
+      padding: 8px;
+    }
+  }
+}

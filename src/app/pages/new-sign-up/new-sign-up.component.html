@@ -1,0 +1,634 @@
+<div class="container">
+  <div class="create-container container">
+    <div class="wrapper-section main-section">
+      <div class="pitchcard-view-section">
+        <div
+            class="pitchcard-view-item"
+            #pitchCardWrapper
+            style="visibility: hidden"
+        >
+          <app-search-result-thumbnail
+              [businessDetails]="businessDetails"
+              #businessCard
+              [scale]="scaleFactor"
+              (companyImages)="handlePitchCardTitleClick($event)"
+          ></app-search-result-thumbnail>
+        </div>
+      </div>
+      <div class="main-form">
+        <div class="sign-up">
+          <h1 translate>get_started_free</h1>
+          <h2 translate>
+            lbl_already_acc
+            <span
+                (click)="goToSignIn()"
+                class="sign-up-link"
+                translate
+            >label_sign_in
+                        </span>
+          </h2>
+          <form [formGroup]="signUpForm">
+            <div class="form-row double">
+              <div class="form-row-input">
+                                <span class="p-float-label">
+                                    <input
+                                        class="new-input-blue sm"
+                                        id="firstName"
+                                        type="text"
+                                        size="30"
+                                        maxlength="30"
+                                        autocomplete="given-name"
+                                        pInputText
+                                        formControlName="firstName"
+                                    />
+                                    <label for="firstName"
+                                    >{{
+                                      'label_first_name' | translate
+                                      }}
+                                      *</label
+                                    >
+                                </span>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.firstName.errors
+                                            ?.required
+                                    "
+                    translate
+                >
+                  err_required_firstname
+                </div>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.firstName.errors
+                                            ?.pattern
+                                    "
+                    translate
+                >
+                  err_invalid_firstname
+                </div>
+              </div>
+            </div>
+            <div class="form-row double">
+              <div class="form-row-input">
+                                <span class="p-float-label">
+                                    <input
+                                        class="new-input-blue sm"
+                                        id="lastName"
+                                        type="text"
+                                        size="30"
+                                        maxlength="30"
+                                        autocomplete="family-name"
+                                        pInputText
+                                        formControlName="lastName"
+                                    />
+                                    <label for="lastName"
+                                    >{{
+                                      'label_last_name' | translate
+                                      }}
+                                      *</label
+                                    >
+                                </span>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.lastName.errors
+                                            ?.required
+                                    "
+                    translate
+                >
+                  err_required_lastname
+                </div>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.lastName.errors
+                                            ?.pattern
+                                    "
+                    translate
+                >
+                  err_required_lastname
+                </div>
+              </div>
+            </div>
+            <div class="form-row double">
+              <div class="form-row-input">
+                                <span class="p-float-label">
+                                    <input
+                                        [attr.disabled]="
+                                            isVerifiedEmail || isVerifiedPhone
+                                                ? true
+                                                : undefined
+                                        "
+                                        pInputText
+                                        class="new-input-blue sm"
+                                        id="emailId"
+                                        type="email"
+                                        size="30"
+                                        maxlength="100"
+                                        autocomplete="email"
+                                        formControlName="emailId"
+                                    />
+                                    <label for="emailId"
+                                    >{{
+                                      'label_email_address' | translate
+                                      }}
+                                      *</label
+                                    >
+                                </span>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.emailId.errors
+                                            ?.required
+                                    "
+                    translate
+                >
+                  err_required_emailId
+                </div>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.emailId.errors
+                                            ?.pattern
+                                    "
+                    translate
+                >
+                  err_invalid_emailId
+                </div>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        signUpForm.controls.emailId.errors
+                                            ?.notUnique
+                                    "
+                    translate
+                >
+                  This email is already registered.
+                </div>
+              </div>
+            </div>
+            <div class="form-row double">
+              <div class="form-row-input">
+                                <span class="p-float-label">
+                                    <p-inputMask
+                                        [disabled]="
+                                            isVerifiedPhone || isVerifiedEmail
+                                        "
+                                        styleClass="new-input-blue sm"
+                                        id="contactNumber"
+                                        autocomplete="tel"
+                                        type="tel"
+                                        inputmode="tel"
+                                        size="30"
+                                        formControlName="contactNumber"
+                                        mask="(999) 999-9999"
+                                    >
+                                    </p-inputMask>
+                                    <label for="contactNumber"
+                                    >{{
+                                      'label_mobile_number' | translate
+                                      }}
+                                      *</label
+                                    >
+                                </span>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.contactNumber.errors
+                                            ?.required
+                                    "
+                    translate
+                >
+                  err_required_contact
+                </div>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.contactNumber.errors
+                                            ?.pattern
+                                    "
+                    translate
+                >
+                  err_required_contact
+                </div>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        signUpForm.controls.contactNumber.errors
+                                            ?.notUnique
+                                    "
+                    translate
+                >
+                  This number is already registered.
+                </div>
+              </div>
+            </div>
+            <div class="form-row double">
+              <div class="form-row-input">
+                                <span class="p-float-label">
+                                    <input
+                                        class="new-input-blue sm"
+                                        id="zipCode"
+                                        type="text"
+                                        size="30"
+                                        maxlength="5"
+                                        autocomplete="postal-code"
+                                        pInputText
+                                        formControlName="zipCode"
+                                        (input)="blockChars($event)"
+                                        (keydown)="onPaste($event, 'zipCode')"
+                                    />
+                                    <label for="zipCode" translate
+                                    >label_zip_code</label
+                                    >
+                                </span>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.zipCode.errors
+                                            ?.required
+                                    "
+                    translate
+                >
+                  err_required_zip
+                </div>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.zipCode.errors
+                                            ?.pattern
+                                    "
+                    translate
+                >
+                  err_invalid_zip_code
+                </div>
+              </div>
+            </div>
+            <div class="form-row double">
+              <div class="form-row-input">
+                                <span class="p-float-label">
+                                    <input
+                                        class="new-input-blue sm"
+                                        type="password"
+                                        id="password"
+                                        size="30"
+                                        pPassword
+                                        [feedback]="false"
+                                        formControlName="password"
+                                        minlength="3"
+                                        pInputText
+                                        (focus)="
+                                            showPasswordRequirements = true
+                                        "
+                                        (blur)="
+                                            showPasswordRequirements = false
+                                        "
+                                    />
+                                    <label for="password"
+                                    >{{
+                                      'label_password' | translate
+                                      }}
+                                      *</label
+                                    >
+                                    <div
+                                        class="sprite eye"
+                                        *ngIf="showpassword"
+                                        (click)="togglePassword()"
+                                    ></div>
+                                    <div
+                                        class="sprite close-eye"
+                                        *ngIf="!showpassword"
+                                        (click)="togglePassword()"
+                                    ></div>
+                                </span>
+                <div
+                    class="password-validator"
+                    *ngIf="showPasswordRequirements"
+                >
+                  <label
+                      [ngClass]="
+                                            signUpForm.controls[
+                                                'password'
+                                            ].hasError('required') ||
+                                            signUpForm.controls[
+                                                'password'
+                                            ].hasError('minlength')
+                                                ? 'text-danger'
+                                                : 'text-success'
+                                        "
+                  >
+                    <i
+                        class="pi"
+                        [ngClass]="{
+                                                'pi-times-circle':
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('required') ||
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('minlength'),
+                                                'pi-check-circle': !(
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('required') ||
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('minlength')
+                                                )
+                                            }"
+                    >
+                    </i>
+                    8 characters
+                  </label>
+                  <label
+                      [ngClass]="
+                                            signUpForm.controls[
+                                                'password'
+                                            ].hasError('required') ||
+                                            signUpForm.controls[
+                                                'password'
+                                            ].hasError('hasNumber')
+                                                ? 'text-danger'
+                                                : 'text-success'
+                                        "
+                  >
+                    <i
+                        class="pi"
+                        [ngClass]="{
+                                                'pi-times-circle':
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('required') ||
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('hasNumber'),
+                                                'pi-check-circle': !(
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('required') ||
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('hasNumber')
+                                                )
+                                            }"
+                    >
+                    </i>
+                    1 number
+                  </label>
+                  <label
+                      [ngClass]="
+                                            signUpForm.controls[
+                                                'password'
+                                            ].hasError('required') ||
+                                            signUpForm.controls[
+                                                'password'
+                                            ].hasError('hasCapitalCase')
+                                                ? 'text-danger'
+                                                : 'text-success'
+                                        "
+                  >
+                    <i
+                        class="pi"
+                        [ngClass]="{
+                                                'pi-times-circle':
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('required') ||
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError(
+                                                        'hasCapitalCase'
+                                                    ),
+                                                'pi-check-circle': !(
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('required') ||
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('hasCapitalCase')
+                                                )
+                                            }"
+                    >
+                    </i>
+                    1 uppercase letter
+                  </label>
+                  <label
+                      [ngClass]="
+                                            signUpForm.controls[
+                                                'password'
+                                            ].hasError('required') ||
+                                            signUpForm.controls[
+                                                'password'
+                                            ].hasError('hasSmallCase')
+                                                ? 'text-danger'
+                                                : 'text-success'
+                                        "
+                  >
+                    <i
+                        class="pi"
+                        [ngClass]="{
+                                                'pi-times-circle':
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('required') ||
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('hasSmallCase'),
+                                                'pi-check-circle': !(
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('required') ||
+                                                    signUpForm.controls[
+                                                        'password'
+                                                    ].hasError('hasSmallCase')
+                                                )
+                                            }"
+                    >
+                    </i>
+                    1 lowercase letter
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row double">
+              <!-- Retype password -->
+              <div class="form-row-input">
+                                <span class="p-float-label">
+                                    <input
+                                        class="new-input-blue sm"
+                                        id="repassword"
+                                        type="password"
+                                        size="30"
+                                        (keypress)="
+                                            signUpForm
+                                                .get('repassword')
+                                                .markAsTouched()
+                                        "
+                                        pInputText
+                                        formControlName="repassword"
+                                        minlength="3"
+                                    />
+                                    <label for="repassword"
+                                    >{{
+                                      'label_confirm_password' | translate
+                                      }}
+                                      *</label
+                                    >
+                                </span>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.repassword.errors
+                                            ?.notEqual
+                                    "
+                    translate
+                >
+                  err_required_password
+                </div>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.repassword.errors
+                                            ?.pattern &&
+                                        (signUpForm.controls.repassword.dirty ||
+                                            signUpForm.controls.repassword
+                                                .touched)
+                                    "
+                    translate
+                >
+                  err_invalid_password_length
+                </div>
+              </div>
+            </div>
+            <div class="form-row double">
+              <div class="form-row-input">
+                                <span class="p-float-label">
+                                    <input
+                                        appNoWhiteSpace
+                                        autocomplete="off"
+                                        class="new-input-blue sm"
+                                        formControlName="refemailId"
+                                        id="refemailId"
+                                        minlength="3"
+                                        pInputText
+                                        type="text"
+                                    />
+                                    <label for="refemailId" translate
+                                    >label_referred_email</label
+                                    >
+                                </span>
+                <div
+                    class="error-sign"
+                    *ngIf="
+                                        submitted &&
+                                        signUpForm.controls.refemailId.errors
+                                    "
+                    translate
+                >
+                  err_invalid_emailId
+                </div>
+              </div>
+            </div>
+            <div class="form-row double" *ngIf="errorMessage">
+              <div class="error-sign">
+                {{ errorMessage }}
+              </div>
+            </div>
+            <h4>
+              By signing up, you are confirming that you accept
+              Pitch59’s
+              <a href="{{ baseUrl + '/terms-and-conditions' }}"
+              >Terms of Service</a
+              >
+              and
+              <a href="{{ baseUrl + '/privacy-policy' }}"
+              >Privacy Policy</a
+              >.
+            </h4>
+            <div class="form-row">
+              <button
+                  class="button-simple sm-35 shock-pink"
+                  [ngClass]="{ disabled: !signUpForm.valid }"
+                  style="min-width: 175px"
+                  [disabled]="!signUpForm.valid"
+                  (click)="sendOtp({ type: 'phone' })"
+                  translate
+              >
+                Sign Up
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast [style]="{ marginTop: '70px' }" key="support">
+  <ng-template pTemplate>
+        <span
+        >If you are still having problems, please call Pitch59 Customer
+            Support:</span
+        ><br/>
+    <a
+        style="color: white; margin-top: 5px; text-decoration: none"
+        href="tel:+18324124070"
+    >(832) 412-4070</a
+    >
+  </ng-template>
+</p-toast>
+
+<p-dialog
+    [(visible)]="otpModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '400px', width: '100%' }"
+    (onHide)="resetModal()"
+    styleClass="dialog"
+    appendTo="body"
+>
+  <div *ngIf="otpModal">
+    <div class="header-block text-center mb-20">
+      A verification text code has been sent to
+      <br/>
+      <span
+      >{{
+        otpRequestModel.type === 'phone'
+            ? signUpForm.value.contactNumber
+            : signUpForm.value.emailId
+        }}
+            </span>
+    </div>
+
+    <div class="main-content text-center mb-30">
+      <h1>Please Enter Code</h1>
+      <div class="input-wrap margin-centered">
+        <app-verify-form
+            [messageResource]="defaultResourceType"
+            [errorMessage]="otpCodeErrorMessage"
+            (otpCode)="verifyOtp($event)"
+            (resentOtp)="sendOtp($event)"
+        ></app-verify-form>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<app-pitchcard-modals-wrapper></app-pitchcard-modals-wrapper>

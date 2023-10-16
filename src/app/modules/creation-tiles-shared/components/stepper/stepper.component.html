@@ -1,0 +1,88 @@
+<div class="wrapper">
+  <div
+      class="step-progress"
+      *ngIf="!isMobile; else mobileStepper"
+      #stepProgressContainer
+      [ngClass]="{ withoutBtns: !showStepperButtons }"
+  >
+    <p-carousel
+        #stepperCarousel
+        [value]="items"
+        [numVisible]="numVisible"
+        [numScroll]="numScroll"
+        [responsiveOptions]="responsiveOptions"
+    >
+      <ng-template let-step pTemplate="item">
+        <div
+            [ngStyle]="{
+                        pointerEvents: disabledMode || (step.disabled && 'none')
+                    }"
+            class="step"
+            [ngClass]="{
+                        current:
+                            current === step.value &&
+                            !(disabledMode || step.disabled),
+                        completed: step.completed && step.visited,
+                        disabled: disabledMode || step.disabled,
+                        justView: justView
+                    }"
+            (click)="step.completed
+                      ? onClick(step.value)
+                      : ''"
+        >
+          <div
+              class="icon"
+              [ngStyle]="{
+                            backgroundImage:
+                                'url(assets/images/' +
+                                (step.completed && step.visited
+                                    ? step.iconCompleted
+                                    : step.icon) +
+                                '.svg)',
+                            backgroundSize: 'contain'
+                        }"
+          ></div>
+          <div class="label">
+            {{ step.label }}
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+  </div>
+  <ng-template #mobileStepper>
+    <div class="mobile-stepper">
+      <div
+          *ngFor="let step of items; let i = index"
+          [ngStyle]="{
+                    pointerEvents: disabledMode || (step.disabled && 'none')
+                }"
+          class="step"
+          [ngClass]="{
+                    current:
+                        current === step.value &&
+                        !(disabledMode || step.disabled),
+                    completed: step.completed && step.visited,
+                    disabled: disabledMode || step.disabled,
+                    justView: justView
+                }"
+          (click)="step.completed ? onClick(step.value) : ''"
+      >
+        <div
+            class="icon"
+            [ngStyle]="{
+                        backgroundImage:
+                            'url(assets/images/' +
+                            (step.completed && step.visited
+                                ? step.iconCompleted
+                                : step.icon) +
+                            '.svg)',
+                        backgroundSize: 'contain'
+                    }"
+        ></div>
+        <div class="label">
+          {{ step.label }}
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

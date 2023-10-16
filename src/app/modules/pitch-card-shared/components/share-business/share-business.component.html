@@ -1,0 +1,176 @@
+<div class="flex flex-wrap p-fluid justify-content-center align-items-center mi-share">
+  <div class="flex flex-wrap justify-content-center align-items-center"
+       [ngClass]="{'flex-column-reverse': isAvailableIntroduction}">
+    <div class="col-12 mi-share-social" [ngClass]="{'mb-3 p-0': isAvailableIntroduction}">
+      <div class="sms-button" (click)="showSms(false)"><span class="sprite chat"></span></div>
+
+      <share-button
+          button="facebook"
+          [url]="shareUrl"
+          [description]="'msg_business_share_desc' | translate"
+          (closed)="shareSocialMediaAnalytics(analytics.ShareFacebook)"
+          theme="circles-dark"
+      >
+      </share-button>
+      <share-button
+          button="twitter"
+          [url]="shareUrl"
+          [description]="'msg_business_share_desc' | translate"
+          (closed)="shareSocialMediaAnalytics(analytics.ShareTwitter)"
+          theme="circles-dark"
+      >
+      </share-button>
+      <share-button
+          button="linkedin"
+          [url]="shareUrl"
+          [description]="'msg_business_share_desc' | translate"
+          (closed)="shareSocialMediaAnalytics(analytics.ShareLinkedin)"
+          theme="circles-dark"
+      >
+      </share-button>
+      <share-button
+          button="email"
+          [url]="shareUrl"
+          [title]="
+                    !isPocketSharing
+                        ? ('msg_business_share_subject' | translate)
+                        : ('msg_pocket_share_subject' | translate)
+                "
+          [description]="
+                    !isPocketSharing
+                        ? businessType === 'resume'
+                            ? ('msg_business_share_desc_resume' | translate)
+                            : ('msg_business_share_desc' | translate)
+                        : ('msg_pocket_share_desc' | translate)
+                "
+          (closed)="shareSocialMediaAnalytics(analytics.ShareEmail)"
+          theme="circles-dark"
+      >
+      </share-button>
+    </div>
+
+    <div class="introduce-block w-12 p-2 mb-3" *ngIf="isAvailableIntroduction">
+      <div class="flex align-items-center flex-column">
+        <button class="w-9 button-simple shock-pink sm-35 mt-3" (click)="showSms(true)">INTRODUCE</button>
+        <p class="w-8 text-xs mt-4 mb-0 text-center">Introduce this PitchCard owner to others with a 3 way text.</p>
+        <div class="font-italic text-sm font-light ml-0 mt-3 mb-3 grid align-items-center flex-nowrap text-center">
+          <span class="white-space-nowrap">In partnership with</span>
+          <a href="https://revetize.com/demo_request2" class="text-decoration" target="_blank">
+            <img src="assets/images/partners/revertize-blue.svg" class="mt-1 w-10" alt="revertize">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="shareUrl" class="qr-code-container text-center" [ngClass]="{'mb-3': isAvailableIntroduction}">
+      <app-angularx-qrcode #qrcode [qrdata]="shareUrl" [size]="150" [level]="'M'"></app-angularx-qrcode>
+      <a class="new-link pointer" (click)="saveQrCode(qrcode)">Download</a>
+    </div>
+  </div>
+
+  <div
+      class="col-12 mi-share-copy"
+      [ngClass]="{ 'mt-15': !isMobile, 'mt-0': isAvailableIntroduction }"
+  >
+    <div class="p-inputgroup">
+            <span class="mi-share-link">
+                <share-button
+                    button="copy"
+                    [url]="shareUrl"
+                    [description]="'msg_business_share_desc' | translate"
+                    theme="default"
+                >
+                </share-button>
+            </span>
+      <input
+          class="flex-auto"
+          type="text"
+          pInputText
+          [value]="shareUrl"
+      />
+    </div>
+  </div>
+</div>
+
+<div class="col-12">
+  <p-dialog
+      [(visible)]="shareSms"
+      styleClass=" thank-you-dialog sms-dialog custom-width-dialog mi-mob-fullscreen-dialog"
+      [modal]="true"
+      [blockScroll]="true"
+      appendTo="body"
+      [draggable]="false"
+      [dismissableMask]="false"
+      (onHide)="onHideShareSmsDialog($event)"
+      [positionTop]="200"
+      [style]="{
+            width: '720px',
+            maxWidth: '100%',
+            'z-index': '9999999 !important'
+        }"
+  >
+    <form action="" [formGroup]="contactForm">
+      <div class="title" translate>lbl_enter_contact_number</div>
+      <div class="form-control" *ngIf="isBrowser">
+                <span class="p-float-label">
+                    <p-inputMask
+                        #inputmask
+                        [tabindex]="3"
+                        [autocomplete]="'tel'"
+                        mask="(999) 999-9999"
+                        type="tel"
+                        size="30"
+                        inputmode="tel"
+                        formControlName="contactNumber"
+                        id="contactNumber"
+                        styleClass="new-input-blue sm"
+                        (onBlur)="
+                            formatPhoneNumber(
+                                contactForm.get('contactNumber')?.value
+                            )
+                        "
+                    >
+                    </p-inputMask>
+                    <label for="contactNumber" translate
+                    >label_mobile_number
+                        <span class="asterisk">*</span>
+                    </label>
+                </span>
+
+        <div
+            class="form-errors"
+            *ngIf="submittedSms && form.contactNumber.errors"
+        >
+          <div
+              *ngIf="contactForm.get('contactNumber').errors.required"
+              translate
+          >
+            required_contact_number
+          </div>
+          <div
+              *ngIf="contactForm.get('contactNumber').errors.pattern"
+              translate
+          >
+            err_invalid_contact
+          </div>
+        </div>
+      </div>
+      <div>
+        <br/>
+      </div>
+      <div class="md:col-3 col-6 margin-centered">
+        <button
+            class="button-simple shock-pink sm-35 uppercase full-width"
+            translate=""
+            [disabled]="
+                        !this.contactForm.get('contactNumber').value ||
+                        !this.contactForm.get('contactNumber').valid
+                    "
+            (click)="sendSMSToReferral()"
+        >
+          label_send
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+</div>

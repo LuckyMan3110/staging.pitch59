@@ -1,0 +1,183 @@
+@import '../../../../styles/variables';
+
+.content {
+  position: relative;
+  min-height: 100%;
+  margin-top: 30px;
+
+  .billing-view-item {
+    position: relative;
+    @media (max-width: 851px) {
+      width: 100%;
+    }
+
+    .header-section {
+      min-height: 95px;
+      @media (max-width: 851px) {
+        margin: 0 10px 10px;
+      }
+
+      h1 {
+        font-size: 36px;
+        @media (max-width: 640px) {
+          font-size: 28px;
+        }
+      }
+    }
+  }
+
+  .price-wrap {
+    justify-content: space-between;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    position: relative;
+  }
+
+  .price-content {
+    min-height: 63%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .description {
+    text-align: center;
+  }
+
+  .billing-block {
+    border-radius: 4px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    max-width: 280px;
+    width: 100%;
+    padding: 20px 0 30px;
+    @media (max-width: 1024px) {
+      max-width: 265px;
+    }
+    @media (max-width: 851px) {
+      max-width: 280px;
+      margin-bottom: 20px;
+      height: unset;
+      min-height: 335px;
+    }
+
+    .billing-title {
+      font-size: 26px;
+      line-height: 30px;
+      font-weight: 500;
+      padding: 0 10px;
+      @media (max-width: 851px) {
+        font-size: 25px;
+        line-height: 30px;
+      }
+    }
+
+    .price {
+      font-size: 36px;
+      line-height: 54px;
+      font-weight: 600;
+      @media (max-width: 1100px) {
+        font-size: 25px;
+        line-height: 28px;
+      }
+      @media (max-width: 851px) {
+        font-size: 30px;
+        line-height: unset;
+        margin-top: 0;
+      }
+
+      span {
+        font-size: 20px;
+        line-height: 24px;
+      }
+
+      &.decorate {
+        font-size: 20px;
+        line-height: 24px;
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        top: 20%;
+        @media (max-width: 851px) {
+          font-size: 18px;
+        }
+
+        h2 {
+          position: relative;
+          overflow: hidden;
+          padding: 5px 0;
+
+          &:after {
+            content: '';
+            height: 3px;
+            width: 34%;
+            position: absolute;
+            background: #f75671;
+            transform: rotate(-14deg);
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 17px;
+
+            @media (max-width: 1025px) {
+              width: 45%;
+            }
+          }
+        }
+      }
+
+      &.extra-height {
+        padding: 23% 0;
+        @media (max-width: 851px) {
+          padding: 10% 0;
+        }
+      }
+    }
+
+    .lower-price {
+      &.smaller {
+        font-size: 32px;
+        line-height: 32px;
+      }
+
+      p {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 20px;
+        max-width: 80%;
+        margin: 10px auto 15px;
+      }
+    }
+  }
+
+  .button-simple {
+    max-width: 134px;
+
+    img,
+    span {
+      height: 25px;
+      width: 25px;
+      margin-right: 4px;
+    }
+  }
+
+  .back-btn {
+    position: absolute;
+    bottom: 7%;
+    left: 6%;
+    @media (max-width: 851px) {
+      position: relative;
+      margin: 0 10px 10px;
+    }
+  }
+}
+
+.dialog-container {
+  padding: 10px 30px 30px;
+  font-size: 16px;
+}

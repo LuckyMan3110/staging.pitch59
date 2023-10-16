@@ -1,0 +1,43 @@
+@import '../../../../../styles/variables.scss';
+
+.new-badge {
+  border-radius: 4px;
+  background-color: $stateErrorTextColor;
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  padding: 3px 11px;
+}
+
+.text-xxs {
+  font-size: 10px;
+}
+
+.reset-circle {
+  border-radius: 6px;
+  top: 1px;
+  right: 1px;
+
+  &:hover {
+    color: $stateDefaultTextColor;
+  }
+}
+
+.spin {
+  border-radius: 50%;
+  animation-name: spin;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

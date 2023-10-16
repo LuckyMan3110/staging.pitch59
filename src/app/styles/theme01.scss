@@ -1,0 +1,153 @@
+// Colors
+$white: #fff;
+$defaultThemeColor: #ff3366;
+$secondaryThemeColor: #3d4246;
+$inputGroupTextColor: #000;
+$uiDropdowncolor: #adadbd;
+$bodyBgColor: #f6f6f6;
+$mainContentBgColor: #f6f6f6;
+$topBarBgColor: $white;
+$progressBarBgColor: #25afb5;
+$BodyTextColor: #454545;
+$linkColor: #666161;
+$topBarTextColor: #303030;
+$sidebarBgColor: $secondaryThemeColor;
+$sidebarMenuTextColor: rgba(255, 255, 255, 0.6);
+$sideBarHoverBgColor: #51575c;
+$sidebarMenuHoverTextColor: $white;
+$sidebarIconColor: #b0bec5;
+$signInBgColor: #009688;
+$headerFontSize: 24px;
+$headerSplitBarColor: #cbd1dc;
+$headerUserName: #101010;
+$buttonDefaultTextColor: $white;
+$buttonDefaultBgColor: #02aab0;
+$negativeButtonColor: $secondaryThemeColor;
+$buttonHoverColor: #d21911;
+$negativeButtonHoverColor: #24282a;
+$pageHeaderBgColor: transparent;
+$panelDivBgColor: $white;
+
+// Forms
+
+$formFieldTopBottomMargin: 8px;
+$formFieldLeftRightMargin: 0;
+$inputFieldsBgColor: $white;
+$inputFieldBorderColor: #e1e3e7;
+$inputTextHeight: 30px;
+$readOnlyFieldColor: #dedede;
+$activeBoxTextColor: #636363;
+$inputBorderColor: #e1e3e7;
+
+// Pring NG
+
+$fontFamily: 'Lato', sans-serif;
+$fontSize: 1rem;
+$borderRadius: 2px;
+$disabledOpacity: 0.35;
+$calendarIconColor: #3d3d3d;
+$dropdownBgColor: #1a1a1a;
+$dropdownBorderColor: #c5c0cb;
+$selectButtonBorderColor: #eee;
+
+// Header
+$headerBorderWidth: 1px;
+$headerBorderColor: $white;
+$headerBgColor: $white;
+$headerTextColor: #444;
+$headerFontWeight: bold;
+$headerIconTextColor: #444;
+
+// Content
+$contentBorderWidth: 1px;
+$contentBorderColor: #ddd;
+$contentBgColor: $white;
+$contentTextColor: #444;
+
+// Default State
+$stateDefaultBorderWidth: 1px;
+$stateDefaultBorderColor: #ddd;
+$stateDefaultBgColor: #f6f6f6;
+$stateDefaultTextColor: #25afb5;
+
+// Active State
+$stateActiveBorderColor: #ddd;
+$stateActiveBgColor: $white;
+$stateActiveTextColor: $white;
+
+// Highlight State
+$stateHighlightBorderColor: #25afb5;
+$stateHighlightBgColor: #25afb5;
+$stateHighlightTextColor: $white;
+
+// Focus State
+$stateFocusBorderColor: #25afb5;
+$stateFocusBgColor: #25afb5;
+$stateFocusTextColor: $white;
+
+// Error State
+$stateErrorBorderColor: #ddd;
+$stateErrorBgColor: $white;
+$stateErrorTextColor: #ff3366;
+
+// Hover State
+$stateHoverBorderColor: #25afb5;
+$stateHoverBgColor: #25afb5;
+$stateHoverTextColor: $white;
+
+// Forms
+$inputBgColor: $white;
+$inputTextColor: #444;
+$invalidInputBorderColor: #ff3366;
+
+// Glow messages
+$growlMessageErrorColor: #f44336;
+$growlMessageSuccessColor: #4caf50;
+
+// Grid
+$gridHeaderTextColor: #1e1e1e;
+$gridHeaderBgColor: #ededed;
+$gridHeaderBorderColor: $topBarBgColor;
+$gridBtnColorDanger: #d9534f;
+$gridBtnColorDangerFocus: #c9302c;
+$gridBtnColorSuccess: #5cb85c;
+$gridBtnColorSuccessFocus: #449d44;
+$loaderBgColor: transperent;
+$actionButtonDeactivate: #1e1e1e;
+$gridSelectedRowHover: #d9dbdd;
+$gridFileHoverColor: #4caf50;
+$color_log_cabin_approx: #222;
+$color_boulder_40_approx: rgba(120, 120, 120, 0.4);
+$color_fuscous_gray_40_approx: rgba(80, 80, 80, 0.4);
+$color_shark_40_approx: rgba(40, 40, 40, 0.4);
+$black_40: rgba(0, 0, 0, 0.4);
+$color_japanese_laurel_approx: #006400;
+$color_red_berry_approx: #8b0000;
+$color_surf_crest_approx: #cec;
+$color_quill_gray_approx: #d3d3d3;
+$color_pumice_approx: #c7c7c7;
+$color_danube_approx: #5b9bd5;
+$color_silver_approx: #bebebe;
+$color_black_haze_approx: #f6f6f6;
+$color_gallery_approx: #f0f0f0;
+$white_50: rgba(255, 255, 255, 0.5);
+$black: #000;
+$gray: #808080;
+$gridOddRowColor: $white;
+$gridRowSelectedColor: #eeeaea;
+$gridSelectorHighliterColor: #ededed;
+$paginationTextColor: #3e3e3e;
+
+// Checkbox
+$checkboxBackgroundColor: $white;
+$checkboxBorderColor: #ededed;
+$checkboxActiveBorderColor: #e1e3e7;
+$checkboxCheckColor: #25afb5;
+
+// Table
+$tableHeaderText: rgba(30, 30, 30, 0.5);
+
+// google map realate color
+$mapPickup: #4da03a;
+$mapDrop: #ec1d25;
+$destinationBox: #e9e9ec;

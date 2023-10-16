@@ -1,0 +1,87 @@
+<div
+    class="pitchcard-folder-wrapper"
+    (click)="handleOpenFolder && !onlyFolder ? handleOpenFolder() : null"
+>
+  <app-search-result-thumbnail
+      *ngIf="isFolderWithContent && !onlyFolder"
+      [businessDetails]="pitchCardFolder.content"
+      #businessCard
+      [scale]="scaleFactor"
+      [disabled]="true"
+  >
+  </app-search-result-thumbnail>
+  <div
+      class="only-folder-wrapper"
+      *ngIf="onlyFolder"
+      (click)="handleAddContent()"
+  >
+    <div
+        class="folder-loader"
+        [hidden]="folderLoader !== pitchCardFolder.id"
+    >
+      <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+    </div>
+    <div class="move-container" *ngIf="!folderLoader">
+      <span>Move Here</span>
+      <span class="icon"></span>
+    </div>
+  </div>
+  <div
+      class="folder-wrapper"
+      [ngStyle]="{ background: pocketGradient }"
+      (click)="
+            pitchCardFolder.children &&
+            onlyFolder &&
+            pitchCardFolder?.children.length
+                ? handleOpenFolder()
+                : handleAddContent()
+        "
+  >
+    <div class="w-12 relative">
+      <div
+          *ngIf="!isOrganizationFolder"
+          class="folder-name text-ellipsis"
+      >
+        {{ pitchCardFolder.name }}
+      </div>
+    </div>
+
+    <div
+        *ngIf="isOrganizationFolder"
+        class="org-icon text-ellipsis w-12 relative color-white"
+        style="padding: 0 10px"
+    >
+      <div class="full-width">
+        <img
+            class="team-icon"
+            src="assets/images/my-account-images/team-page/team-icon.svg"
+            alt="team icon"
+        />
+      </div>
+      <span class="folder-name">{{ pitchCardFolder.name }}</span>
+    </div>
+    <div
+        *ngIf="
+                !onlyFolder && pitchCardFolder.count;
+                else contentFolderCount
+            "
+        class="content-number"
+    >
+      {{ pitchCardFolder.count }} PitchCard{{
+      pitchCardFolder.count > 1 ? 's' : ''
+      }}
+    </div>
+    <ng-template #contentFolderCount>
+      <div *ngIf="pitchCardFolder.count" class="content-number">
+        {{ pitchCardFolder.count.contents }} PitchCard{{
+        pitchCardFolder.count.contents > 1 ? 's' : ''
+        }}
+      </div>
+      <div *ngIf="pitchCardFolder.count" class="folder-number">
+        {{ pitchCardFolder.count.folders }} Pocket{{
+        pitchCardFolder.count.folders > 1 ? 's' : ''
+        }}
+      </div>
+    </ng-template>
+  </div>
+</div>

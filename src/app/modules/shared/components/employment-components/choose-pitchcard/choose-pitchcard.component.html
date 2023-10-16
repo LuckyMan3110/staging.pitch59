@@ -1,0 +1,360 @@
+<div class="page-container col-12 margin-centered">
+  <div
+      class="main-section bg-white"
+      style="border-radius: 6px"
+      *ngIf="activePrices.length"
+  >
+    <div
+        class="header-section grid justify-content-between align-items-start no-margins"
+    >
+      <div [ngClass]="{ 'margin-centered': isMobile }">
+        <h1 class="no-margins" [ngStyle]="{ paddingBottom: '10px' }">
+          Choose a PitchCard Type
+        </h1>
+
+        <div
+            class="grid align-items-center switch"
+            [ngClass]="{ 'no-margins': !isMobile }"
+        >
+                    <span
+                        class="mr-2"
+                        [ngStyle]="{ opacity: !isAnnuallyBilling ? '.4' : '1' }"
+                    >Annual Billing</span
+                    >
+
+          <div class="rotate-block-180" style="margin-right: 10px">
+            <p-inputSwitch
+                styleClass="always-checked"
+                [(ngModel)]="isAnnuallyBilling"
+                (onChange)="
+                                getActivePrice(
+                                    isAnnuallyBilling
+                                        ? billingFrequencyEnum.Annual
+                                        : billingFrequencyEnum.Monthly
+                                )
+                            "
+            >
+            </p-inputSwitch>
+          </div>
+
+          <span
+              [ngStyle]="{ opacity: isAnnuallyBilling ? '.4' : '1' }"
+          >Monthly Billing</span
+          >
+        </div>
+      </div>
+
+      <div
+          *ngIf="!hasUserEmployerPortal && showEmployerPortal"
+          class="button-simple bg-resume-red"
+          [ngClass]="{
+                    'lg-50': isDesktop,
+                    'no-margins': !isMobile,
+                    'margin-centered': isMobile
+                }"
+          (click)="createEmployerPortalModal = true"
+      >
+        CREATE EMPLOYER PORTAL
+      </div>
+    </div>
+
+    <div class="body-section mt-20">
+      <div
+          class="package-block"
+          [ngStyle]="{
+                    maxWidth: isDesktop ? 360 * scaleFactor + 'px' : ''
+                }"
+          *ngFor="let package of cardsPackages; let i = index"
+      >
+        <div class="package-block-header">
+          <div>
+            <h2 class="no-margins">
+              {{ getBusinessTypeValue(package.businessType) }}
+            </h2>
+          </div>
+
+          <div class="package-description">
+                        <span
+                            [ngClass]="{
+                                pink:
+                                    package.businessType ===
+                                        pitchcardTypes.Resume &&
+                                    allowCreateResume
+                            }"
+                        >
+                            {{
+                          package.businessType ===
+                          pitchcardTypes.Resume && allowCreateResume
+                              ? 'Resume PitchCard already exists'
+                              : descriptionsList[i]
+                          }}
+                        </span>
+            <br/>
+            <span
+                class="pink"
+                *ngIf="package.businessType === pitchcardTypes.Job"
+            >(Requires Employer Portal)</span
+            >
+          </div>
+        </div>
+
+        <div
+            class="pitchcard-view-item"
+            *ngIf="package"
+            [ngClass]="{
+                        pointer:
+                            package.businessType !== pitchcardTypes.Resume &&
+                            allowCreateResume
+                    }"
+        >
+          <div
+              *ngIf="
+                            package.businessType === pitchcardTypes.Resume &&
+                            allowCreateResume
+                        "
+              class="underlay"
+              [ngStyle]="{
+                            borderRadius: 8 * scaleFactor + 'px',
+                            width: !isDesktop
+                                ? scaleFactor * 360 + 'px'
+                                : '100%'
+                        }"
+          ></div>
+
+          <app-search-result-thumbnail
+              (click)="selectedBillingType = package.businessType"
+              [businessDetails]="package"
+              [demo]="false"
+              [scale]="scaleFactor.toString()"
+              [disabled]="true"
+          ></app-search-result-thumbnail>
+        </div>
+
+        <div
+            class="text-center"
+            *ngIf="
+                        getRightActivePrice(package.businessType).price ||
+                        getRightActivePrice(package.businessType).price === 0
+                    "
+        >
+          <div
+              class="price-block"
+              [ngClass]="{ 'mb-20': isDesktop, 'mb-2': !isDesktop }"
+          >
+            <div
+                *ngIf="
+                                package.businessType !== pitchcardTypes.Job;
+                                else noJobAnnually
+                            "
+                [ngClass]="{
+                                'old-price old-price-color':
+                                    getRightActivePrice(package.businessType)
+                                        .referralDiscount &&
+                                    getRightActivePrice(package.businessType)
+                                        .referralDiscount > 0
+                            }"
+            >
+              {{
+              getRightActivePrice(package.businessType).price
+                  ? '$' +
+                  getRightActivePrice(package.businessType)
+                      .price +
+                  '/' +
+                  pricePer
+                  : ''
+              }}
+            </div>
+
+            <ng-template #noJobAnnually>
+              <div
+                  class="old-price-color"
+                  *ngIf="isAnnuallyBilling === true"
+              >
+                Monthly Billing Only
+              </div>
+            </ng-template>
+
+            <div
+                *ngIf="
+                                getRightActivePrice(package.businessType)
+                                    .referralDiscount &&
+                                getRightActivePrice(package.businessType)
+                                    .referralDiscount > 0 &&
+                                package.businessType !== pitchcardTypes.Job
+                            "
+                class="green"
+            >
+              {{
+              getRightActivePrice(package.businessType)
+                  .price -
+              getRightActivePrice(package.businessType)
+                  .referralDiscount ===
+              0
+                  ? 'FREE/1st ' + pricePer
+                  : '$' +
+                  (getRightActivePrice(package.businessType)
+                          .price -
+                      getRightActivePrice(
+                          package.businessType
+                      ).referralDiscount) +
+                  '/1st ' +
+                  pricePer
+              }}
+            </div>
+
+            <div
+                class="green"
+                *ngIf="
+                                getRightActivePrice(package.businessType)
+                                    .price === 0 &&
+                                package.businessType !== pitchcardTypes.Job
+                            "
+            >
+              FREE
+            </div>
+
+            <div
+                class="green"
+                *ngIf="package.businessType === pitchcardTypes.Job"
+            >
+              ${{
+              getRightActivePrice(package.businessType).price
+              }}/Mo
+            </div>
+          </div>
+
+          <button
+              class="button-simple shock-pink uppercase margin-centered"
+              [disabled]="
+                            (package.businessType === pitchcardTypes.Resume &&
+                                allowCreateResume) ||
+                            (!showEmployerPortal &&
+                                package.businessType === pitchcardTypes.Job)
+                        "
+              (keydown)="calculateNextRoute(package.businessType)"
+              (click)="calculateNextRoute(package.businessType)"
+          >
+            Select
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+    [(visible)]="createEmployerPortalModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="true"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '650px', width: '650px' }"
+    styleClass="dialog"
+    appendTo="body"
+>
+  <div class="modal-body" *ngIf="productEP">
+    <div class="tips-message pink text-center">
+      To create a Job Card, please set up your Employer Portal first.
+    </div>
+
+    <div class="modal-header mb-30">
+      <div class="modal-title">
+        <img
+            src="../../../../../../assets/images/my-account-images/profile-sidebar-images/employer-portal.svg"
+            alt="Teams"
+        />
+
+        <h1>
+          {{
+          productEP?.name
+              ? (productEP.name | uppercase)
+              : 'EMPLOYER PORTAL'
+          }}
+        </h1>
+      </div>
+
+      <div>
+        <h2
+            class="green no-margins"
+            *ngIf="productEP?.isDiscountAvailable && realPriceEP"
+        >
+          {{ '$' + realPriceEP }}
+          {{
+          billingFrequencyEnum[productEP.paymentFrequency]
+          }}
+          Access
+          <span style="font-size: 1rem; font-weight: 400"
+          >(Limited Time)</span
+          >
+        </h2>
+        <h2
+            class="green no-margins"
+            *ngIf="!productEP?.isDiscountAvailable"
+        >
+          {{ productEP?.price ? '$' + productEP.price : 'FREE' }}
+          {{
+          billingFrequencyEnum[productEP.paymentFrequency]
+          }}
+          Access
+        </h2>
+        <div>(Includes up to 3 admins, $99 per additional admin)</div>
+      </div>
+    </div>
+
+    <div class="grid align-items-start justify-content-start mb-30">
+      <ul class="text-left">
+        <li>
+          Create and manage your team’s PitchCards (including Job
+          Cards)
+        </li>
+        <li>Organize team members and job applicants into pockets</li>
+        <li>Easily testimonial and manage applicants</li>
+        <li>Gather reports and analytics for your team</li>
+        <li>24/7 Access to the Resumè PitchCard Search Directory</li>
+      </ul>
+    </div>
+
+    <div class="modal-footer text-center">
+      <div
+          class="button-simple margin-centered shock-pink"
+          (click)="navigateToCreationEP(employerPortalProductName)"
+      >
+        CREATE EMPLOYER PORTAL
+      </div>
+
+      <div class="mt-5 uppercase" *ngIf="!isAuthUser">
+        Already have an account?
+        <span class="green link" [routerLink]="'/sign-in'">LOG IN</span>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<div *ngIf="createPCFromEPModal">
+  <p-dialog
+      [(visible)]="createPCFromEPModal && businessProduct"
+      [blockScroll]="true"
+      [draggable]="false"
+      [modal]="true"
+      [closeOnEscape]="false"
+      [resizable]="false"
+      [dismissableMask]="false"
+      [style]="{ minWidth: '300px', maxWidth: '750px', width: '750px' }"
+      (onHide)="createPCFromEPModal = false"
+      styleClass="dialog apply-to-job-modal"
+      appendTo="body"
+  >
+    <app-create-team-pitchcard
+        *ngIf="createPCFromEPModal"
+        [selectedPackage]="
+                computeSelectedPackage(businessProduct.businessType)
+            "
+        [product]="businessProduct"
+        [organizationCardDetail]="organizationCardDetail"
+        (closeWindow)="createPCFromEPModal = false"
+        (selectedOptions)="createBusinessFromEmployerPortal($event)"
+    ></app-create-team-pitchcard>
+  </p-dialog>
+</div>

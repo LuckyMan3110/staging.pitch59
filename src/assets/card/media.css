@@ -1,0 +1,342 @@
+@media (min-width: 1399px) {
+    .gallery-window span.close {
+        top: -50px;
+    }
+}
+
+@media only screen and (max-device-width: 1399px) {
+    .gallery-window span.close {
+        top: 80px;
+    }
+}
+
+@media (max-width: 1025px), (max-height: 1367px) {
+    /* .wrapper,
+	.banner {
+		--scale-factor: 1.45;
+	} */
+    .gallery-window span.close {
+        top: -100px;
+    }
+
+    .modal .gallery-window span.close {
+        right: -50px;
+    }
+
+    .main-info .thumb-logo img.resume-btn {
+        border-radius: 4px;
+    }
+}
+
+@media (max-width: 980px), (max-height: 1280px) {
+    .wrapper .welcome-demo {
+        margin-top: -18px;
+    }
+
+    .modal .modal-window.medium {
+        max-width: 550px;
+        width: 60%;
+    }
+
+    .modal-window.video-dialog {
+        padding: 0;
+        width: 800px;
+    }
+
+    .modal .gallery-window span.close {
+        line-height: 35px;
+        height: 35px;
+        width: 35px;
+    }
+}
+
+@media (max-width: 767px), (max-height: 1023px) {
+    /* .wrapper,
+	.banner {
+		--scale-factor: 1.2;
+	} */
+    .cards-slider .swiper-slide.slide.swiper-slide-next .box-wrap:before {
+        content: '';
+        background: #2d3149;
+        border-radius: calc(0.5em * var(--scale-factor));
+        height: 100%;
+        left: 0;
+        opacity: 0.4;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        margin: auto;
+        z-index: 99;
+    }
+
+    .modal .modal-window.doc-view,
+    .modal .modal-window.img-view {
+        width: 85%;
+    }
+
+    .swiper-slide.slide.swiper-slide-active .box-wrap:before {
+        background: transparent;
+        pointer-events: none;
+    }
+
+    .swiper-button-prev.prev,
+    .swiper-button-next.next {
+        display: none;
+    }
+
+    .swiper-button-next.next.preview-right,
+    .swiper-button-prev.prev.preview-left {
+        display: flex;
+    }
+
+    .wrapper .swiper-slide.slide.swiper-slide-next {
+        pointer-events: none;
+    }
+
+    .wrapper .swiper-slide.slide.swiper-slide-active {
+        pointer-events: auto;
+    }
+
+    .modal.dropdown {
+        margin-left: 0;
+    }
+
+    #modal_dialog_0 {
+        align-items: flex-end;
+    }
+
+    .modal-window.large.regist-save {
+        width: 100%;
+        padding: 0 0 10px;
+    }
+
+    .modal .modal-window.save-sign-in {
+        width: 500px;
+    }
+
+    .modal .gallery-window span.close {
+        right: -30px;
+        line-height: 30px;
+        height: 30px;
+        width: 30px;
+        font-size: 25px;
+    }
+}
+
+/* iPhone 11 in portrait */
+@media (height: 767px) and (width: 375px) {
+    /* .wrapper,
+	.banner {
+		--scale-factor: 1;
+	} */
+    .modal-video > .modal-window,
+    .modal-reviews-video > .modal-window {
+        width: 90%;
+        padding: 0;
+    }
+}
+
+@media (max-width: 1024px) and (orientation: portrait) {
+    div.modal-window.video-dialog {
+        width: 75%;
+    }
+}
+
+@media (max-width: 767px) and (orientation: portrait) {
+    div.modal-window.video-dialog {
+        width: 100%;
+        padding: 0;
+    }
+
+    .close.video-close {
+        background: transparent;
+        color: var(--green);
+        transform: unset;
+    }
+
+    .modal .modal-window.medium {
+        width: 100%;
+    }
+
+    .modal .modal-window.medium#signUp {
+        box-sizing: border-box;
+        max-height: 100%;
+        overflow-y: scroll;
+    }
+
+    .modal-window.small > .modal-body {
+        padding: 0;
+    }
+
+    .download-block {
+        right: 45px;
+        top: 19px;
+    }
+
+    .download-block img {
+        margin-right: 0;
+        width: 20px;
+    }
+
+    .download-block span {
+        display: none;
+    }
+}
+
+/*height media rules*/
+
+@media (max-height: 1080px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 1.3;
+    }
+}
+
+@media (max-height: 1024px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 1.2;
+    }
+}
+
+@media (max-height: 900px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 1.1;
+    }
+}
+
+@media (max-height: 800px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 1;
+    }
+}
+
+@media (max-height: 720px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.9;
+    }
+}
+
+@media (max-height: 628px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.8;
+    }
+}
+
+@media (max-height: 540px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.7;
+    }
+}
+
+@media (max-height: 480px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.6;
+    }
+}
+
+@media (max-height: 423px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.5;
+    }
+}
+
+@media (max-height: 360px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.4;
+    }
+}
+
+@media (max-height: 280px) and (orientation: landscape) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.3;
+    }
+}
+
+/*width media rules*/
+
+@media (max-width: 768px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 1.3;
+    }
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 1.2;
+    }
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.8;
+    }
+}
+
+@media (max-width: 600px) and (min-height: 768px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 1.2;
+    }
+}
+
+@media (max-width: 480px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 1;
+    }
+}
+
+@media (max-width: 425px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.8;
+    }
+}
+
+@media (max-width: 425px) and (min-height: 720px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 1;
+    }
+}
+
+@media (max-width: 360px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.7;
+    }
+}
+
+@media (max-width: 320px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.6;
+    }
+}
+
+@media (max-width: 320px) and (min-height: 600px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.7;
+    }
+}
+
+@media (max-width: 240px) and (orientation: portrait) {
+    .wrapper,
+    .banner {
+        --scale-factor: 0.4;
+    }
+}

@@ -1,0 +1,36 @@
+@import '../../../../../styles/variables';
+
+.page-container {
+  max-width: 1370px;
+  position: relative;
+
+  @media (max-width: 1440px) {
+    max-width: 1200px;
+  }
+  @media (max-width: 1280px) {
+    max-width: 1170px;
+  }
+  @media (max-height: 640px) {
+    height: 100%;
+  }
+  @media (max-width: 1024px) {
+    max-width: 900px;
+  }
+
+  .pricing-menu-layout {
+    border-radius: 6px;
+    padding: 50px 50px 70px;
+    position: relative;
+    @media (max-width: 1024px) {
+      padding: 35px;
+    }
+    @media (max-width: 767px) {
+      padding: 15px;
+    }
+  }
+
+  .layout-bg {
+    background: #00101a;
+    box-shadow: 6px 4px 4px rgba(14, 13, 13, 0.25);
+  }
+}

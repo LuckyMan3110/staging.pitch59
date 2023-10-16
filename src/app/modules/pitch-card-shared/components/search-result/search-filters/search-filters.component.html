@@ -1,0 +1,399 @@
+<div class="layout-wrap" *ngIf="form">
+  <div class="filters-wrap" [formGroup]="form">
+    <div class="filter-block form-field mb-15">
+      <div class="form-label mb-1">
+        <label translate>Location</label>
+      </div>
+
+      <div class="form-control">
+        <div class="col-10 no-padding">
+          <p-autoComplete
+              #location
+              [suggestions]="suggestedCities"
+              (completeMethod)="searchCities($event)"
+              (onSelect)="setCommonField('location')"
+              (input)="setLocationData($event, 'location')"
+              formControlName="location"
+              styleClass="mi-autocomplete"
+              class="dropdown-box-gray"
+              field="cityName"
+              placeholder="City or ZIP Code"
+              minLength="3"
+              delay="500"
+          >
+          </p-autoComplete>
+        </div>
+
+        <div
+            class="clear-filter pi pi-times pointer color-white"
+            (click)="clearFilter('location')"
+        ></div>
+      </div>
+    </div>
+
+    <div
+        class="filter-block form-field mb-15"
+        *ngIf="
+                searchType === searchTypes.Businesses ||
+                searchType === searchTypes.Nonprofit
+            "
+    >
+      <div class="form-label mb-2">
+        <label
+        >Number of Testimonials
+          <span *ngIf="maxNumbersOfReviews"
+          >(Max {{ maxNumbersOfReviews }})</span
+          ></label
+        >
+      </div>
+
+      <div class="form-control mb-2">
+        <input
+            type="number"
+            class="input-box-gray"
+            formControlName="numberOfReviews"
+            placeholder="Input number"
+            (blur)="checkOnMaxValue($event)"
+            [style]="{ width: '85%' }"
+        />
+
+        <div
+            class="clear-filter pi pi-times pointer color-white"
+            (click)="clearFilter('numberOfReviews')"
+        ></div>
+      </div>
+    </div>
+
+    <div
+        class="filter-block form-field mb-15"
+        *ngIf="searchType === searchTypes.Resumes"
+    >
+      <div class="form-label mb-1">
+        <label translate>Level of Education</label>
+      </div>
+
+      <div class="form-control">
+        <div class="col-10 no-padding">
+          <p-dropdown
+              [options]="educationLevel"
+              optionLabel="value.name"
+              class="dropdown-box-gray"
+              [placeholder]="'Some college'"
+              formControlName="educationLevel"
+          ></p-dropdown>
+        </div>
+
+        <div
+            class="clear-filter pi pi-times pointer color-white"
+            (click)="clearFilter('educationLevel')"
+        ></div>
+      </div>
+    </div>
+
+    <div
+        class="filter-block form-field mb-15"
+        *ngIf="searchType === searchTypes.Resumes"
+    >
+      <div class="form-label mb-1">
+        <label>College/University</label>
+      </div>
+
+      <div class="form-control auto-complete-section">
+        <div class="col-10 no-padding categories-input">
+          <p-multiSelect
+              #searchEducation
+              [options]="educationalSuggestions"
+              [filter]="true"
+              [showHeader]="true"
+              [showToggleAll]="false"
+              [maxSelectedLabels]="1"
+              [resetFilterOnHide]="true"
+              optionLabel="name"
+              class="dropdown-box-gray filtered"
+              [defaultLabel]="'College/University'"
+              ariaFilterLabel="College/University"
+              filterPlaceHolder="College/University"
+              formControlName="educationalInstitutions"
+              (onFilter)="searchEducationInit($event)"
+              selectedItemsLabel="{0} items selected"
+          >
+            <ng-template let-item pTemplate="item">
+              <div
+                  class="text-ellipsis"
+                  [pTooltip]="item.name"
+                  [tooltipDisabled]="
+                                    (isDesktop && item.name?.length < 20) ||
+                                    !isDesktop
+                                "
+                  [tooltipPosition]="'top'"
+              >
+                {{ item.name }}
+              </div>
+            </ng-template>
+          </p-multiSelect>
+        </div>
+
+        <div
+            class="clear-filter pi pi-times pointer color-white"
+            (click)="clearFilter('educationalInstitutions')"
+        ></div>
+      </div>
+    </div>
+
+    <div
+        class="filter-block form-field mb-15"
+        *ngIf="searchType === searchTypes.Jobs"
+    >
+      <div class="form-label mb-2">
+        <label>Radius (miles)</label>
+      </div>
+
+      <div class="form-control mb-2">
+        <input
+            type="number"
+            class="input-box-gray"
+            [ngClass]="{ 'col-10': !isDesktop }"
+            formControlName="radius"
+            placeholder="25"
+            pInputText
+            [style]="{ width: isDesktop ? '83.3%' : '' }"
+        />
+        <div
+            class="clear-filter pi pi-times pointer color-white"
+            (click)="clearFilter('radius')"
+        ></div>
+      </div>
+    </div>
+
+    <div class="mb-20" *ngIf="searchType === searchTypes.Jobs">
+      <p-checkbox
+          name="isRemote"
+          formControlName="isRemote"
+          (onChange)="disableLocation($event)"
+          label="Remote Position"
+          class="checkbox-military"
+          binary="true"
+      >
+      </p-checkbox>
+    </div>
+
+    <div
+        class="filter-block form-field mb-15"
+        *ngIf="
+                searchType === searchTypes.Resumes ||
+                searchType === searchTypes.Jobs
+            "
+    >
+      <div class="form-label mb-1">
+        <label *ngIf="searchType === searchTypes.Resumes"
+        >Work Type</label
+        >
+        <label *ngIf="searchType === searchTypes.Jobs"
+        >Employment Type</label
+        >
+      </div>
+
+      <div class="form-control">
+        <div class="col-10 no-padding">
+          <p-multiSelect
+              *ngIf="
+                            searchType === searchTypes.Jobs ||
+                            searchType === searchTypes.Resumes
+                        "
+              [options]="workTypesSuggestions"
+              [filter]="false"
+              [showHeader]="false"
+              [showToggleAll]="false"
+              optionLabel="name"
+              class="dropdown-box-gray"
+              [defaultLabel]="'-Select-'"
+              ariaFilterLabel="Select All"
+              filterPlaceHolder="Select All"
+              formControlName="{{
+                            searchType === searchTypes.Jobs
+                                ? 'employmentType'
+                                : 'workType'
+                        }}"
+          ></p-multiSelect>
+        </div>
+        <div
+            *ngIf="
+                        searchType === searchTypes.Resumes ||
+                        searchType === searchTypes.Jobs
+                    "
+            class="clear-filter pi pi-times pointer color-white"
+            (click)="
+                        clearFilter(
+                            searchType === searchTypes.Jobs
+                                ? 'employmentType'
+                                : 'workType'
+                        )
+                    "
+        ></div>
+      </div>
+    </div>
+
+    <div
+        class="filter-block form-field mb-15"
+        *ngIf="searchType === searchTypes.Jobs"
+    >
+      <div class="form-label mb-1">
+        <label>Industry</label>
+      </div>
+
+      <div class="form-control">
+        <div class="col-10 no-padding">
+          <p-multiSelect
+              [options]="industrySuggestions"
+              [filter]="false"
+              [showHeader]="false"
+              [showToggleAll]="false"
+              optionLabel="name"
+              class="dropdown-box-gray"
+              [defaultLabel]="'-Select-'"
+              ariaFilterLabel="Select All"
+              filterPlaceHolder="Select All"
+              formControlName="industries"
+          ></p-multiSelect>
+        </div>
+
+        <div
+            class="clear-filter pi pi-times pointer color-white"
+            (click)="clearFilter('industries')"
+        ></div>
+      </div>
+    </div>
+
+    <div
+        class="filter-block form-field mb-15"
+        *ngIf="searchType === searchTypes.Jobs"
+    >
+      <div class="form-label mb-1">
+        <label translate>Compensation Type</label>
+      </div>
+
+      <div class="form-control auto-complete-section">
+        <div class="col-10 no-padding categories-input">
+          <p-dropdown
+              [options]="compensationTypesDropDown"
+              optionLabel="value.name"
+              class="dropdown-box-gray"
+              [placeholder]="'-Select-'"
+              formControlName="compensationTypes"
+              (onChange)="onCompensationTypeChange()"
+          ></p-dropdown>
+        </div>
+
+        <div
+            class="clear-filter pi pi-times pointer color-white"
+            (click)="
+                        form.get('compensationTypes').patchValue([]);
+                        compensationTypeSuggestions = [];
+                        onCompensationTypeChange()
+                    "
+        ></div>
+      </div>
+    </div>
+
+    <div
+        class="filter-block form-field mb-15"
+        *ngIf="searchType === searchTypes.Jobs"
+    >
+      <div class="form-label mb-2">
+        <label>Compensation</label>
+      </div>
+
+      <div class="form-control mb-2">
+        <div
+            class="grid justify-content-between no-margins col-10 no-padding"
+        >
+          <input
+              type="number"
+              class="input-box-gray"
+              [ngClass]="{ 'col-5': !isDesktop }"
+              formControlName="minCompensationAmount"
+              placeholder="Min"
+              [style]="{ width: isDesktop ? '40%' : '' }"
+          />
+          <input
+              type="number"
+              class="input-box-gray"
+              [ngClass]="{ 'col-5': !isDesktop }"
+              formControlName="maxCompensationAmount"
+              placeholder="Max"
+              [style]="{ width: isDesktop ? '40%' : '' }"
+          />
+        </div>
+        <div
+            class="clear-filter pi pi-times pointer color-white"
+            (click)="
+                        clearFilter('minCompensationAmount');
+                        clearFilter('maxCompensationAmount')
+                    "
+        ></div>
+      </div>
+    </div>
+
+    <div
+        *ngIf="searchType === searchTypes.Jobs"
+        class="filter-block form-field"
+        [ngClass]="{ 'mb-3': !isMobile, 'mb-4': isMobile }"
+    >
+      <div class="form-label mb-1">
+        <label>Benefits</label>
+      </div>
+
+      <div class="form-control auto-complete-section">
+        <div class="col-10 no-padding categories-input">
+          <p-multiSelect
+              [options]="benefitsSuggestions"
+              [filter]="false"
+              [showHeader]="false"
+              [showToggleAll]="false"
+              [scrollHeight]="isMobile ? '120px' : '200px'"
+              optionLabel="name"
+              class="dropdown-box-gray"
+              [defaultLabel]="'-Select-'"
+              ariaFilterLabel="Select All"
+              filterPlaceHolder="Select All"
+              formControlName="benefits"
+          ></p-multiSelect>
+        </div>
+
+        <div
+            class="clear-filter pi pi-times pointer color-white"
+            (click)="clearFilter('benefits')"
+        ></div>
+      </div>
+    </div>
+
+    <div class="mb-2" *ngIf="searchType === searchTypes.Resumes">
+      <p-checkbox
+          name="hasMilitaryService"
+          formControlName="hasMilitaryService"
+          label="Military Service"
+          binary="true"
+      >
+      </p-checkbox>
+    </div>
+
+    <div class="grid align-items-center no-margins">
+      <button
+          class="button-simple shock-pink sm-30"
+          [ngClass]="{
+                    'bg-green': searchType === searchTypes.Businesses,
+                    'bg-resume-red': searchType === searchTypes.Resumes,
+                    'bg-job': searchType === searchTypes.Jobs,
+                    'bg-gold': searchType === searchTypes.Nonprofit
+                }"
+          (click)="applyFilters()"
+      >
+        Apply
+      </button>
+
+      <span class="col-offset-1 link pointer" (click)="clearFilters()"
+      >Clear Filters</span
+      >
+    </div>
+  </div>
+</div>

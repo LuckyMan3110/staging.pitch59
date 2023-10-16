@@ -1,0 +1,17 @@
+<div class="bank-account-thumbnail" *ngIf="model">
+  <img src="assets/images/fa-icons/bank-account.svg"/>
+  <div class="account-data">
+    <div class="account-data-titles">
+      <span>Holder Name: </span>
+      <span>Account Type: </span>
+      <span>Routing Number: </span>
+      <span>Account Number: </span>
+    </div>
+    <div class="account-data-values">
+      <span>{{ model.accountHolderName }}</span>
+      <span>{{ accountType }}</span>
+      <span>{{ routingNumber }}</span>
+      <span>{{ accountNumber }}</span>
+    </div>
+  </div>
+</div>

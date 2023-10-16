@@ -1,0 +1,130 @@
+<div class="app-footer">
+  <div class="container">
+    <div class="grid">
+      <div class="col-12 lg:col-3 sm:col-5">
+        <div class="logo-social-link">
+          <div class="col-12 footer-logo">
+            <img
+                src="assets/images/logo/pitch59-logo-gray.svg"
+                (click)="goToPage('/welcome')"
+                alt="{{ 'lbl_img_alt_logo' | translate }}"
+            />
+          </div>
+          <div class="col-12">
+            <ul class="social-icons">
+              <li>
+                <a
+                    href="https://www.facebook.com/pitch59social/"
+                    target="_blank"
+                >
+                  <img
+                      src="../../../../../assets/images/facebook-icon-gray.svg"
+                      alt="facebook"
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                    href="https://twitter.com/pitch59_"
+                    target="_blank"
+                >
+                  <img
+                      src="../../../../../assets/images/twitter-icon-gray.svg"
+                      alt="twitter"
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                    href="https://www.instagram.com/pitch59_/"
+                    target="_blank"
+                >
+                  <img
+                      src="/assets/images/instagram-icon-gray.svg"
+                      alt="instagram"
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                    href="https://www.linkedin.com/company/19087630"
+                    target="_blank"
+                >
+                  <img
+                      src="/assets/images/linkedin-icon-gray.svg"
+                      alt="linkedin"
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                    href="https://www.pinterest.com/pitch59_/"
+                    target="_blank"
+                >
+                  <img
+                      src="/assets/images/pinterest-icon-gray.svg"
+                      alt="pinterest"
+                  />
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div
+          class="footer-menu-elements"
+          [ngClass]="{ 'footer-logged-in': hideFooterlinks }"
+      >
+        <div class="web-links">
+          <ul>
+            <li (click)="goToPage('/welcome')">
+              <span>Welcome</span>
+            </li>
+            <li routerLink="/pricing">
+              <span translate>label_pricing</span>
+            </li>
+            <li routerLink="/search">
+              <span translate>Search</span>
+            </li>
+          </ul>
+        </div>
+        <div class="web-links">
+          <ul>
+            <li>
+              <a
+                  [href]="helpCenterLink"
+                  target="_blank"
+                  class="link"
+                  translate
+              >label_contact_us</a
+              >
+            </li>
+            <li routerLink="/terms-and-conditions">
+              <span translate>lbl_terms_conditions</span>
+            </li>
+            <li routerLink="/privacy-policy">
+              <span translate>lbl_privacy_policy</span>
+            </li>
+          </ul>
+        </div>
+        <div class="web-links" *ngIf="!hideFooterlinks">
+          <ul>
+            <li routerLink="/pricing">
+              <span translate>label_add_your_business</span>
+            </li>
+            <li (click)="goToPage('/sign-in')">
+              <span translate>label_sign_in</span>
+            </li>
+            <li (click)="goToPage('/sign-up')">
+              <span translate>lbl_signup</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <hr/>
+    <div class="col-12">
+      <div class="copyright-text" translate>lbl_copy_rights</div>
+    </div>
+  </div>
+</div>

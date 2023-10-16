@@ -1,0 +1,1372 @@
+<p-dialog
+    styleClass="video-player-dialog"
+    [(visible)]="showVideoPlayerDialog"
+    [modal]="true"
+    [blockScroll]="true"
+    [style]="{ width: '800px', maxWidth: '100%' }"
+    [draggable]="false"
+    [dismissableMask]="true"
+    [resizable]="false"
+    [showHeader]="true"
+    (onHide)="detachVideoFile()"
+>
+  <app-video-js-player
+      [autoplay]="true"
+      [isVideoMirrored]="isVideoMirrored"
+      [muxVideoId]="videoFileUrl"
+      (watchedSeconds)="handleStopVideo($event)"
+      *ngIf="showVideoPlayerDialog && videoFileUrl"
+      #videoPlayer
+  >
+  </app-video-js-player>
+</p-dialog>
+
+<p-dialog
+    class="contact-me-dialog"
+    styleClass="pitch-modal"
+    [(visible)]="showContactMeDialog"
+    [draggable]="false"
+    [modal]="true"
+    [style]="{
+        width: '100%',
+        maxWidth: '500px',
+        overflow: isMobile ? 'hidden' : 'initial'
+    }"
+    [blockScroll]="false"
+    (onHide)="onContactModalHide($event)"
+>
+  <app-contact-modal
+      *ngIf="showContactMeDialog"
+      (hideModal)="onContactModalHide()"
+      (submitForm)="onContactModalSubmit($event)"
+  ></app-contact-modal>
+</p-dialog>
+
+<p-dialog
+    class="contact-me-dialog"
+    styleClass="pitch-modal"
+    [(visible)]="showDoneDialog"
+    [draggable]="false"
+    [modal]="true"
+    [style]="{ width: '100%', maxWidth: '300px' }"
+    [blockScroll]="false"
+>
+  <app-done-modal (done)="onClickDoneDialog()">
+    <ng-template #content>
+      <p>Got it, we’ll be in touch soon!</p>
+    </ng-template>
+  </app-done-modal>
+</p-dialog>
+
+<p-dialog
+    class="video-reviews-dialog"
+    styleClass="pitch-modal video-reviews-dialog"
+    [(visible)]="showViewReviewsDialog"
+    [draggable]="false"
+    [modal]="true"
+    [style]="{
+        width: '1040px',
+        maxWidth: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: isMobile ? '0' : '',
+        transform: 'scale(1)',
+        position: 'relative'
+    }"
+    [blockScroll]="false"
+>
+  <app-business-reviews
+      *ngIf="showViewReviewsDialog"
+      [business]="currentPitchCard"
+      (showVideo)="reviewVideoInit($event)"
+      (leaveAreviewClick)="handleLeaveReviewClick()"
+  ></app-business-reviews>
+</p-dialog>
+
+<div class="col-12 home-banner no-padding upload-review-dialog">
+  <p-dialog
+      styleClass="mi-mob-fullscreen-dialog scroll-modal"
+      [(visible)]="showUploadReviewVideoDialog"
+      [draggable]="false"
+      [blockScroll]="false"
+      [closeOnEscape]="false"
+      [style]="{ width: '800px', maxWidth: '100%' }"
+      [modal]="true"
+      [dismissableMask]="false"
+      (onHide)="
+            showUploadReviewRatingScreen = false;
+            customerServiceRating = 0;
+            qualityRating = 0
+        "
+  >
+    <app-upload-video-steps
+        *ngIf="!showUploadReviewRatingScreen && showUploadReviewVideoDialog"
+        (next)="moveToUploadReviewRatingScreen($event)"
+        [businessType]="this.currentPitchCard.businessType"
+    ></app-upload-video-steps>
+    <div class="review-screen" *ngIf="showUploadReviewRatingScreen">
+      <div class="main-title" translate>label_upload_testimonial</div>
+      <div class="grid add-business-form mt-30">
+        <div class="col-12 md:col-6 lg:col-6">
+          <div class="box-wrap">
+            <div class="video-img-thumb"></div>
+            <div
+                class="text-center relative border-1 border-gray-50 border-round flex bg-black"
+                style="--border-radius: 4px"
+            >
+              <img
+                  class="h-auto w-12"
+                  (load)="calcCover()"
+                  #coverImage
+                  [ngStyle]="{
+                                    'object-fit': isCoverLandscape
+                                        ? 'cover'
+                                        : 'contain',
+                                    maxHeight: coverImageHeight
+                                        ? coverImageHeight
+                                        : ''
+                                }"
+                  [src]="
+                                    uploadReviewVideoMetaData?.thumnailUrl
+                                        ? uploadReviewVideoMetaData.thumnailUrl +
+                                          '?time=1&fit_mode=smartcrop'
+                                        : 'assets/images/home-banner-image.jpg'
+                                "
+                  alt="thumbnail"
+              />
+              <div
+                  class="overlay-camera"
+                  *ngIf="uploadReviewVideoMetaData?.videoUrl"
+                  (click)="
+                                    reviewVideoInit(
+                                        uploadReviewVideoMetaData?.videoUrl
+                                    )
+                                "
+              >
+                <span class="sprite big-video"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+          class="grid col-12 justify-content-between pb-0 pl-0 pr-0 ml-0 mr-0 mt-20"
+      >
+        <div
+            class="button-simple primary-btn"
+            (click)="updateUploadedReviewVideo()"
+            translate
+        >
+          label_reupload_video
+        </div>
+        <div
+            class="button-simple shock-pink"
+            translate
+            (click)="submitUploadedVideoReview()"
+        >
+          label_submit
+        </div>
+      </div>
+    </div>
+  </p-dialog>
+</div>
+
+<p-dialog
+    class="dialog more-info-dialog"
+    *ngIf="showMoreInfoDialog"
+    [(visible)]="showMoreInfoDialog"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    styleClass="more-info-dialog"
+    [style]="{
+        minWidth: '320px',
+        maxWidth: '826px',
+        height: isMobile ? '100%' : 'unset'
+    }"
+    [header]="'More Information'"
+>
+  <div class="more-info-body">
+    <div
+        class="working-hours-container"
+        *ngIf="currentPitchCardType !== 'resume'"
+    >
+            <span
+                class="working-hours-row"
+                *ngFor="let row of moreInfoWorkingHours"
+            >
+                <span *ngFor="let range of row.workingDays; let last = last">
+                    {{ range }}{{ range.length > 1 && !last ? ', ' : ' : ' }}
+                </span>
+                <span> {{ row.openHours }} - {{ row.closeHours }} </span>
+            </span>
+    </div>
+    <div
+        class="social-icons-container"
+        #socialLinks
+        [style.justifyContent]="
+                socialLinks.childElementCount < 6
+                    ? 'space-around'
+                    : 'space-between'
+            "
+    >
+      <div class="item-icon" *ngIf="currentPitchCard?.websiteLink">
+        <a
+            [ngClass]="{ empty: !currentPitchCard?.websiteLink }"
+            [href]="validateLink(currentPitchCard?.websiteLink)"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+          <img
+              src="assets/images/pitch-card-svg/resume/web-icon.svg"
+              alt="Web icon"
+          />
+        </a>
+        <div class="icon-title">Website</div>
+      </div>
+      <div class="item-icon" *ngIf="currentPitchCard?.calendarLink">
+        <a
+            [ngClass]="{ empty: !currentPitchCard?.calendarLink }"
+            [href]="validateLink(currentPitchCard?.calendarLink)"
+            target="_blank"
+        >
+          <img
+              src="assets/images/calendar-icon.svg"
+              alt="Calendar icon"
+          />
+        </a>
+        <div class="icon-title">Calendar</div>
+      </div>
+      <div class="item-icon" *ngIf="currentPitchCard?.facebookLink">
+        <a
+            [ngClass]="{ empty: !currentPitchCard?.facebookLink }"
+            [href]="validateLink(currentPitchCard?.facebookLink)"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+          <img
+              src="assets/images/pitch-card-svg/resume/facebook-icon.svg"
+              alt="Facebook icon"
+          />
+        </a>
+        <div class="icon-title">Facebook</div>
+      </div>
+      <div class="item-icon" *ngIf="currentPitchCard?.twitterLink">
+        <a
+            [ngClass]="{ empty: !currentPitchCard?.twitterLink }"
+            [href]="validateLink(currentPitchCard?.twitterLink)"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+          <img
+              src="assets/images/pitch-card-svg/resume/twitter-icon.svg"
+              alt="Twitter icon"
+          />
+        </a>
+        <div class="icon-title">Twitter</div>
+      </div>
+      <div class="item-icon" *ngIf="currentPitchCard?.instagramLink">
+        <a
+            [ngClass]="{ empty: !currentPitchCard?.instagramLink }"
+            [href]="validateLink(currentPitchCard?.instagramLink)"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+          <img
+              src="assets/images/pitch-card-svg/resume/instagram-icon.svg"
+              alt="Instagram icon"
+          />
+        </a>
+        <div class="icon-title">Instagram</div>
+      </div>
+      <div class="item-icon" *ngIf="currentPitchCard?.linkedinLink">
+        <a
+            [ngClass]="{ empty: !currentPitchCard?.linkedinLink }"
+            [href]="validateLink(currentPitchCard?.linkedinLink)"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+          <img
+              src="assets/images/pitch-card-svg/resume/linkedin-icon.svg"
+              alt="Linkedin icon"
+          />
+        </a>
+        <div class="icon-title">Linkedin</div>
+      </div>
+      <div class="item-icon" *ngIf="currentPitchCard?.pinterestLink">
+        <a
+            [ngClass]="{ empty: !currentPitchCard?.pinterestLink }"
+            [href]="validateLink(currentPitchCard?.pinterestLink)"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+          <img
+              src="assets/images/pitch-card-svg/resume/pinterest-icon.svg"
+              alt="Pinterest icon"
+          />
+        </a>
+        <div class="icon-title">Pinterest</div>
+      </div>
+    </div>
+    <div class="descriptions" *ngIf="currentPitchCard.pricingModel">
+      <div class="textarea-template w-12">
+        <div
+            class="editor-preview"
+            [id]="'e_description_' + uniqueId"
+        ></div>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+    class="dialog job-detail-dialog"
+    *ngIf="showJobDetailsDialog"
+    [(visible)]="showJobDetailsDialog"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    styleClass="job-detail-dialog"
+    [style]="{
+        minWidth: '320px',
+        maxWidth: '840px',
+        width: '100%',
+        padding: '0'
+    }"
+>
+  <div class="dialog-title">Position Details</div>
+
+  <div class="job-detail-body mt-20">
+    <div class="grid align-items-baseline no-margins light-text">
+      <div
+          class="text-right"
+          [ngStyle]="{
+                    width: !isMobile ? '27%' : '30%',
+                    padding: '0.5em'
+                }"
+      >
+        Position Title
+      </div>
+
+      <div
+          class="col-9 normal-text large font-semibold text-ellipsis"
+          [pTooltip]="
+                    currentPitchCard?.positions[0]?.name
+                        ? currentPitchCard.positions[0].name
+                        : ''
+                "
+          [tooltipPosition]="'top'"
+          [tooltipDisabled]="
+                    !currentPitchCard?.positions[0]?.name ||
+                    currentPitchCard?.positions[0]?.name.length < 30
+                "
+          [ngStyle]="{
+                    width: !isMobile ? '72%' : '70%',
+                    padding: '0.5em'
+                }"
+      >
+        {{ currentPitchCard?.positions[0]?.name || '' }}
+      </div>
+    </div>
+
+    <div class="grid no-margins light-text">
+      <div
+          class="text-right"
+          [ngStyle]="{
+                    width: !isMobile ? '27%' : '30%',
+                    padding: '0.5em'
+                }"
+      >
+        Compensation
+      </div>
+
+      <div
+          class="normal-text"
+          [ngStyle]="{
+                    width: !isMobile ? '72%' : '70%',
+                    padding: '0.5em',
+                    overflowWrap: 'anywhere'
+                }"
+      >
+        {{ compensationDescription || '' }}
+      </div>
+    </div>
+
+    <div
+        class="job-compensation grid justify-content-start justify-content-between mt-10"
+        *ngIf="currentPitchCard?.benefits?.length"
+    >
+      <div
+          class="job-compensation-badge bg-darkgray color-white mb-2 text-center text-ellipsis"
+          *ngFor="let benefit of benefits"
+      >
+        {{ benefit ? (benefit.name | splitCamelCase) : '' }}
+      </div>
+    </div>
+
+    <div class="grid no-margins light-text">
+      <div
+          class="text-right"
+          [ngStyle]="{
+                    width: !isMobile ? '27%' : '30%',
+                    padding: '0.5em'
+                }"
+      >
+        Type
+      </div>
+
+      <div
+          class="normal-text"
+          [ngStyle]="{
+                    width: !isMobile ? '72%' : '70%',
+                    padding: '0.5em'
+                }"
+          *ngIf="workTypes?.length"
+      >
+                <span>
+                    <span>{{ workTypesList || 'Full-Time' }}</span>
+                </span>
+      </div>
+
+      <div
+          class="normal-text"
+          [ngStyle]="{
+                    width: !isMobile ? '72%' : '70%',
+                    padding: '0.5em'
+                }"
+          *ngIf="!workTypes?.length"
+      >
+        <span>Full-Time</span>
+      </div>
+    </div>
+
+    <div class="grid no-margins light-text">
+      <div
+          class="text-right"
+          [ngStyle]="{
+                    width: !isMobile ? '27%' : '30%',
+                    padding: '0.5em'
+                }"
+      >
+        Location
+      </div>
+
+      <div
+          class="normal-text"
+          [ngStyle]="{
+                    width: !isMobile ? '72%' : '70%',
+                    padding: '0.5em'
+                }"
+          *ngIf="!currentPitchCard?.isRemote"
+      >
+        {{ locationAddress || 'txt_default_job_location' | translate }}
+      </div>
+
+      <div
+          class="normal-text"
+          [ngStyle]="{
+                    width: !isMobile ? '72%' : '70%',
+                    padding: '0.5em'
+                }"
+          *ngIf="currentPitchCard?.isRemote"
+          translate
+      >
+        txt_position_remote
+      </div>
+    </div>
+
+    <div class="light-text" *ngIf="currentPitchCard?.positionRequirements">
+      <div
+          class="text-right mb-1"
+          [ngStyle]="{
+                    width: !isMobile ? '27%' : '30%',
+                    padding: '0.5em'
+                }"
+      >
+        Requirements
+      </div>
+
+      <div class="textarea-template">
+        <div
+            class="editor-preview"
+            [id]="'e_requirements_' + uniqueId"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-title mt-20 mb-1">Company Information</div>
+
+  <div class="job-detail-body">
+    <div
+        class="grid no-margins light-text"
+        [ngClass]="{
+                'justify-content-end': !currentPitchCard.industries?.length,
+                'justify-content-between': currentPitchCard.industries?.length
+            }"
+    >
+      <div
+          class="industry-tags col-6 text-right"
+          *ngIf="currentPitchCard.industries?.length"
+      >
+        <div
+            class="industry-tag text-left"
+            *ngFor="let industry of currentPitchCard.industries"
+        >
+                    <span *ngIf="industry">{{
+                      industry?.name ? (industry.name | titlecase) : ''
+                      }}</span>
+        </div>
+      </div>
+
+      <div class="grid justify-content-end col-6 no-padding no-margins">
+        <div
+            class="logo-social-link web pointer"
+            *ngIf="currentPitchCard?.websiteLink"
+        >
+          <a
+              [href]="validateLink(currentPitchCard?.websiteLink)"
+              pTooltip="Website"
+              tooltipPosition="top"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            <img
+                src="/assets/images/pitch-card-svg/resume/web-icon.svg"
+                alt="website"
+            />
+          </a>
+        </div>
+        <div
+            class="logo-social-link pointer"
+            *ngIf="currentPitchCard?.facebookLink"
+        >
+          <a
+              [href]="validateLink(currentPitchCard?.facebookLink)"
+              pTooltip="Facebook"
+              tooltipPosition="top"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            <img
+                src="/assets/images/pitch-card-svg/facebook-icon.svg"
+                alt="facebook"
+            />
+          </a>
+        </div>
+        <div
+            class="logo-social-link pointer"
+            *ngIf="currentPitchCard?.instagramLink"
+        >
+          <a
+              [href]="validateLink(currentPitchCard?.instagramLink)"
+              pTooltip="Instagram"
+              tooltipPosition="top"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            <img
+                src="/assets/images/pitch-card-svg/instagram-icon.svg"
+                alt="instagram"
+            />
+          </a>
+        </div>
+        <div
+            class="logo-social-link pointer"
+            *ngIf="currentPitchCard?.linkedinLink"
+        >
+          <a
+              [href]="validateLink(currentPitchCard?.linkedinLink)"
+              pTooltip="Linkedin"
+              tooltipPosition="top"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            <img
+                src="/assets/images/pitch-card-svg/linkedin-icon.svg"
+                alt="linkedin"
+            />
+          </a>
+        </div>
+        <div
+            class="logo-social-link pointer"
+            *ngIf="currentPitchCard?.pinterestLink"
+        >
+          <a
+              [href]="validateLink(currentPitchCard?.pinterestLink)"
+              pTooltip="Pinterest"
+              tooltipPosition="top"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            <img
+                src="/assets/images/pitch-card-svg/pinterest-icon.svg"
+                alt="pinterest"
+            />
+          </a>
+        </div>
+        <div
+            class="logo-social-link pointer"
+            *ngIf="currentPitchCard?.twitterLink"
+        >
+          <a
+              [href]="validateLink(currentPitchCard?.twitterLink)"
+              pTooltip="Twitter"
+              tooltipPosition="top"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            <img
+                src="/assets/images/pitch-card-svg/twitter-icon.svg"
+                alt="twitter"
+            />
+          </a>
+        </div>
+        <div
+            class="logo-social-link pointer"
+            *ngIf="currentPitchCard?.calendarLink"
+        >
+          <a
+              [href]="validateLink(currentPitchCard?.calendarLink)"
+              pTooltip="Calendar"
+              tooltipPosition="top"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            <img
+                src="/assets/images/schedule-outline.svg"
+                alt="calendar"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="light-text mt-15" *ngIf="currentPitchCard?.pricingModel">
+      <div class="textarea-template">
+        <div
+            class="editor-preview"
+            [id]="'e_description_' + uniqueId"
+        ></div>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+  class="dialog share-business-dialog mb-0"
+  *ngIf="showShareBusinessDialog"
+  [(visible)]="showShareBusinessDialog"
+  [blockScroll]="true"
+  [draggable]="false"
+  [modal]="true"
+  [dismissableMask]="true"
+  [position]="isMobile && isPortraitMode? 'bottom' : (isMobile && !isPortraitMode? 'top' : 'center')"
+  [style]="{ minWidth: '360px', maxWidth: '500px', 'height': isMobile && !isPortraitMode ? '100vh' : 'unset' }"
+  [header]="shareTitle"
+  (onHide)="setDefaultShareTitle()"
+>
+  <app-share-business
+      [shareUrl]="shareBusinessUrl"
+      [introTextOptions]="{
+            introText: currentPitchCard?.introText
+                ? currentPitchCard.introText
+                : '',
+            extraPhoneNumber: currentPitchCard?.extraPhoneNumber
+                ? currentPitchCard.extraPhoneNumber
+                : currentPitchCard?.contactNumber
+                ? currentPitchCard.contactNumber
+                : '',
+            isEnabledIntroText: currentPitchCard?.isEnabledIntroText,
+            name: currentPitchCard?.title
+                ? currentPitchCard.title
+                : currentPitchCard?.displayName
+                ? currentPitchCard.displayName
+                : '',
+            companyName: currentPitchCard?.businessName
+                ? currentPitchCard?.businessName
+                : ''
+        }"
+      [businessType]="currentPitchCard?.businessType"
+      [businessId]="currentPitchCard?.id"
+      [inputStatus]="currentPitchCard?.businessStatus"
+  >
+  </app-share-business>
+</p-dialog>
+
+<p-dialog
+    class="dialog savemobile-business-dialog"
+    *ngIf="showSaveMobileBusinessDialog"
+    [(visible)]="showSaveMobileBusinessDialog"
+    [blockScroll]="true"
+    [draggable]="false"
+    [showHeader]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+>
+  <div class="choice-button-block">
+    <button class="save-button full-width" (click)="this.downloadContact()">
+      <img
+          class="gs-icon"
+          src="/assets/images/pitch-card-svg/add-user.svg"
+          alt="add-user"
+      />
+      <span>SAVE TO CONTACTS</span>
+    </button>
+    <button
+        class="save-button full-width"
+        (click)="this.openSaveBusinessDialog()"
+    >
+      <img
+          class="gs-icon"
+          src="/assets/images/pitch-card-svg/pocket-outline.svg"
+          alt="pocket-outline"
+      />
+      <span>SAVE TO POCKETS</span>
+    </button>
+  </div>
+</p-dialog>
+
+<app-photo-galleria
+    *ngIf="showPhotoGalleriaDialog && photoGalleriaImages?.length > 0"
+    class="photo-galleria-dialog"
+    [images]="photoGalleriaImages"
+    [showGalleria]="showPhotoGalleriaDialog && photoGalleriaImages?.length > 0"
+    (hideGallery)="onGalleriaHide()"
+    [showThumbnails]="!isMobile"
+></app-photo-galleria>
+
+<p-dialog
+    class="dialog save-business-dialog"
+    [(visible)]="showSaveBusinessDialog"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{
+        paddingTop: '10px',
+        maxWidth: '1080px',
+        minHeight: '380px',
+        position: 'relative'
+    }"
+    (onHide)="clearCarouselAllPocketsVariable()"
+>
+  <p-header class="dialog-title">
+    Choose Pocket or
+    <span class="green pointer" (click)="detailsPocketModal = true"
+    >CREATE NEW POCKET</span
+    >
+  </p-header>
+  <i
+      class="fa fa-spinner fa-pulse fa-5x fa-fw pockets-loader"
+      *ngIf="carouselAllPocketsLoader"
+  ></i>
+  <div
+      class="save-business-pockets-carousel"
+      *ngIf="
+            carouselAllPockets &&
+            carouselAllPockets.length &&
+            !carouselAllPocketsLoader
+        "
+  >
+    <p-carousel
+        #pocketsCarousel
+        [value]="carouselAllPockets"
+        [numVisible]="numVisible"
+        [numScroll]="numScroll"
+        [responsiveOptions]="responsiveOptions"
+        [showNavigators]="
+                carouselAllPockets?.length > getVisibleSlideNumbers()
+            "
+    >
+      <ng-template let-pocket pTemplate="item">
+        <app-pitchcard-folder-thumbnail
+            class="pocket"
+            [scaleFactor]="0.4"
+            [pitchCardFolder]="pocket"
+            [onlyFolder]="true"
+            (addContent)="saveBusinessToPocket($event, '')"
+        ></app-pitchcard-folder-thumbnail>
+      </ng-template>
+    </p-carousel>
+  </div>
+</p-dialog>
+
+<p-dialog
+    class="new-pocket-modal"
+    [(visible)]="detailsPocketModal"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="isMobile"
+    [style]="{ paddingTop: '10px', maxWidth: '800px', margin: '20px' }"
+    (onHide)="clearDetailsModalOptions()"
+>
+  <p-header class="modal-title">Create Pocket</p-header>
+
+  <app-pocket-setup
+      *ngIf="detailsPocketModal"
+      [detailPocketMode]="'create'"
+      [modalErrors]="modalErrors"
+      (saveChanges)="newPocketSubmit($event)"
+  >
+  </app-pocket-setup>
+</p-dialog>
+
+<p-dialog
+    class="dialog save-business-mobile-dialog"
+    [(visible)]="showSaveBusinessDialog"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [position]="'bottom'"
+    [style]="{
+        margin: '0',
+        width: '100vw',
+        borderBottomLeftRadius: '0px',
+        borderBottomRightRadius: '0px'
+    }"
+    (onHide)="clearCarouselAllPocketsVariable()"
+>
+  <p-header class="dialog-title text-base">
+    Choose Pocket or
+    <span class="green pointer" (click)="detailsPocketModal = true"
+    >CREATE NEW</span
+    >
+  </p-header>
+  <div class="mobile-pockets-container" #mobilePocketsContainer>
+    <div *ngIf="carouselAllPocketsLoader" class="pocket-dummy">
+      <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+    </div>
+    <app-pitchcard-folder-thumbnail
+        class="mobile-pocket"
+        *ngFor="let mobilePocket of carouselAllPockets; let i = index"
+        [ngStyle]="{ marginLeft: !i ? '20px' : '50px' }"
+        [scaleFactor]="mobilePocketScale"
+        [pitchCardFolder]="mobilePocket"
+        [onlyFolder]="true"
+        (addContent)="saveBusinessToPocket($event, '')"
+    >
+    </app-pitchcard-folder-thumbnail>
+  </div>
+</p-dialog>
+
+<p-dialog
+    class="sign-up-common-dialog"
+    [(visible)]="showSignUpDialog"
+    styleClass="sign-up-in-dialog mi-mob-fullscreen-dialog"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="false"
+    [closeOnEscape]="false"
+    [style]="{ minWidth: '300px', maxWidth: '800px' }"
+    (onHide)="removeJobCardAliasLink()"
+    appendTo="body"
+>
+  <app-sign-up-common
+      (switchToLogIn)="switchToSignIn()"
+      (loggingIn)="
+          showSignUpDialog = false;
+          showSignInDialog = false;
+          showSignUpCommonDialog = false
+      "
+      [redirectTo]="redirectionPath"
+  ></app-sign-up-common>
+</p-dialog>
+
+<p-dialog
+    *ngIf="showSignInDialog"
+    [(visible)]="showSignInDialog"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="false"
+    [style]="{ width: '32rem' }"
+>
+  <app-sign-in-common
+      styleClass="log-in-common-dialog"
+      (loggingIn)="
+            showSignUpDialog = false;
+            showSignInDialog = false;
+            showSignUpCommonDialog = false
+        "
+      (switchToSignUp)="switchToSignUp()"
+  >
+  </app-sign-in-common>
+</p-dialog>
+
+<p-dialog
+    styleClass="sign-up-log-in-choice-dialog"
+    *ngIf="showSignUpCommonDialog"
+    [(visible)]="showSignUpCommonDialog"
+    appendTo="body"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+>
+  <div class="choice-content-wrapper">
+    <h1>
+      Great choice! Please log in or create your free account to continue.
+    </h1>
+    <h3>(Signing up is quick, we promise!)</h3>
+    <div class="choice-button-block">
+      <div class="col-4 md\:col-3">
+        <button
+            class="button-simple bg-green full-width"
+            (click)="showSignInDialog = !showSignInDialog"
+        >
+          LOG IN
+        </button>
+      </div>
+      <div class="col-4 md\:col-3">
+        <button
+            class="button-simple shock-pink full-width"
+            (click)="showSignUpDialog = !showSignUpDialog"
+        >
+          SIGN UP
+        </button>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+    class="contact-info-dialog"
+    [ngClass]="{ 'contact-me-dialog-mob': isMobile }"
+    *ngIf="showContactInfoDialog"
+    [(visible)]="showContactInfoDialog"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ background: isMobile ? 'transparent' : 'white' }"
+>
+  <div
+      [ngClass]="{ 'contact-info': !isMobile, 'contact-info-mob': isMobile }"
+  >
+    <div class="text-center" [ngClass]="{ 'color-white': isMobile }">
+      <p
+          class="text-2xl p-0 mt-2 mb-0"
+          [ngClass]="{
+                    'white-space-nowrap': userName?.length <= 23 && !isMobile
+                }"
+      >
+        Thanks! {{ userName }} should be
+      </p>
+      <p class="text-2xl p-0 mt-0 mb-2">getting in touch with you.</p>
+    </div>
+
+    <div
+        class="mx-auto min-w-max"
+        [ngClass]="{ 'col-3': !isMobile, 'col-4': isMobile }"
+    >
+      <img
+          class="full-width"
+          [src]="
+                    'assets/images/pitch-card-svg/' +
+                    (isMobile ? 'contact-me-white.svg' : 'contact-me.svg')
+                "
+          alt="contact-me"
+      />
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+    [styleClass]="
+        showResumeFileDialog && showViaDocViewer()
+            ? 'resume-dialog'
+            : 'resume-img-dialog'
+    "
+    *ngIf="showResumeFileDialog"
+    [(visible)]="showResumeFileDialog"
+    [modal]="true"
+    [draggable]="false"
+    [dismissableMask]="true"
+    [resizable]="false"
+    appendTo="body"
+    header="Resume Preview"
+    [style]="{
+        width: '90%',
+        maxWidth: deviceService.isTablet() ? '80%' : 'unset',
+        height: '90%',
+        display: showResumeFileDialog && showViaDocViewer() ? 'block' : 'grid'
+    }"
+>
+  <ngx-doc-viewer
+      *ngIf="showViaDocViewer()"
+      viewerUrl="https://docs.google.com/gview?url=%URL%&embedded=true"
+      [url]="currentPitchCard.resumeFileUrl"
+      googleCheckContentLoaded="true"
+      googleCheckInterval="3000"
+      style="height: 89%"
+      class="resume-modal"
+  ></ngx-doc-viewer>
+
+  <a
+      *ngIf="showViaDocViewer()"
+      class="link green pointer grid no-margins"
+      [href]="currentPitchCard.resumeFileUrl"
+      [target]="
+            currentPitchCard.resumeFileUrl.includes('pdf') ? '_blank' : '_self'
+        "
+      download="resume"
+      style="position: absolute; top: -30px; right: 40px"
+  >
+    <img
+        src="/assets/images/pitch-card-svg/download-icon.svg"
+        alt="Download"
+        style="margin-right: 5px"
+    />
+    <span *ngIf="!isMobile">Download Resume</span>
+  </a>
+
+  <div
+      class="image-resume-preview"
+      *ngIf="!showViaDocViewer() && currentPitchCard.resumeFileUrl"
+  >
+    <img [src]="currentPitchCard.resumeFileUrl" alt="resume image"/>
+  </div>
+
+  <div
+      *ngIf="!showViaDocViewer() && !currentPitchCard?.resumeFileUrl"
+      class="grid align-items-center justify-content-center no-margins"
+  >
+    <h2 style="font-weight: 500">Resume Unavailable</h2>
+  </div>
+</p-dialog>
+
+<p-dialog
+    #applyJobModal
+    styleClass="apply-to-job-modal"
+    [(visible)]="showApplyJobDialog"
+    [modal]="true"
+    [dismissableMask]="true"
+    [resizable]="false"
+    [draggable]="false"
+    appendTo="body"
+    (onHide)="hideRequirements()"
+>
+  <div class="apply-to-job-wrapper" *ngIf="showApplyJobDialog">
+    <div class="main-content" *ngIf="mobileMode">
+      <div class="no-resume-pitchcard-mobile" *ngIf="!userResumeCard">
+        <h2>WELCOME TO PITCH59!</h2>
+        <span
+        >To apply for this position you will need a FREE Resume
+                    PitchCard. If you don’t have one, it takes less than 10
+                    minutes to create and will be yours to use when you apply
+                    for any position, forever.
+                    <span *ngIf="!userCommonService.userFirstName"
+                    >Sign up or log in to get started!</span
+                    >
+                </span>
+      </div>
+      <div class="resume-pitchcard" *ngIf="userResumeCard">
+                <span class="greeting">
+                    Hi {{ userCommonService.userFirstName || 'User' }}!
+                </span>
+        <span *ngIf="userResumeCard.businessStatus !== 7">
+                    Please confirm you’d like us to send your Resume PitchCard
+                    to apply for this position.
+                </span>
+        <span *ngIf="userResumeCard.businessStatus === 7">
+                    To apply for this position please complete your free Resume
+                    PitchCard.
+                </span>
+      </div>
+    </div>
+    <div class="pitchcard-view-section" #pitchCardWrapper>
+      <app-search-result-thumbnail
+          [style]="{ margin: '1rem' }"
+          [businessDetails]="userResumeCard || previewResumeCard"
+          #businessCard
+          [scale]="scaleFactor"
+          (companyImages)="handlePitchCardTitleClick($event)"
+          [disabled]="true"
+      >
+      </app-search-result-thumbnail>
+    </div>
+    <ng-template [ngIf]="mobileMode">
+      <div class="no-resume-pitchcard-mobile" *ngIf="!userResumeCard">
+        <div
+            class="guest-button-block"
+            *ngIf="!userCommonService.userFirstName"
+        >
+          <button
+              class="button-simple shock-pink"
+              (click)="
+                            saveJobCardAliasLink(this.currentPitchCard);
+                            switchToSignUp('create')
+                        "
+          >
+            SIGN UP (FREE)
+          </button>
+          <div class="link" href="#" (click)="switchToSignIn()">
+            LOG IN
+          </div>
+        </div>
+        <div
+            class="user-button-block"
+            *ngIf="userCommonService.userFirstName"
+        >
+          <button
+              class="button-simple shock-pink"
+              (click)="goToCreateResume()"
+          >
+            CREATE RESUME PITCHCARD
+          </button>
+        </div>
+      </div>
+      <div class="resume-pitchcard-mobile" *ngIf="userResumeCard">
+        <button
+            class="apply-job-button button-simple shock-pink"
+            *ngIf="
+                        userResumeCard.businessStatus === 1 ||
+                        userResumeCard.businessStatus === 2
+                    "
+            [disabled]="!validToApply"
+            (click)="applyToTheJob()"
+        >
+          YES, APPLY NOW
+        </button>
+        <p
+            class="special-status"
+            *ngIf="
+                        (userResumeCard.businessStatus === 2 ||
+                            userResumeCard.businessStatus === 1) &&
+                        !validToApply
+                    "
+        >
+          You have already submitted your resume for this job.
+        </p>
+        <button
+            class="button-simple shock-pink"
+            *ngIf="userResumeCard.businessStatus === 7"
+            (click)="goToDraftResume(userResumeCard.businessId)"
+        >
+          FINISH RESUME PITCHCARD
+        </button>
+      </div>
+    </ng-template>
+    <div class="main-content" *ngIf="!mobileMode">
+      <div class="no-resume-pitchcard" *ngIf="!userResumeCard">
+        <h1>WELCOME TO PITCH59!</h1>
+        <p>
+          To apply for this position you will need a FREE Resume
+          PitchCard. If you don’t have one, it takes less than 10
+          minutes to create and will be yours to use when you apply
+          for any position, forever.
+          <span *ngIf="!userCommonService.userFirstName"
+          >Sign up or log in to get started!</span
+          >
+        </p>
+        <div
+            class="guest-button-block"
+            *ngIf="!userCommonService.userFirstName"
+        >
+          <button
+              class="button-simple full-width no-padding bg-darkgray lg-50"
+              (click)="switchToSignIn()"
+          >
+            LOG IN
+          </button>
+          <button
+              class="button-simple full-width no-padding shock-pink lg-50"
+              (click)="
+                            switchToSignUp('create');
+                            saveJobCardAliasLink(this.currentPitchCard)
+                        "
+          >
+            SIGN UP
+          </button>
+        </div>
+        <div
+            class="user-button-block"
+            *ngIf="userCommonService.userFirstName"
+        >
+          <button
+              class="button-simple shock-pink"
+              (click)="goToCreateResume()"
+          >
+            CREATE RESUME PITCHCARD
+          </button>
+        </div>
+      </div>
+      <div class="resume-pitchcard" *ngIf="userResumeCard">
+        <app-search-result-thumbnail
+            [businessDetails]="currentPitchCard"
+            [scale]="jobCardScaleFactor"
+            (companyImages)="handlePitchCardTitleClick($event)"
+            [disabled]="true"
+        >
+        </app-search-result-thumbnail>
+        <p class="greeting">
+          Hi {{ userCommonService.userFirstName || 'User' }}!
+        </p>
+        <p *ngIf="userResumeCard.businessStatus !== 7">
+          Please confirm you’d like us to send your Resume PitchCard
+          to apply for this position.
+        </p>
+        <p *ngIf="userResumeCard.businessStatus === 7">
+          To apply for this position please complete your free Resume
+          PitchCard.
+        </p>
+        <button
+            class="apply-job-button button-simple shock-pink"
+            *ngIf="
+                        userResumeCard.businessStatus === 1 ||
+                        userResumeCard.businessStatus === 2
+                    "
+            [disabled]="!validToApply"
+            (click)="applyToTheJob()"
+        >
+          YES, APPLY NOW
+        </button>
+        <p
+            class="special-status"
+            *ngIf="
+                        (userResumeCard.businessStatus === 2 ||
+                            userResumeCard.businessStatus === 1) &&
+                        !validToApply
+                    "
+        >
+          You have already submitted your resume for this job.
+        </p>
+        <button
+            class="button-simple shock-pink"
+            *ngIf="userResumeCard.businessStatus === 7"
+            (click)="goToDraftResume(userResumeCard.businessId)"
+        >
+          FINISH RESUME PITCHCARD
+        </button>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="showApplyJobDialogByLink"
+    [modal]="true"
+    [dismissableMask]="true"
+    [resizable]="false"
+    [draggable]="false"
+    [style]="{ width: isMobile ? '68%' : '500px' }"
+    appendTo="body"
+>
+  <div class="block my-5">
+    <button
+        class="button-simple w-9 sm:w-6 gradient-border-pink bg-inherit uppercase mx-auto mb-3 sm:mb-5"
+        [ngClass]="{ 'lg-50': !isMobile, 'sm-35': isMobile }"
+        (click)="openInNewTab(currentPitchCard.otherApplicationLink)"
+    >
+      <div class="gradient-border-text">
+        <p class="no-margins" translate>label_apply_now</p>
+      </div>
+    </button>
+
+    <button
+        class="button-simple w-9 sm:w-6 shock-pink uppercase mx-auto"
+        [ngClass]="{ 'lg-50': !isMobile, 'sm-35': isMobile }"
+        (click)="switchToSignIn(); showApplyJobDialogByLink = false"
+        translate
+    >
+      label_sign_in
+    </button>
+
+    <div class="block text-center text-xs sm:text-base mt-2">
+      <div class="font-light mb-2">
+        Need an account?
+        <span
+            class="link font-normal green"
+            (click)="
+                        showApplyJobDialogByLink = false;
+                        showJobRequirementsDialog = false;
+                        showSignUpDialog = true
+                    "
+        >
+                    SIGN UP
+                </span>
+      </div>
+      <div
+          class="font-bold text-black-alpha-90 link"
+          [routerLink]="'/forgot-password'"
+      >
+        Forgot password?
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<p-confirmDialog
+    class="apply-job-confirmation"
+    [blockScroll]="true"
+    acceptLabel="Great!"
+    [rejectVisible]="false"
+    header="Congratulations!"
+    key="applyJobConfirmation"
+></p-confirmDialog>
+
+<p-dialog
+    [(visible)]="showJobRequirementsDialog"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [dismissableMask]="true"
+    (onHide)="hideRequirements()"
+    styleClass="job-requirements-dialog"
+    [style]="{
+        width: !isMobile ? '840px' : '90%',
+        maxHeight: 'unset',
+        padding: '0 10px 10px'
+    }"
+>
+  <div class="mb-30">
+    <h2 class="text-center no-margins">This position requires:</h2>
+    <div class="text-center" style="font-size: 11px">
+      (Must agree to requirements to continue with application)
+    </div>
+  </div>
+
+  <div class="grid align-items-start" style="flex-wrap: nowrap">
+    <p-checkbox
+        name="requireApplicants"
+        binary="true"
+        [(ngModel)]="acceptPositionRequirements"
+    >
+    </p-checkbox>
+
+    <span
+        class="requirements-text w-12"
+        [ngStyle]="{
+                maxHeight: !currentPitchCard.positionRequirements
+                    ? (262 * scaleFactor).toFixed() + 'px'
+                    : !isMobile
+                    ? '500px'
+                    : '300px',
+                padding: '0 10px'
+            }"
+    >
+            <div
+                class="editor-preview"
+                [id]="'e_requirements_' + uniqueId"
+            ></div>
+        </span>
+  </div>
+
+  <hr/>
+
+  <div class="p-col-7 margin-centered">
+    <button
+        class="button-simple shock-pink full-width"
+        [disabled]="!acceptPositionRequirements"
+        (click)="handleAcceptPositionRequirements()"
+    >
+      CONTINUE
+    </button>
+  </div>
+</p-dialog>

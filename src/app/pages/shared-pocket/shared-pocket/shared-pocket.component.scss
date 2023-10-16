@@ -1,0 +1,102 @@
+#pocket-page {
+  color: white;
+  height: 100%;
+
+  .pocket-page-header {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    margin: 0 calc(2rem + 2px);
+
+    h2 {
+      margin: 0 0 0.67em;
+    }
+
+    span {
+      font-size: 0.75em;
+    }
+
+    @media (max-width: 1280px) {
+      margin: 0 18px;
+    }
+    @media (max-width: 1025px) {
+      margin: 25px 0;
+      h2 {
+        margin: 0;
+      }
+    }
+    @media (max-width: 500px) and (orientation: portrait) {
+      font-size: large;
+    }
+  }
+
+  .body-gradient {
+    min-height: 100vh;
+    @media (max-width: 500px) and (orientation: portrait) {
+      padding: 0 2em;
+    }
+    @media (max-width: 767px) and (orientation: landscape) {
+      padding: 0 2em;
+    }
+  }
+
+  .wrapper-section {
+    flex-flow: wrap;
+    align-items: unset;
+    justify-content: unset;
+    @media (max-width: 500px) {
+      justify-content: space-between;
+    }
+
+    &.fade-out {
+      -webkit-transition: opacity 500ms ease-in-out;
+      -moz-transition: opacity 500ms ease-in-out;
+      -ms-transition: opacity 500ms ease-in-out;
+      -o-transition: opacity 500ms ease-in-out;
+      opacity: 0;
+    }
+  }
+
+  .empty-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    height: 90vh;
+    @media screen and (max-width: 481px) {
+      height: 80vh;
+    }
+  }
+
+  .pitchcard-view-section {
+    margin-bottom: 5%;
+    flex: unset;
+    cursor: pointer;
+    padding-top: 0;
+
+    @media (max-width: 1025px) {
+      margin-bottom: 10%;
+      width: fit-content;
+      padding: 0;
+      flex: 1 20%;
+      min-width: 33.33%;
+      &:not(:first-child):not(:nth-child(2)) {
+        flex-grow: 0;
+      }
+    }
+    @media (max-width: 768px) {
+      min-width: 50%;
+    }
+    @media (max-width: 500px) {
+      min-width: unset;
+      flex: unset;
+    }
+  }
+
+  .card-page-footer {
+    transition: auto;
+    margin: 0 0 2rem;
+  }
+}

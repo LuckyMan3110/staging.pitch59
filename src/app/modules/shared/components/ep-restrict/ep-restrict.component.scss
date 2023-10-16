@@ -1,0 +1,53 @@
+.blur {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  backdrop-filter: blur(3px);
+  z-index: 0;
+
+  .restrict {
+    position: absolute;
+    bottom: 0;
+    margin: calc(40px * var(--scale-factor));
+    height: auto;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 8px;
+    color: #ffffff;
+
+    .contact-button {
+      margin-bottom: 15px;
+    }
+
+    .pi-lock {
+      margin-top: calc(15px * var(--scale-factor));
+      font-size: calc(3rem * var(--scale-factor));
+    }
+
+    &-text {
+      padding: 0 calc(30px * var(--scale-factor)) calc(15px * var(--scale-factor));
+      z-index: 1;
+      text-align: center;
+      font-size: calc(16px * var(--scale-factor));
+    }
+
+    .get-started {
+      text-align: center;
+      font-size: calc(14px * var(--scale-factor));
+
+      p {
+        padding: calc(7px * var(--scale-factor)) 0;
+      }
+
+      a {
+        text-decoration: underline;
+        color: #ffffff;
+      }
+    }
+  }
+}

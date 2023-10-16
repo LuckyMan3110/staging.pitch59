@@ -1,0 +1,30 @@
+::ng-deep .new-dropdown-blue .ui-autocomplete input {
+  min-width: 400px;
+}
+
+.contact-modal-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @media (max-width: 500px) {
+    padding-bottom: 25px;
+  }
+
+  &__item {
+    width: 120px;
+  }
+}
+
+.contact-form__input {
+  width: 100%;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.header {
+  margin-bottom: 25px;
+}
+
+.phone-number {
+  margin-top: 0;
+}

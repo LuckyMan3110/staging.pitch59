@@ -1,0 +1,540 @@
+<div class="page-container col-12 no-padding margin-centered">
+    <div class="page-header mt-4">
+      <h2 class="no-margins" *ngIf="!isMobile">
+        {{onlyOrganization
+          ? 'Select the number of PitchCards you’d like for your team.'
+          : 'Choose your PitchCards'}}
+      </h2>
+      <h2 class="no-margins text-center" *ngIf="isMobile && stepOneActive">Select PitchCard Type</h2>
+      <h2 class="no-margins text-center" *ngIf="isMobile && stepTwoActive">Check Out</h2>
+      <p *ngIf="!isMobile || isMobile && stepOneActive" [ngClass]="{'text-center': isMobile}">
+        You can change quantities and PitchCard types at any time.
+        <span class="link green" (click)="openModal()">Volume discounts</span>
+        given for higher quantities.
+      </p>
+    </div>
+    <div class="grid align-items-start no-margins" [formGroup]="form">
+        <div class="col-6 no-padding" *ngIf="!isMobile || isMobile && stepOneActive" [ngClass]="{'col-6': !isMobile, 'col-12': isMobile}">
+            <div class="overflow-auto hidden-scroll" [ngStyle]="{maxHeight: '640px'}" #scrollableBlock>
+                <div formArrayName="packages"
+                     *ngFor="let pac of packages.controls let i = index">
+                    <div
+                        [formGroupName]="i"
+                        class="grid align-items-start justify-content-center no-margins"
+                        (transitionend)="executeProportionalScroll($event, i)"
+                    >
+                        <div class="col-2 no-padding mb-20 mt-3 sm:mt-5"
+                        [ngClass]="{'col-2': !isMobile,
+                        'col-3': isMobile
+                    }">
+                            <p-inputNumber
+                                   *ngIf="pac.get('businessType').value !== PitchCardEnum.Resume else selectResume"
+                                    formControlName="businessCount"
+                                    [styleClass]="isMobile ? 'white-border' : 'white-border md'"
+                                    mode="decimal"
+                                    [showButtons]="true"
+                                (onInput)="initCounter($event, i)"
+                                [min]="0">
+                            </p-inputNumber>
+                            <ng-template #selectResume>
+                                <button (click)="setInformationModal()" [disabled]="isResumeCreated" class="button-simple full-width no-padding border-2 bg-transparent resume-select">SELECT</button>
+                                <span class="text-xs" *ngIf="isResumeCreated">You already have a Resume PitchCard</span>
+                            </ng-template>
+                        </div>
+
+                        <div *ngIf="pac"
+                             class="gradient-block grid justify-content-between pointer"
+                             [ngClass]="{'business-block': pac.get('businessType').value === PitchCardEnum.Basic || pac.get('businessType').value === PitchCardEnum.Employee,
+                                'service-block': pac.get('businessType').value === PitchCardEnum.Service,
+                                'job-block': pac.get('businessType').value === PitchCardEnum.Job,
+                                'resume-block': pac.get('businessType').value === PitchCardEnum.Resume,
+                                'col-9 align-items-start': !isMobile,
+                                'col-8 align-items-center': isMobile
+                            }"
+                             [ngStyle]="{zoom: isMobile ? '66%' : '100%'}">
+
+                            <div class="flex flex-column justify-content-between gradient-box-content gradient-title">
+                              <h3 class="font-semibold text-4xl mt-2 mb-0">
+                                {{getPackageValues(pac.get('businessType').value, 'title')}}
+                                <br *ngIf="isMobile">
+                              </h3>
+                              <p class="no-margins text-base font-normal pb-3" [ngClass]="{'text-ellipsis': isTablet}">
+                                {{getPackageValues(pac.get('businessType').value, 'shortDesc')}}
+                              </p>
+                              <p class="no-margins text-lg font-bold" [ngClass]="{'text-ellipsis': isTablet}">
+                                {{getPackageValues(pac.get('businessType').value, 'price')}}
+                              </p>
+
+                <ul>
+                  <li
+                      *ngFor="
+                                            let option of getPackageValues(
+                                                pac.get('businessType').value,
+                                                'longDesc'
+                                            )
+                                        "
+                  >
+                    {{ option }}
+                  </li>
+                </ul>
+              </div>
+
+              <div class="gradient-box-img align-self-center">
+                <img
+                    [src]="
+                                        getPackageValues(
+                                            pac.get('businessType').value,
+                                            'img'
+                                        )
+                                    "
+                    class="full-width"
+                    alt=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+            <div class="border-top-2" [ngClass]="{'pt-2': !isMobile, 'p-2': isMobile}">
+                <div class="grid align-items-center no-margins"
+                     [ngClass]="{'justify-content-center': !isMobile, 'justify-content-between': isMobile}">
+                    <div class="total-block" [ngClass]="">
+                        <div class="border-1 total font-bold text-xl">
+                            <span>{{responsePaymentPlan?.countBusiness ? responsePaymentPlan.countBusiness : 0}}</span>
+                        </div>
+                    </div>
+
+
+                    <div class="grid align-items-start flex-column no-margins no-padding font-bold"
+                         [ngClass]="{'col-9': !isMobile, 'col-8': isMobile}">
+                        <div class="text-xl">Total PitchCards</div>
+                        <div class="grid justify-content-between align-items-center no-margins full-width">
+                            <div class="text-base">
+                                &#x24;{{responsePaymentPlan?.price ? responsePaymentPlan?.price : '0.00'}}<span
+                                    class="text-sm font-normal">/PitchCard/mo</span>
+                            </div>
+
+              <div
+                  class="text-sm font-normal"
+                  *ngIf="isOrganizationMode && !isMobile"
+              >
+                Total PitchCards:
+                <span class="text-xl font-bold">{{
+                  totalPCsInEP + additionalPCsInEP
+                  }}</span>
+              </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div
+        class="grid align-items-center justify-content-center no-padding"
+        *ngIf="!isMobile || (isMobile && stepTwoActive)"
+        [ngClass]="{
+                'col-6 no-margins': !isMobile,
+                'col-12 m-0 mb-5': isMobile
+            }"
+    >
+      <div
+          class="billing-view-item layout-wrap bg-white"
+          [ngClass]="{ 'flip-card-mode': isPaymentApproved }"
+          [ngStyle]="{ height: isPaymentApproved ? '610px' : '' }"
+      >
+        <div class="header-form mb-5">
+          <div *ngIf="mainCardDetail?.length">
+            <app-credit-card
+                [miniSize]="false"
+                [midSize]="true"
+                [cardDetails]="mainCardDetail[0]"
+                [allowRemoveCard]="false"
+            >
+            </app-credit-card>
+          </div>
+
+          <div
+              class="header-form-pay-text text-center"
+              *ngIf="mainCardDetail?.length"
+          >
+            You can update your payment information
+            <span
+                class="link green"
+                (click)="handlePaymentMethods = true"
+            >here.</span
+            >
+          </div>
+        </div>
+
+                <div class="billing-info-block mb-5">
+                    <div class="billing-item mb-2 box-bottom-border">
+                      <div class="light-text">
+                        {{
+                        billingFrequencyEnum[
+                            responsePaymentPlan?.paymentFrequency
+                                ? responsePaymentPlan.paymentFrequency
+                                : 1
+                            ]
+                        }}
+                        Subscription
+                      </div>
+                    </div>
+
+                    <div class="billing-item text-lg mb-2">
+                        <div class="bold-text relative">
+                            <span>
+                                PitchCards Monthly
+                            </span>
+                            <span class="light-text sm-text ml-1">
+                                {{responsePaymentPlan?.countBusiness > 0
+                                ? ' (' + responsePaymentPlan?.countBusiness + ' x $' + responsePaymentPlan?.priceWoDiscount.toFixed(2) + ')'
+                                : ''}}
+                            </span>
+                        <!-- <span
+                            class="light-text sm-text ml-1"
+                            *ngIf="responsePaymentPlan?.discountCode"
+                        >
+                                {{
+                          responsePaymentPlan?.countBusinessDiscountTrue >
+                          0
+                              ? ' (' +
+                              responsePaymentPlan?.countBusinessDiscountTrue +
+                              ' x $' +
+                              responsePaymentPlan?.price.toFixed(
+                                  2
+                              ) +
+                              ') '
+                              : ''
+                          }}
+                          {{
+                          responsePaymentPlan?.countBusinessDiscountFalse >
+                          0
+                              ? '+ (' +
+                              responsePaymentPlan?.countBusinessDiscountFalse +
+                              ' x $' +
+                              responsePaymentPlan?.priceWoDiscount.toFixed(
+                                  2
+                              ) +
+                              ') '
+                              : ''
+                          }}
+                            </span> -->
+
+                            <!-- <span *ngIf="responsePaymentPlan?.isVolumeDiscountApplied"
+                                  class="font-normal text-sm absolute white-space-nowrap" style="bottom: -1rem">
+                                Volume Discount Applied <i class="pi pi-check green"></i>
+                            </span> -->
+                        </div>
+
+                        <div class="bold-text">
+                            <span>
+                                &#x24;{{
+                              responsePaymentPlan?.countBusiness > 0 && responsePaymentPlan?.priceWoDiscount > 0
+                                  ? (responsePaymentPlan.countBusiness * responsePaymentPlan.priceWoDiscount
+                                      | number : '1.2-2')
+                                  : '0.00'
+                              }}
+                            </span>
+                        </div>
+                    </div>
+
+                  <div
+                      class="billing-item mb-2"
+                      *ngIf="
+                            addedDiscountMode ||
+                            responsePaymentPlan?.discountCode
+                        "
+                  >
+                    <div
+                        class="promo-block-badge color-white promo-approved"
+                    >
+                      <div
+                          (click)="clearPromoCode()"
+                          class="close pointer"
+                      >
+                        <span class="pi pi-times"></span>
+                      </div>
+
+                      <span *ngIf="responsePaymentPlan?.discountCode">
+                                {{
+                        responsePaymentPlan?.discountCode
+                            ? responsePaymentPlan?.discountCode
+                            : ''
+                        }}
+                            </span>
+                    </div>
+
+                    <span class="promo-discount text-lg font-bold"
+                    >{{
+                      responsePaymentPlan?.priceWoDiscount &&
+                      responsePaymentPlan?.countBusinessDiscountTrue
+                          ? '-$' + (
+                          (responsePaymentPlan.priceWoDiscount -
+                              responsePaymentPlan.price) *
+                          responsePaymentPlan.countBusinessDiscountTrue
+                             | number : '1.2-2')
+                          : ''
+                      }}
+                        </span>
+                  </div>
+
+                    <div class="billing-item box-bottom-border mb-2">
+                      <div class="promo-block border-text">
+                        <div
+                            class="link light-text"
+                            *ngIf="
+                                    !addedDiscountMode &&
+                                    !responsePaymentPlan?.discountCode &&
+                                    !editDiscountMode
+                                "
+                            (click)="editDiscountMode = true"
+                        >
+                          Promo code?
+                        </div>
+
+                        <div
+                            class="promo-block-input mt-1"
+                            *ngIf="editDiscountMode"
+                        >
+                          <div class="p-input-icon-right">
+                            <i
+                                class="pi pi-times pointer z-1"
+                                (click)="clearPromoCode()"
+                            ></i>
+
+                            <input
+                                class="new-input-box xs no-margins text-ellipsis darkgray"
+                                [ngClass]="{
+                                            'ng-invalid': invalidDiscountMessage
+                                        }"
+                                formControlName="discountCode"
+                                type="text"
+                                pInputText
+                                placeholder="Enter promo code"
+                                minlength="4"
+                                maxlength="15"
+                            />
+                          </div>
+
+                          <button
+                              class="button-simple shock-pink uppercase sm-30"
+                              [ngClass]="{
+                                        disabled: !(
+                                            form.get('discountCode').value
+                                                ?.length >= 4
+                                        )
+                                    }"
+                              [disabled]="
+                                        !(
+                                            form.get('discountCode').value
+                                                ?.length >= 4
+                                        )
+                                    "
+                              (click)="getPaymentPlan()"
+                          >
+                            Apply
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                  <div class="billing-item relative">
+                    <div
+                        *ngIf="invalidDiscountMessage"
+                        style="top: -9px"
+                        class="pink text-xs absolute"
+                    >
+                      {{ invalidDiscountMessage | titlecase }}
+                    </div>
+                    <div class="text-lg bold-text font-normal mt-1 mb-1">Subtotal</div>
+
+                    <div class="text-lg bold-text font-normal mt-1 mb-1">
+                            <span>
+                                &#x24;{{
+                              responsePaymentPlan?.amount > 0
+                                  ? (responsePaymentPlan?.amount
+                                      | number : '1.2-2')
+                                  : '0.00'
+                              }}
+                            </span>
+                    </div>
+                    </div>
+
+                    <div class="billing-item mt-5">
+                        <div class="bold-text large-text">
+                            Due Now:
+                        </div>
+
+                        <div class="bold-text large-text">
+                            <span class="total-price">
+                                &#x24;{{
+                              responsePaymentPlan?.amount
+                                  ? (responsePaymentPlan.amount
+                                      | number : '1.2-2')
+                                  : '0.00'
+                              }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+        <div
+            class="nav-buttons mt-20 col-10 margin-centered"
+            *ngIf="mainCardDetail?.length; else enterCard"
+        >
+          <button
+              class="button-simple shock-pink lg-50 full-width"
+              (click)="saveChanges()"
+              [ngClass]="{ hidden: isPaymentApproved }"
+              [disabled]="
+                            !mainCardDetail?.length ||
+                            !responsePaymentPlan?.countBusiness
+                        "
+          >
+            PAY NOW
+          </button>
+        </div>
+        <ng-template #enterCard>
+          <div
+              class="enter-card grid justify-content-center align-items-center no-padding"
+          >
+            <button
+                class="button-simple shock-pink lg-50 full-width"
+                (click)="handlePaymentMethods = true"
+            >
+              ENTER PAYMENT INFO
+            </button>
+          </div>
+        </ng-template>
+
+        <div
+            class="text-center"
+            [ngClass]="{ hidden: isPaymentApproved }"
+        >
+          Need help?
+          <a
+              class="link green"
+              [href]="helpCenterLink"
+              target="_blank"
+          >Contact support</a
+          >
+        </div>
+
+        <div
+            class="flip-card"
+            [ngStyle]="{
+                        perspective:
+                            isSafari && isPaymentApproved ? '1000px' : ' unset'
+                    }"
+        >
+          <div class="flip-card-header">
+            <h2>Thank you!</h2>
+          </div>
+
+          <div class="flip-card-icon">
+            <span class="pi pi-check"></span>
+          </div>
+
+          <div class="flip-card-footer">
+            <div class="privacy-policy text-center mb-20">
+              A payment confirmation has <br/>
+              been sent to {{ userDetailsFromStorage.email }}.
+            </div>
+
+            <button
+                class="button-simple shock-pink uppercase lg-50 col-12 md:col-9"
+                (click)="calculateNextRoute()"
+            >
+              Create PitchCards
+            </button>
+          </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="col-12" *ngIf="isMobile && stepOneActive">
+      <button
+          class="button-simple shock-pink lg-50 full-width"
+          (click)="nextStep()"
+      >
+        NEXT
+      </button>
+      <div class="text-center" [ngClass]="{ hidden: isPaymentApproved }">
+        Need help?
+        <a class="link green" [href]="helpCenterLink" target="_blank"
+        >Contact support</a
+        >
+      </div>
+    </div>
+    </div>
+</div>
+
+<p-dialog
+    [(visible)]="handlePaymentMethods"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '500px', width: '100%' }"
+    [closable]="false"
+    styleClass="billing-modal"
+    appendTo="body"
+    header="Enter Credit Card Information"
+>
+  <div class="form-layout-wrap" *ngIf="handlePaymentMethods">
+    <button class="p-dialog-header-close pointer" (click)="acceptModal()">
+      <span class="pi pi-times"></span>
+    </button>
+    <div class="form-layout" *ngIf="requestPaymentPlan">
+      <app-payment-method-forms
+          [importCardDetail]="
+                    mainCardDetail?.length ? mainCardDetail[0] : null
+                "
+          [cardError]="cardErrorMessage"
+          [bothAvailable]="false"
+          [(isHaveChangesModel)]="hasCardChanges"
+          (saveChanges)="saveCard($event)"
+      ></app-payment-method-forms>
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-dialog
+        class="contact-me-dialog"
+        styleClass="pitch-modal"
+        [(visible)]="showRequestDemoModal"
+        [draggable]="false"
+        [modal]="true"
+        [style]="{ width: '100%', maxWidth: '500px', overflow: isMobile ? 'hidden' : 'initial'}"
+        [blockScroll]="false"
+>
+    <app-contact-modal *ngIf="showRequestDemoModal"
+                       (hideModal)="showRequestDemoModal = false"
+                       (submitForm)="onContactModalSubmit($event)"
+    ></app-contact-modal>
+</p-dialog>
+
+<p-dialog
+        class="contact-me-dialog"
+        styleClass="pitch-modal"
+        [(visible)]="showDoneDialog"
+        [draggable]="false"
+        [modal]="true"
+        [style]="{ width: '100%', maxWidth: '300px' }"
+        [blockScroll]="false"
+>
+    <app-done-modal (onClick)="showDoneDialog = false">
+        <ng-template #content>
+            <p>Great! One of our representatives will reach out to you soon!</p>
+        </ng-template>
+    </app-done-modal>
+</p-dialog>
+
+<p-confirmDialog
+    [styleClass]="isResumeCreated ? 'header-center-y' : ''"
+    key="isResumeExist"
+></p-confirmDialog>

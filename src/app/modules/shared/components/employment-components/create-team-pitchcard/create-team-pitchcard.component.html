@@ -1,0 +1,277 @@
+<div *ngIf="selectedPackage" class="tined-bg-layout">
+  <div class="grid align-items-start no-margins">
+    <div class="col-5 no-padding" style="margin: 6% 0 0">
+      <app-search-result-thumbnail
+          [businessDetails]="selectedPackage"
+          [demo]="false"
+          [disabled]="true"
+          [scale]="'0.62'"
+      ></app-search-result-thumbnail>
+    </div>
+
+    <div
+        class="col-7"
+        style="margin: 5% 0 0 0; padding: 0 5%"
+        [formGroup]="teamPcForm"
+    >
+      <h2 class="no-margins">
+        How many {{ businessTypeValue }} PitchCards would you like to
+        create now?
+      </h2>
+
+      <div class="mt-20 mb-20">
+        <p-inputNumber
+            formControlName="businessCount"
+            #inputNumber
+            mode="decimal"
+            [showButtons]="true"
+            (onInput)="initChangeOnType($event)"
+            [min]="1"
+            [max]="99"
+        >
+        </p-inputNumber>
+      </div>
+
+      <div
+          *ngIf="
+                    product && selectedPackage && !paymentPlan;
+                    else appliedChanges
+                "
+      >
+        <p *ngIf="isInvalidPromoCodeError">
+          Promo code
+          <b>{{ teamPcForm.get('discountCode').value }}</b> only valid
+          for <b>{{ businessTypeValue }}</b> PitchCards.
+        </p>
+
+        <p *ngIf="isExpiredPromoCodeError">
+          Promo code
+          <b>{{ teamPcForm.get('discountCode').value }}</b> only valid
+          for <b>{{ businessTypeValue }}</b> PitchCards.
+        </p>
+
+        {{ businessTypeValue }} PitchCards are each billed individually
+        at the time of purchase, renewal or reactivation. For
+        <b>{{
+          teamPcForm.get('businessCount').value
+              ? teamPcForm.get('businessCount').value
+              : ''
+          }}</b>
+        PitchCards, a charge of
+        <b
+        >[${{
+          (
+              product.price *
+              teamPcForm.get('businessCount').value
+          ).toFixed(2)
+          }}]</b
+        >
+        will be applied today to your
+        <b>{{
+          organizationCardDetail?.brand
+              ? '[' + organizationCardDetail.brand + ']'
+              : ''
+          }}</b>
+        {{
+        organizationCardDetail?.brand
+            ? ' ending in '
+            : 'credit card'
+        }}
+        <b>{{
+          organizationCardDetail?.last4
+              ? '[' + organizationCardDetail?.last4 + ']'
+              : ''
+          }}</b
+        >.
+      </div>
+      <ng-template #appliedChanges>
+        <div>
+          <p>
+            {{ businessTypeValue }} PitchCards are each billed
+            individually at the time of purchase, renewal or
+            reactivation.
+            {{
+            paymentPlan?.discountCode &&
+            paymentPlan.businessCountPromoFalse > 0
+                ? 'Promo code can be used only for part of businesses.'
+                : ''
+            }}
+            For
+            <b>{{
+              paymentPlan?.discountCode
+                  ? paymentPlan?.businessCountPromoTrue
+                  : paymentPlan?.businessCountPromoFalse
+              }}</b>
+            PitchCards, a charge of
+            <b
+            >[${{
+              paymentPlan?.discountCode
+                  ? paymentPlan?.amountTotalDiscountTrue.toFixed(
+                      2
+                  )
+                  : (paymentPlan?.amountTotalDiscountFalse).toFixed(
+                      2
+                  )
+              }}]</b
+            >
+            will be applied today to your
+            <b>{{
+              organizationCardDetail?.brand
+                  ? '[' + organizationCardDetail.brand + ']'
+                  : ''
+              }}</b>
+            {{
+            organizationCardDetail?.brand
+                ? ' ending in '
+                : 'credit card'
+            }}
+            <b>{{
+              organizationCardDetail?.last4
+                  ? '[' + organizationCardDetail?.last4 + ']'
+                  : ''
+              }}</b
+            >.
+            <span
+                *ngIf="
+                                paymentPlan?.discountCode &&
+                                paymentPlan.businessCountPromoFalse > 0
+                            "
+            >
+                            For
+                            <b>{{ paymentPlan?.businessCountPromoFalse }}</b>
+                            PitchCards, a charge of
+                            <b
+                            >[${{
+                              paymentPlan?.amountTotalDiscountFalse.toFixed(
+                                  2
+                              )
+                              }}]</b
+                            >
+                            will be applied today.</span
+            >
+          </p>
+        </div>
+      </ng-template>
+
+      <div class="mt-20 mb-20">
+        {{ businessTypeValue }} PitchCards will automatically renew
+        every month until deactivated.
+      </div>
+
+      <div class="green link fit-content" (click)="goToEPBilling()">
+        Update billing information
+      </div>
+
+      <div class="promo-block">
+        <div
+            class="green link mt-20 mb-20 fit-content"
+            (click)="editDiscountMode = true"
+            *ngIf="!editDiscountMode && !isAppliedPromoCode"
+        >
+          Add a promo code
+        </div>
+
+        <div
+            class="promo-block-input mt-20 mb-20"
+            *ngIf="editDiscountMode && !isAppliedPromoCode"
+        >
+          <input
+              type="text"
+              class="new-input-box xs text-ellipsis"
+              formControlName="discountCode"
+              style="border-color: #4d4d4d !important"
+              placeholder="Enter Code"
+              minlength="4"
+              maxlength="10"
+          />
+
+          <span *ngIf="wrongPromoCode" class="pink">{{
+            invalidDiscountMessage | titlecase
+            }}</span>
+
+          <div
+              class="clear-promo pointer"
+              *ngIf="wrongPromoCode"
+              (click)="clearPromoCode(); wrongPromoCode = false"
+          >
+            <span class="pi pi-times"></span>
+          </div>
+
+          <button
+              class="button-simple shock-pink uppercase sm-35"
+              [disabled]="
+                            !teamPcForm.get('discountCode')?.valid ||
+                            !teamPcForm.get('discountCode')?.dirty
+                        "
+              [ngClass]="{
+                            disabled:
+                                !teamPcForm.get('discountCode')?.valid ||
+                                !teamPcForm.get('discountCode')?.dirty
+                        }"
+              (click)="calculatePaymentPlan('discountCode')"
+          >
+            Apply
+          </button>
+        </div>
+
+        <div
+            *ngIf="isAppliedPromoCode"
+            class="promo-block-badge color-white promo-approved"
+        >
+          <div (click)="clearPromoCode()" class="close pointer">
+            <span class="pi pi-times"></span>
+          </div>
+          <span
+              *ngIf="
+                            discountTypeValue &&
+                            paymentFrequencyValue &&
+                            paymentPlan?.discountCodeValue >= 0
+                        "
+          >
+                        {{
+            paymentPlan.discountType === DiscountType.Dollar
+                ? discountTypeValue +
+                paymentPlan.discountCodeValue
+                : paymentPlan.discountCodeValue +
+                discountTypeValue
+            }}
+            Discount
+                    </span>
+
+          <span *ngIf="!(discountTypeValue && paymentFrequencyValue)">
+                        {{
+            teamPcForm.get('discountCode').value
+                ? teamPcForm.get('discountCode').value
+                : ''
+            }}
+                    </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+      class="grid justify-content-end align-items-center no-margins"
+      style="padding: 0 5% 5% 0"
+  >
+    <div class="mr-2">
+      <button
+          class="button-simple sm-35 bg-darkgray white no-margins"
+          (click)="cancelOperation()"
+      >
+        {{ 'CANCEL' | uppercase }}
+      </button>
+    </div>
+    <button
+        class="button-simple sm-35 shock-pink no-margins"
+        (click)="createBusinessCard()"
+        [disabled]="
+                !teamPcForm?.get('discountCode').value
+                    ? !teamPcForm.valid
+                    : !(teamPcForm.valid && isAppliedPromoCode)
+            "
+    >
+      {{ 'ADD PITCHCARDS' | uppercase }}
+    </button>
+  </div>
+</div>

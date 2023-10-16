@@ -1,0 +1,37 @@
+<div class="time-picker-wrapper">
+  <p-inputNumber
+      #hoursInput
+      class="time-picker-input"
+      [(ngModel)]="_hours"
+      (onInput)="onHoursChanges($event)"
+      [min]="0"
+      [max]="13"
+      [maxlength]="2"
+      [showButtons]="true"
+      buttonLayout="vertical"
+      spinnerMode="vertical"
+      [placeholder]="_hours === null ? '00' : 'HH'"
+      [size]="2"
+  ></p-inputNumber>
+
+  <span class="time-colon"> : </span>
+  <p-inputNumber
+      #minutesInput
+      class="time-picker-input"
+      [ngClass]="{ placeholder: minutes === null }"
+      [(ngModel)]="minutes"
+      (onInput)="onMinutesChanges($event)"
+      [min]="0"
+      [max]="55"
+      [maxlength]="2"
+      [showButtons]="true"
+      buttonLayout="vertical"
+      spinnerMode="vertical"
+      placeholder="{{ minutes === null ? '00' : 'MM' }}"
+      [size]="2"
+      [step]="5"
+  ></p-inputNumber>
+  <div class="time-format" (click)="toogleTimeFormat()">
+    {{ timeFormat }}
+  </div>
+</div>

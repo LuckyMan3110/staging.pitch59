@@ -1,0 +1,42 @@
+<div class="review-wrapper">
+  <div class="review-container">
+    <div class="review-video swiper-no-swiping" (click)="playVideo()">
+      <div class="video-thumbnail sub-head">
+        <img
+            [ngStyle]="{
+                        display: !review.isVideoPlaying ? 'block' : 'none'
+                    }"
+            [src]="review.thumnailUrl + '?width=520'"
+            alt=""
+        />
+        <video
+            [ngStyle]="{
+                        display: review.isVideoPlaying ? 'block' : 'none'
+                    }"
+            controls
+            disablePictureInPicture
+            style="height: 100%; width: 100%; background: black"
+            #videoPlayer
+            preload="none"
+            playsinline
+            webkit-playsinline="true"
+            poster="assets/images/video-loader.gif"
+            (ended)="onVideoEnded()"
+        ></video>
+      </div>
+      <img
+          class="play-icon"
+          [ngStyle]="{
+                    display: !review.isVideoPlaying ? 'block' : 'none'
+                }"
+          src="/assets/images/play-icon.svg"
+      />
+    </div>
+    <div class="review-text">
+      <div class="text-container">
+        <p class="review-message">"{{ review.text }}"</p>
+        <p class="review-author">- {{ review.author }}</p>
+      </div>
+    </div>
+  </div>
+</div>

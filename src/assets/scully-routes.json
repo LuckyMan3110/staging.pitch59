@@ -1,0 +1,125 @@
+[
+  {
+    "route": "/card"
+  },
+  {
+    "route": "/"
+  },
+  {
+    "route": "/two-step-verification"
+  },
+  {
+    "route": "/one-time-password"
+  },
+  {
+    "route": "/forgot-password"
+  },
+  {
+    "route": "/change-password"
+  },
+  {
+    "route": "/reset-password"
+  },
+  {
+    "route": "/welcome"
+  },
+  {
+    "route": "/sign-in"
+  },
+  {
+    "route": "/sign-up"
+  },
+  {
+    "route": "/search-result"
+  },
+  {
+    "route": "/search"
+  },
+  {
+    "route": "/404"
+  },
+  {
+    "route": "/terms-and-conditions"
+  },
+  {
+    "route": "/privacy-policy"
+  },
+  {
+    "route": "/business"
+  },
+  {
+    "route": "/jobs"
+  },
+  {
+    "route": "/pricing"
+  },
+  {
+    "route": "/select-pitchcards"
+  },
+  {
+    "route": "/create/information"
+  },
+  {
+    "route": "/create/images"
+  },
+  {
+    "route": "/create/video"
+  },
+  {
+    "route": "/create/more-info"
+  },
+  {
+    "route": "/create/radius"
+  },
+  {
+    "route": "/create/billing"
+  },
+  {
+    "route": "/create/other"
+  },
+  {
+    "route": "/create/admin"
+  },
+  {
+    "route": "/create/analytics"
+  },
+  {
+    "route": "/create/employment"
+  },
+  {
+    "route": "/create/congratulations"
+  },
+  {
+    "route": "/create/position"
+  },
+  {
+    "route": "/create"
+  },
+  {
+    "route": "/account/pockets"
+  },
+  {
+    "route": "/account/my-pitchcards"
+  },
+  {
+    "route": "/account/employer-portal"
+  },
+  {
+    "route": "/account/commissions"
+  },
+  {
+    "route": "/account/billing"
+  },
+  {
+    "route": "/account/groups"
+  },
+  {
+    "route": "/account/settings"
+  },
+  {
+    "route": "/account"
+  },
+  {
+    "route": "/cancel-navigation"
+  }
+]

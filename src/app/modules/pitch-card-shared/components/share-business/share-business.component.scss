@@ -1,0 +1,31 @@
+@import '../../../../styles/variables';
+
+.new-link.pointer {
+  font-weight: 700;
+  color: $stateActiveTextColor;
+  text-transform: uppercase;
+}
+
+.p-g.p-fluid.mi-share {
+  justify-content: center;
+}
+
+.introduce-block {
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 6.45833px;
+
+  a {
+    text-decoration: none;
+  }
+}
+
+.new-badge {
+  border-radius: 4px;
+  background-color: $stateErrorTextColor;
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  padding: 3px 11px;
+}

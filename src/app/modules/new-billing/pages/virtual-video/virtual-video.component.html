@@ -1,0 +1,125 @@
+<div class="content">
+    <div class="billing-view-item">
+        <div class="header-section text-center">
+          <h1>Would you like help creating your pitch video?</h1>
+        </div>
+
+        <div class="grid justify-content-evenly no-margins">
+          <div class="billing-block bg-white text-center">
+            <div class="price-wrap">
+              <h3 class="billing-title no-margins">
+                No thanks, I’ll take care of my video.
+              </h3>
+
+              <div class="price-content">
+                <div class="price extra-height lower-price green mt-15">
+                  <h2 class="no-margins">FREE</h2>
+                </div>
+              </div>
+
+              <div
+                  class="button-simple shock-pink lg-50 margin-centered"
+                  (click)="
+                            setVirtualVideo(
+                                '/billing-page/billing-summary',
+                                false
+                            )
+                        "
+              >
+                Select
+              </div>
+            </div>
+            </div>
+          <div class="billing-block bg-white text-center">
+            <div class="price-wrap">
+              <h3 class="billing-title no-margins">Yes please!</h3>
+              <p
+                  class="description green pointer no-margins"
+                  (click)="handleVirtualVideoExplanation()"
+              >
+                What is a Virtual Video Shoot?
+              </p>
+
+              <div class="price-content">
+                <div class="price decorate">
+                  <h2 class="no-margins">
+                    {{
+                    virtualVideoData
+                        ? '&#x24;' + virtualVideoData.price
+                        : ''
+                    }}
+                  </h2>
+                </div>
+                <div class="price lower-price green mt-15">
+                  <h2 class="no-margins">
+                    {{
+                    resultPriceOfProduct
+                        ? '&#x24;' + resultPriceOfProduct
+                        : 'FREE'
+                    }}
+                  </h2>
+                </div>
+              </div>
+
+              <div
+                  class="button-simple shock-pink lg-50 margin-centered"
+                  (click)="
+                            setVirtualVideo(
+                                '/billing-page/billing-summary',
+                                true,
+                                calendlyLink
+                            )
+                        "
+              >
+                        <span
+                        ><img
+                            src="/assets/images/logo/pitch59-logo-only-play-white.svg"
+                            alt=""
+                        /></span>
+                Select
+              </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="back-btn pointer" (click)="goToPage('/cards-packages')">
+        <span class="arrow-back"></span>
+        <span>Back</span>
+    </div>
+</div>
+
+<p-dialog
+    [(visible)]="virtualVideoExplanation"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="true"
+    [resizable]="false"
+    [dismissableMask]="true"
+    [style]="{ minWidth: '300px', maxWidth: '650px', width: '650px' }"
+    styleClass="dialog"
+    appendTo="body"
+>
+  <div class="dialog-container">
+    <h1 class="text-center">What is Virtual Video Shoot?</h1>
+    <p>
+      By helping you shoot your pitch video (usually in just 20 or 30
+      minutes), and then editing it for you, Pitch59’s Virtual Video
+      Shoots make creating your video a breeze.
+    </p>
+    <p>You’ll need:</p>
+    <ul>
+      <li>- A camera to shoot the video (usually your phone),</li>
+      <li>- A computer to video conference with your PitchCoach, and</li>
+      <li>
+        - To determine the lighting and background that you want in your
+        video.
+      </li>
+    </ul>
+    <p>
+      Don’t worry about memorizing or preparing a script - you won’t need
+      it! Your PitchCoach will interview you and guide you through the
+      process.
+    </p>
+  </div>
+</p-dialog>

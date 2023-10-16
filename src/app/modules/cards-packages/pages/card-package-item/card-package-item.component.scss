@@ -1,0 +1,134 @@
+@import '../../../../styles/variables.scss';
+
+.card-container {
+    height: calc(500px * var(--scale-factor));
+    width: calc(253px * var(--scale-factor));
+    border-radius: calc(15px * var(--scale-factor));
+    position: relative;
+    overflow: hidden;
+
+    .shoulder-strap {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        height: calc(37px * var(--scale-factor));
+        width: calc(280px * var(--scale-factor));
+        transform: rotate(-45deg);
+        top: calc(25px * var(--scale-factor));
+        left: calc(-90px * var(--scale-factor));
+        font-size: calc(1.2rem * var(--scale-factor));
+        color: #000;
+        background-color: #f0f189;
+        box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+        text-transform: capitalize;
+    }
+
+    .underlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: $black;
+        opacity: 0.65;
+    }
+
+    .card-header {
+      color: $white;
+      text-transform: capitalize;
+      font-size: calc(1.4rem * var(--scale-factor));
+      padding: calc(10px * var(--scale-factor)) 0;
+      text-align: center;
+      border-radius: calc(4px * var(--scale-factor)) calc(4px * var(--scale-factor)) 0 0;
+      margin-bottom: calc(18px * var(--scale-factor));
+    }
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      padding: 0 calc(20px * var(--scale-factor)) calc(20px * var(--scale-factor));
+
+      .card-title {
+        text-transform: capitalize;
+        text-align: center;
+        font-size: calc(1.4rem * var(--scale-factor));
+        color: #004d7f;
+        font-weight: 800;
+        padding: calc(10px * var(--scale-factor));
+      }
+
+        .card-price {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: $cardPrice;
+            font-size: calc(2rem * var(--scale-factor));
+            font-weight: 900;
+            padding: 0 0 calc(5px * var(--scale-factor));
+
+            span {
+                text-align: center;
+                font-size: calc(1.2rem * var(--scale-factor));
+                font-weight: 500;
+                color: $black;
+            }
+        }
+
+        .card-control-panel {
+            margin-top: calc(10px * var(--scale-factor));
+            padding: calc(11px * var(--scale-factor));
+            color: $white;
+            font-size: calc(1.2rem * var(--scale-factor));
+            border-radius: calc(4px * var(--scale-factor));
+            border: none;
+            text-transform: uppercase;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .card-description {
+            margin-top: calc(15px * var(--scale-factor));
+            max-height: calc(365px * var(--scale-factor));
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            overflow-y: scroll;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+
+            div {
+                width: 80%;
+
+              > li {
+                display: flex;
+                font-size: calc(1.2rem * var(--scale-factor));
+                margin: calc(10px * var(--scale-factor)) 0;
+
+                .list-item {
+                  margin-right: calc(5px * var(--scale-factor));
+                  font-size: calc(1.2rem * var(--scale-factor));
+                }
+              }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .card-container {
+        border-radius: calc(12px * var(--scale-factor));
+    }
+}
+
+@media screen and (max-width: 419px) {
+    .card-container {
+        height: unset;
+    }
+}

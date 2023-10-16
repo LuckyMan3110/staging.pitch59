@@ -1,0 +1,840 @@
+<div class="step-form" *ngIf="cardVerification">
+  <div class="billing">
+    <div class="billing-block layout-card billing-plan">
+      <div class="billing-block-body" *ngIf="service.paymentPlan">
+        <ul>
+          <li class="mb-20 mt-10">
+            <h3 class="no-margins">
+              My Plan:
+              <span
+                  [ngClass]="{
+                                    green:
+                                        service.business.businessType ===
+                                            pitchCardTypes.Basic ||
+                                        service.business.businessType ===
+                                            pitchCardTypes.Employee,
+                                    gold:
+                                        service.business.businessType ===
+                                        pitchCardTypes.Service
+                                }"
+              >
+                                {{ getBusinessTypeValue() | titlecase }}
+                            </span>
+            </h3>
+            <h3
+                *ngIf="
+                                service.business.businessStatus ===
+                                businessStatusesEnum.Suspended
+                            "
+                class="no-margins pink"
+            >
+              {{
+              businessStatusesEnum[
+                  service.business.businessStatus
+                  ] | titlecase
+              }}
+            </h3>
+          </li>
+          <li
+              *ngIf="service?.paymentPlan?.referralEmail"
+              class="mb-2"
+          >
+            <span>Referred by:</span>
+            <span
+                class="input-block"
+                tooltipPosition="top"
+                [pTooltip]="service.paymentPlan?.referralEmail"
+            >
+                            <input
+                                class="no-margins text-ellipsis lightgray"
+                                placeholder="[Email of referrer]"
+                                [disabled]="true"
+                                [ngStyle]="{ 'text-align': 'right' }"
+                                value="{{ service.paymentPlan?.referralEmail }}"
+                            />
+                        </span>
+          </li>
+          <li class="mb-2">
+            <span>Subscription:</span>
+            <span
+                *ngIf="service?.paymentPlan?.amountWoDiscount > 0"
+                class="plan-value lightgray"
+            >
+                            &#x24;{{
+              service.paymentPlan.amountWoDiscount
+                  | number : '1.2-2'
+              }}
+              per month
+                        </span>
+            <span
+                *ngIf="service?.paymentPlan?.amountWoDiscount === 0"
+                class="plan-value lightgray"
+            >&#x24;0.00 per month
+                        </span>
+          </li>
+          <li *ngIf="service?.nextPaymentDate" class="mb-2">
+            <span>Your subscription will renew on:</span>
+            <span class="plan-value lightgray">
+                            {{ service.nextPaymentDate | date : 'MM/dd/yy' }}
+                        </span>
+          </li>
+          <li
+              class="mb-2"
+              *ngIf="
+                            service.paymentPlan?.discountCode &&
+                            service.paymentPlan?.amountDiscountCode
+                        "
+          >
+            <span>Promo Code:</span>
+            <span class="plan-value lightgray">
+                            -&#x24;{{
+              service.paymentPlan.amountDiscountCode
+                  | number : '1.2-2'
+              }}
+                        </span>
+          </li>
+          <li
+              class="mb-2"
+              *ngIf="
+                            service.paymentPlan?.discountCode &&
+                            service.paymentPlan?.amountDiscountCode
+                        "
+          >
+            <span>Promo Code Value:</span>
+            <span class="plan-value lightgray">
+                            {{ service.paymentPlan.discountCode }}
+                        </span>
+          </li>
+          <li class="mb-2">
+            <span>Total Cost</span>
+            <span class="plan-value lightgray">
+                            &#x24;{{
+              service.paymentPlan?.amount | number : '1.2-2'
+              }}
+                        </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="billing-block layout-card billing-methods">
+      <div class="billing-methods-header mt-10 mb-2">
+        <h2 class="no-margins">Payment Method</h2>
+        <span>
+                    <img
+                        class="pointer"
+                        src="/assets/images/my-account-images/team-page/team-edit-default.svg"
+                        alt="Edit Payment Method"
+                        (click)="handlePaymentMethods = true"
+                    />
+                </span>
+      </div>
+      <div
+          *ngIf="paymentErrorReason"
+          class="billing-payment-failed text-center"
+      >
+        <p
+            (click)="
+                        isOrganization
+                            ? (handlePaymentFailedMethods = true)
+                            : null
+                    "
+            [ngStyle]="{ cursor: isOrganization ? 'pointer' : 'null' }"
+        >
+          Payment Failed
+          {{ !isOrganization ? '- ' + paymentErrorReason : '...' }}
+        </p>
+      </div>
+      <div
+          *ngIf="!service.isAppPayment; else appPaymentMessage"
+          class="billing-block-body"
+          [ngClass]="{
+                    'mt-20': service.bankDetail && !service.cardDetail
+                }"
+          [ngStyle]="{
+                    transform: service.cardDetail ? 'scale(0.8)' : ''
+                }"
+      >
+        <div *ngIf="service.cardDetail" class="margin-centered">
+          <app-credit-card
+              [allowRemoveCard]="false"
+              [cardDetails]="service.cardDetail"
+          >
+          </app-credit-card>
+        </div>
+
+        <div
+            *ngIf="!service.cardDetail && this.service.bankDetail"
+            class="margin-centered"
+        >
+          <app-bank-account-thumbnail
+              [model]="this.service.bankDetail"
+          >
+          </app-bank-account-thumbnail>
+        </div>
+      </div>
+      <div
+          class="error-sign text-center mb-2 link pointer"
+          *ngIf="
+                    service.business.businessStatus ===
+                    businessStatusesEnum.Suspended
+                "
+          (click)="handlePaymentMethods = true"
+      >
+        Update Billing Info
+      </div>
+    </div>
+  </div>
+  <div class="billing-history layout-card mt-20">
+    <h2>Billing History</h2>
+    <div *ngIf="!service.isAppPayment; else appHistoryMessage">
+      <p-table
+          #dt
+          [value]="transactions"
+          dataKey="createdAt"
+          styleClass="billing-table"
+          [paginator]="true"
+          [totalRecords]="totalRecords"
+          [rows]="rows"
+          [lazy]="true"
+          (onLazyLoad)="loadTransactionsLazy($event)"
+      >
+        <ng-template pTemplate="header">
+          <tr *ngIf="transactions && transactions.length">
+            <th
+                *ngFor="let col of columns"
+                class="text-left"
+                [style]="tableCellsStyle"
+                [ngStyle]="{
+                                width: col.width,
+                                fontSize: !isDesktop ? '16px' : '14px'
+                            }"
+            >
+              {{ col.header }}
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template
+            pTemplate="body"
+            let-transaction
+            let-expanded="expanded"
+            let-rowIndex="rowIndex"
+        >
+          <tr
+              [ngClass]="{
+                            pink:
+                                transaction.lastError !== null &&
+                                !transaction.nextPaymentDate
+                        }"
+          >
+            <td class="border-bottom" [style]="tableCellsStyle">
+              {{
+              transaction.createdAt
+                  ? (transaction.createdAt
+                      | date : 'MM/dd/yy')
+                  : ''
+              }}
+            </td>
+            <td class="border-bottom" *ngIf="isDesktop">
+              {{
+              transaction?.itemName
+                  ? transaction.itemName
+                  : ''
+              }}
+            </td>
+            <td class="border-bottom" *ngIf="isDesktop">
+              {{ isOrganization ? transaction.count : 1 }}
+            </td>
+            <td class="border-bottom" *ngIf="isDesktop">
+              <div *ngIf="isOrganization">
+                &#x24;{{
+                transaction?.priceOne
+                    ? (transaction.priceOne
+                        | number : '1.2-2')
+                    : 0.0
+                }}
+              </div>
+              <div *ngIf="!isOrganization">
+                &#x24;{{
+                transaction?.amount
+                    ? (transaction.amount
+                        | number : '1.2-2')
+                    : 0.0
+                }}
+              </div>
+            </td>
+            <td class="border-bottom" [style]="tableCellsStyle">
+              <div *ngIf="isOrganization">
+                &#x24;{{
+                transaction?.priceAll
+                    ? (transaction.priceAll
+                        | number : '1.2-2')
+                    : '0.00'
+                }}
+              </div>
+
+              <div *ngIf="!isOrganization">
+                &#x24;{{
+                transaction?.amount
+                    ? (transaction.amount
+                        | number : '1.2-2')
+                    : 0.0
+                }}
+              </div>
+            </td>
+            <td
+                class="border-bottom text-ellipsis"
+                *ngIf="
+                                isOrganization &&
+                                transaction?.transaction?.length &&
+                                !isMobile
+                            "
+                [ngClass]="{
+                                green: transaction.transaction[
+                                    transaction.transaction.length - 1
+                                ].nextPaymentDate,
+                                pink: !transaction.transaction[
+                                    transaction.transaction.length - 1
+                                ].nextPaymentDate
+                            }"
+            >
+              {{
+              !transaction.transaction[
+              transaction.transaction.length - 1
+                  ].nextPaymentDate
+                  ? 'Overdue'
+                  : 'Paid'
+              }}
+            </td>
+
+            <td
+                class="border-bottom text-ellipsis"
+                *ngIf="!isOrganization"
+                [style]="tableCellsStyle"
+                [ngClass]="{
+                                green:
+                                    !transaction.lastError &&
+                                    transaction.nextPaymentDate,
+                                pink:
+                                    transaction.lastError &&
+                                    !transaction.nextPaymentDate
+                            }"
+            >
+              {{
+              transaction.lastError !== null &&
+              !transaction.nextPaymentDate
+                  ? 'Overdue'
+                  : 'Paid'
+              }}
+            </td>
+
+            <td
+                class="text-center border-bottom"
+                [style]="
+                                tableCellsStyle +
+                                (isMobile ? 'border:none;' : '')
+                            "
+            >
+              <div
+                  *ngIf="
+                                    transaction.nextPaymentDate ||
+                                    isOrganization
+                                "
+                  class="pointer save-pdf"
+                  [ngClass]="{ 'no-margins': isDesktop }"
+                  (click)="
+                                    initDownload(transaction.id, {
+                                        groupAttempt: transaction?.groupAttempt,
+                                        type: transaction?.type
+                                    })
+                                "
+                  pTooltip="Download"
+                  tooltipPosition="top"
+              ></div>
+              <div
+                  class="border-bottom link green white-space-nowrap"
+                  *ngIf="
+                                    !transaction.nextPaymentDate &&
+                                    !isOrganization &&
+                                    isDesktop
+                                "
+                  (click)="handleRetryPaymentModal()"
+              >
+                Retry Payment
+              </div>
+            </td>
+            <td class="text-center border-bottom" *ngIf="isDesktop">
+              <button
+                  type="button"
+                  pButton
+                  pRipple
+                  [pRowToggler]="transaction"
+                  class="accordion-btn p-button-text p-button-rounded p-button-plain bg-white darkgray bd-none"
+                  [icon]="
+                                    expanded
+                                        ? 'pi pi-chevron-up'
+                                        : 'pi pi-chevron-down'
+                                "
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template
+            pTemplate="rowexpansion"
+            let-transaction
+            let-index="rowIndex"
+        >
+          <td
+              [attr.colspan]="columns.length"
+              style="
+                            margin: 0 auto;
+                            border-bottom: 1px solid antiquewhite;
+                        "
+          >
+            <div *ngIf="isOrganization">
+              <p-table
+                  [value]="transaction.transaction"
+                  dataKey="{{ index }}"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th
+                        *ngFor="let col of expandColumns"
+                        class="tag-table-header exp-table-header"
+                    ></th>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-transaction>
+                  <tr>
+                    <td>
+                      <div class="expanded-block">
+                        <ul>
+                          <li>
+                                                        <span
+                                                        >Payment Method:
+                                                        </span>
+                            <span>{{
+                              transaction.billingMethod
+                                  ? transaction.billingMethod
+                                  : ''
+                              }}</span>
+                          </li>
+                          <li>
+                                                        <span
+                                                        >Product Type:
+                                                        </span>
+                            <span>{{
+                              transaction?.itemName
+                                  ? (transaction.itemName
+                                      | titlecase)
+                                  : ''
+                              }}</span>
+                          </li>
+                          <li>
+                            <span>Quantity: </span>
+                            <span>1</span>
+                          </li>
+                          <li>
+                                                        <span
+                                                        >Subscription:
+                                                          {{
+                                                          billingFrequencyModel[
+                                                              transaction
+                                                                  .paymentFrequency
+                                                              ]
+                                                          }}
+                                                          {{
+                                                          transaction.nextPaymentDate
+                                                              ? '(Auto-renews on [' +
+                                                              (transaction.nextPaymentDate
+                                                                  | date) +
+                                                              '])'
+                                                              : ''
+                                                          }}
+                                                          :
+                                                        </span>
+
+                            <span
+                                class="plan-value"
+                            >
+                                                            &#x24;{{
+                              transaction?.amountWoDiscount
+                                  ? (transaction.amountWoDiscount
+                                      | number
+                                      : '1.2-2')
+                                  : 0.0
+                              }}
+                                                        </span>
+                          </li>
+                          <li
+                              *ngIf="
+                                                            transaction.virtualVideo &&
+                                                            virtualVideo
+                                                        "
+                          >
+                                                        <span
+                                                        >Virtual Video
+                                                            Shoot</span
+                                                        >
+
+                            <span class="plan-value"
+                            >&#x24;{{
+                              virtualVideo.price
+                                  | number
+                                  : '1.2-2'
+                              }}</span
+                            >
+                          </li>
+                          <br/>
+                          <li>
+                            <span>Discounts: </span>
+                            <span
+                            >&#x24;{{
+                              transaction.amountDiscountReferer >
+                              0
+                                  ? (transaction.amountDiscountReferer
+                                      | number
+                                      : '1.2-2')
+                                  : '0.00'
+                              }}</span
+                            >
+                          </li>
+                          <li>
+                                                        <span
+                                                        >Promo Code:
+                                                        </span>
+                            <span
+                            >&#x24;{{
+                              transaction.amountDiscountCode >
+                              0 &&
+                              transaction.amountDiscountCode
+                                  ? (transaction.amountDiscountCode
+                                      | number
+                                      : '1.2-2')
+                                  : '0.00'
+                              }}</span
+                            >
+                          </li>
+                          <li>
+                                                        <span
+                                                        >Promo Code Value:
+                                                        </span>
+                            <span>{{
+                              transaction.amountDiscountCode >
+                              0 &&
+                              transaction.amountDiscountCode
+                                  ? transaction.discountCode
+                                  : ''
+                              }}</span>
+                          </li>
+                          <li>
+                                                        <span
+                                                            class="font-semibold"
+                                                        >Total:
+                                                        </span>
+                            <span
+                                class="font-semibold"
+                            >&#x24;{{
+                              transaction.amount >
+                              0
+                                  ? (transaction.amount
+                                      | number
+                                      : '1.2-2')
+                                  : '0.00'
+                              }}</span
+                            >
+                          </li>
+                        </ul>
+
+                        <div
+                            class="mt-20 expanded-footer"
+                        >
+                          Order received at [{{
+                          transaction.createdAt
+                              | date : 'medium'
+                          }}]
+                        </div>
+                        <div
+                            class="expanded-footer"
+                            *ngIf="
+                                                        transaction.prevPaymentDate
+                                                    "
+                        >
+                          Payment processed at [{{
+                          transaction.prevPaymentDate
+                              | date : 'medium'
+                          }}]
+                        </div>
+                        <div
+                            class="expanded-footer pink mt-10"
+                            *ngIf="
+                                                        service.business
+                                                            .businessStatus ===
+                                                        businessStatusesEnum.PaymentFailed
+                                                    "
+                        >
+                          Failed:
+                          {{
+                          transactionsErrors[
+                              transaction
+                                  .lastError
+                              ] | splitCamelCase
+                          }}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+
+            <div class="expanded-block" *ngIf="!isOrganization">
+              <ul>
+                <li>
+                  <span>Payment Method: </span>
+                  <span>{{
+                    transaction?.billingMethod
+                        ? transaction?.billingMethod
+                        : ''
+                    }}</span>
+                </li>
+                <li>
+                  <span>PitchCard Type: </span>
+                  <span>{{ businessType | titlecase }}</span>
+                </li>
+                <li>
+                                    <span
+                                    >Subscription:
+                                      {{
+                                      billingFrequencyModel[
+                                          transaction.paymentFrequency
+                                          ]
+                                      }}
+                                      {{
+                                      transaction.nextPaymentDate
+                                          ? '(Auto-renews on [' +
+                                          (transaction.nextPaymentDate
+                                              | date) +
+                                          '])'
+                                          : ''
+                                      }}
+                                      :
+                                    </span>
+
+                  <span
+                      *ngIf="
+                                            transaction?.amountWoDiscount > 0
+                                        "
+                      class="plan-value"
+                  >
+                                        &#x24;{{
+                    transaction.amountWoDiscount
+                        | number : '1.2-2'
+                    }}
+                                    </span>
+                  <span
+                      *ngIf="
+                                            transaction?.amountWoDiscount === 0
+                                        "
+                      class="plan-value"
+                  >&#x24;0.00</span
+                  >
+                </li>
+                <li
+                    *ngIf="
+                                        transaction?.virtualVideo &&
+                                        virtualVideo
+                                    "
+                >
+                  <span>Virtual Video Shoot</span>
+
+                  <span class="plan-value"
+                  >&#x24;{{
+                    virtualVideo.price
+                        | number : '1.2-2'
+                    }}</span
+                  >
+                </li>
+                <br/>
+                <li>
+                  <span>Discounts: </span>
+                  <span
+                  >&#x24;{{
+                    transaction.amountDiscountReferer >
+                    0
+                        ? (transaction.amountDiscountReferer
+                            | number : '1.2-2')
+                        : '0.00'
+                    }}</span
+                  >
+                </li>
+                <li>
+                  <span>Promo Code: </span>
+                  <span
+                  >&#x24;{{
+                    transaction.amountDiscountCode >
+                    0 &&
+                    transaction.amountDiscountCode
+                        ? (transaction.amountDiscountCode
+                            | number : '1.2-2')
+                        : '0.00'
+                    }}</span
+                  >
+                </li>
+                <li>
+                  <span>Promo Code Value: </span>
+                  <span>{{
+                    transaction.amountDiscountCode > 0 &&
+                    transaction.amountDiscountCode
+                        ? transaction.discountCode
+                        : ''
+                    }}</span>
+                </li>
+                <li>
+                  <span class="font-semibold">Total: </span>
+                  <span class="font-semibold"
+                  >&#x24;{{
+                    transaction.amount > 0
+                        ? (transaction.amount
+                            | number : '1.2-2')
+                        : '0.00'
+                    }}</span
+                  >
+                </li>
+              </ul>
+
+              <div class="mt-20 expanded-footer">
+                Order received at [{{
+                transaction.createdAt | date : 'medium'
+                }}]
+              </div>
+              <div
+                  class="expanded-footer"
+                  *ngIf="transaction?.prevPaymentDate"
+              >
+                Payment processed at [{{
+                transaction.prevPaymentDate
+                    | date : 'medium'
+                }}]
+              </div>
+              <div
+                  class="expanded-footer pink mt-10"
+                  *ngIf="transaction?.lastError"
+              >
+                Failed:
+                {{
+                transactionsErrors[transaction.lastError]
+                    | splitCamelCase
+                }}
+              </div>
+            </div>
+          </td>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr class="empty-message">
+            <td class="text-center font-semibold" colspan="4">
+              There are no Transactions here yet.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<ng-template #appPaymentMessage>
+  <div class="text-center">
+    <p [style]="{ fontSize: '18px' }">
+      Manage your payment within your app store account.
+    </p>
+  </div>
+</ng-template>
+<ng-template #appHistoryMessage>
+  <div class="text-center">
+    <p [style]="{ fontSize: '20px' }">
+      View your Billing History through your app store account.
+    </p>
+  </div>
+</ng-template>
+
+<p-dialog
+    [(visible)]="handlePaymentMethods"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '500px', width: '100%' }"
+    [closable]="false"
+    styleClass="billing-modal"
+    appendTo="body"
+    header="Enter Credit Card Information"
+>
+  <div class="form-layout-wrap" *ngIf="handlePaymentMethods">
+    <button class="p-dialog-header-close pointer" (click)="acceptModal()">
+      <span class="pi pi-times"></span>
+    </button>
+    <div class="form-layout" *ngIf="service.paymentPlan && businessType">
+      <app-payment-method-forms
+          [importCardDetail]="
+                    service.cardDetail ? service.cardDetail : null
+                "
+          [importBankDetail]="
+                    service.bankDetail ? service.bankDetail : null
+                "
+          [achErrorMessage]="achErrorMessage"
+          [cardError]="cardErrorMessage"
+          [bothAvailable]="false"
+          [(isHaveChangesModel)]="isHaveChanges"
+          (saveChanges)="saveChanges($event)"
+          (deleteACH)="populateBankDetailRemoveObj($event)"
+      ></app-payment-method-forms>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="handlePaymentFailedMethods"
+    [blockScroll]="true"
+    [draggable]="false"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [resizable]="false"
+    [dismissableMask]="false"
+    [style]="{ minWidth: '300px', maxWidth: '500px', width: '100%' }"
+    [closable]="false"
+    styleClass="paymentfailed-modal"
+    appendTo="body"
+    header="Payment was unsuccessful"
+>
+  <div class="form-layout-wrap">
+    <button
+        class="p-dialog-header-close pointer"
+        (click)="handlePaymentFailedMethods = false"
+    >
+      <span class="pi pi-times"></span>
+    </button>
+  </div>
+  <div class="text-center payment-error-reason">
+    <p>{{ paymentErrorReason }}</p>
+  </div>
+  <div class="grid justify-content-center align-items-center mt-15 mb-3">
+    <button
+        class="button-simple"
+        [style]="{ backgroundColor: '#4D4D4D' }"
+        (click)="handlePaymentFailedMethods = false"
+    >
+      {{ 'Cancel' }}
+    </button>
+    <button
+        class="button-simple shock-pink"
+        (click)="handlePaymentMethods = true"
+    >
+      {{ 'Update Payment' }}
+    </button>
+  </div>
+</p-dialog>

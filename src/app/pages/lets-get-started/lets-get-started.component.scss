@@ -1,0 +1,615 @@
+@import '../../styles/variables.scss';
+
+$darkBannerBg: #001118;
+
+.welcome-container {
+  margin: auto;
+  max-width: 1200px;
+  position: relative;
+}
+
+@mixin flex-centered() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.section {
+  padding: 3em 0;
+  background: $darkBannerBg;
+  @media (max-width: 767px) {
+    padding: 1em 0;
+    overflow: hidden;
+  }
+}
+
+.top-down-gradient {
+  background: linear-gradient(
+                  180deg,
+                  rgba(0, 17, 24, 1) 0%,
+                  rgba(0, 67, 113, 1) 100%
+  );
+}
+
+.section {
+  color: $white;
+
+  .intro-block {
+    h2 {
+      color: $white;
+      font-size: 4rem;
+      @media (max-width: 800px) {
+        font-size: 3.3rem;
+      }
+      @media (max-width: 767px) {
+        font-size: 4.6rem;
+      }
+    }
+
+    h3 {
+      font-size: 3rem;
+    }
+
+    .shock-title,
+    resume-title,
+    .business-title {
+      font-style: normal;
+      font-weight: 600;
+      margin-bottom: 3.5rem;
+
+      h2 {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 4rem;
+        @media (max-width: 800px) {
+          font-size: 3.3rem;
+        }
+        @media (max-width: 767px) {
+          font-size: 4.6rem;
+        }
+      }
+    }
+
+    .shock-title {
+      background: linear-gradient(
+                      94.44deg,
+                      #f05fd8 36.9%,
+                      #6a2bfd 134.43%
+      );
+      background: -webkit-linear-gradient(
+                      94.44deg,
+                      #f05fd8 36.9%,
+                      #6a2bfd 134.43%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .resume-title {
+      background: $resumeGradient;
+      background: $resumeWebkitG6t;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .business-title {
+      background: $basicGradient;
+      background: $basicWebkitG6t;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p {
+      font-size: 1.4rem;
+      line-height: 31px;
+      color: $white;
+    }
+
+    &.resume {
+      .shock-title {
+        background: linear-gradient(
+                        93.24deg,
+                        #fb5e5e 0.89%,
+                        #c90060 104.21%
+        );
+        background: -webkit-linear-gradient(
+                        93.24deg,
+                        #fb5e5e 0.89%,
+                        #c90060 104.21%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+        margin-bottom: 3.5rem;
+      }
+
+      .button-simple {
+        background: $resumeGradient;
+      }
+    }
+
+    &.basic {
+      .shock-title {
+        background: $basicGradient;
+        background: -webkit-linear-gradient(
+                        90.81deg,
+                        #7cdee3 9.35%,
+                        #0f81d9 108.57%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+        margin-bottom: 3.5rem;
+      }
+
+      .button-simple {
+        background: $basicGradient;
+      }
+
+      .search-basic {
+        &::after {
+          background: $basicGradient;
+          -webkit-mask: $webkitWhiteMask;
+          -webkit-mask-composite: destination-out;
+
+          background: -webkit-linear-gradient(
+                          90.81deg,
+                          #7cdee3 9.35%,
+                          #0f81d9 108.57%
+          );
+          mask-composite: exclude;
+        }
+      }
+    }
+
+    .search-navigation {
+      font-size: 1rem;
+
+      .dropdown-wrap {
+        width: 41%;
+        @media (max-width: 767px) {
+          width: 37%;
+        }
+      }
+
+      span.color-white,
+      .dropdown-wrap {
+        margin-right: 1rem;
+      }
+
+      .submit-arrow {
+        height: 30px;
+        width: 30px;
+        border: 2px solid white;
+        border-radius: 50%;
+        color: white;
+        @include flex-centered();
+        font-size: 20px;
+      }
+    }
+
+    .main-video-mob {
+      display: none;
+      margin-bottom: 3.5rem;
+      padding: 0 20px;
+      @media (max-width: 767px) {
+        display: block;
+      }
+      @media (max-height: 450px) and (max-width: 850px) {
+        display: block;
+        padding: 0 40px;
+      }
+    }
+  }
+
+  .tabs-content {
+    margin-bottom: 5%;
+  }
+
+  .gradient-block {
+    position: relative;
+    $bw: 3px; /* border width*/
+    $br: 12px; /* the radius */
+    border: unset;
+    padding: 3em;
+    background: rgba(0, 17, 24, 0.8);
+    border-radius: $br;
+    z-index: 5;
+
+    img {
+      max-height: 306px;
+      max-width: fit-content;
+      align-self: center;
+      @media (max-width: 768px) {
+        max-height: 200px;
+      }
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: $br;
+      padding: $bw;
+      -webkit-mask: $webkitWhiteMask;
+      mask-composite: exclude;
+    }
+
+    .gradient-title {
+      position: relative;
+      width: fit-content;
+      @include flex-centered();
+      margin: 0 auto;
+
+      h2 {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+
+    .white-subtitle {
+      -webkit-text-fill-color: #fdfdfd;
+    }
+
+    &.resume-block {
+      .gradient-title h2 {
+        background: linear-gradient(
+                        93.24deg,
+                        #fb5e5e 0.89%,
+                        #c90060 104.21%
+        );
+        background: -webkit-linear-gradient(
+                        93.24deg,
+                        #fb5e5e 0.89%,
+                        #c90060 104.21%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .button-simple {
+        background: $resumeGradient;
+      }
+
+      &::after {
+        background: $resumeGradient;
+        z-index: -1;
+      }
+    }
+
+    &.business-block {
+      .gradient-title h2 {
+        background: $basicGradient;
+        background: -webkit-linear-gradient(
+                        90.81deg,
+                        #7cdee3 9.35%,
+                        #0f81d9 108.57%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .button-simple {
+        background: $basicGradient;
+      }
+
+      &::after {
+        background: $basicGradient;
+        z-index: -1;
+      }
+    }
+
+    h2 {
+      font-size: 3rem;
+    }
+
+    ul {
+      min-height: 170px;
+      font-size: 17px;
+      line-height: 34px;
+      list-style-type: disc;
+      margin: 15px 0 20px 20px;
+    }
+  }
+
+  .intro-content {
+    .shock-title h2 {
+      -webkit-text-fill-color: #fdfdfd;
+      font-size: 1.8rem;
+      font-weight: 500;
+    }
+
+    .welcome-demo-button {
+      position: relative;
+      $bw: 3px; /* border width*/
+      $br: 30px; /* the radius */
+      border: unset;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border-radius: $br;
+        padding: $bw;
+      }
+    }
+  }
+
+  .play-overlay {
+    @include flex-centered;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    .play-icon {
+      background: url('~assets/images/logo/pitch59-logo-only-play-white.svg');
+      height: 5rem;
+      width: 5rem;
+      @media (max-width: 767px) {
+        height: 3rem;
+        width: 3rem;
+      }
+    }
+  }
+
+  .section-header {
+    background: linear-gradient(180deg, #ff6581 25.57%, #e333ff 89.82%);
+    background: -webkit-linear-gradient(
+                    180deg,
+                    #ff6581 25.57%,
+                    #e333ff 89.82%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+  }
+
+  .section-header .section-header-title {
+    font-size: 40px;
+    font-weight: 500;
+    @media (max-width: 767px) {
+      font-size: 20px;
+      line-height: unset;
+    }
+  }
+
+  .section-header span {
+    font-size: 24px;
+    margin-left: 10px;
+    @media (max-width: 767px) {
+      font-size: 14px;
+    }
+  }
+
+  .partners {
+    margin: 50px 0;
+    @media (max-width: 767px) {
+      margin: 20px 0;
+    }
+  }
+
+  .welcome-demo-button {
+    @include flex-centered();
+    border-radius: 50px;
+    font-weight: 500;
+    border: 2px solid $loginHeadingColor;
+
+    &.sm {
+      height: 45px;
+    }
+
+    &.md {
+      height: 49px;
+      font-size: 22px;
+      line-height: 26px;
+      @media (max-width: 1280px) {
+        height: 50px;
+        font-size: 1.5rem;
+      }
+      @media (max-width: 767px) {
+        margin-top: 30px;
+      }
+      @media (max-width: 450px) {
+        height: 40px;
+        font-size: 1.3rem;
+        //Content under constructions
+        //margin-top: 15px;
+        margin-top: 0;
+      }
+      @media (max-width: 320px) {
+        margin-top: 0;
+      }
+    }
+
+    > img {
+      width: 30px;
+      margin-right: 9px;
+    }
+
+    > span {
+      line-height: 100%;
+    }
+  }
+
+  .partner-card {
+    width: 30%;
+    border-radius: 6px;
+    @media (max-height: 450px) and (max-width: 850px) {
+      width: 100%;
+    }
+    @media (max-width: 767px) {
+      width: 100%;
+    }
+
+    .partner-card-logo {
+      min-height: 70px;
+      @include flex-centered();
+      @media (max-width: 800px) {
+        min-height: 45px;
+      }
+      @media (max-width: 700px) {
+        min-height: 70px;
+      }
+      @media (max-height: 450px) and (max-width: 850px) {
+        min-height: 110px;
+      }
+      @media (max-height: 400px) and (max-width: 800px) {
+        min-height: 90px;
+      }
+    }
+
+    .partner-card-logo img {
+      width: 100%;
+      max-width: 60%;
+    }
+
+    .partner-card-desc {
+      font-style: italic;
+      font-size: 18px;
+      max-width: 80%;
+      width: 100%;
+      margin: 0 auto;
+      min-height: 100px;
+      text-decoration: none;
+      color: #000;
+      @media (max-width: 1025px) {
+        min-height: 111px;
+      }
+      @media (max-width: 800px) {
+        min-height: 170px;
+      }
+    }
+  }
+
+  .home-banner.search-result {
+    padding: 30px 0;
+    @include flex-centered();
+    flex-direction: column;
+    @media (min-width: 2400px) {
+      margin: 49px 0;
+    }
+    @media (max-width: 991px) {
+      display: block;
+    }
+    @media (max-width: 500px) {
+      margin: 15px 0;
+    }
+  }
+
+  .get-started-card {
+    flex-grow: 1;
+    flex-basis: 0;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+
+    &:not(:first-child) {
+      margin-left: 1rem;
+      @media (max-width: 767px) {
+        margin: 0;
+      }
+    }
+
+    .get-started-text {
+      font-size: 2rem;
+      @media (max-width: 767px) {
+        font-size: 1.2rem;
+      }
+    }
+
+    .get-started-app-buttons,
+    .get-started-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: flex-start;
+      margin-top: 1rem;
+    }
+
+    .get-started-app-buttons {
+      img {
+        width: 136px;
+        object-fit: contain;
+        min-height: unset;
+      }
+
+      a {
+        margin-right: 0.5rem;
+      }
+    }
+
+    .video-block {
+      position: relative;
+
+      .big-video-svg {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        height: 4em;
+        width: 4em;
+        background: url(/assets/images/pitch-card-svg/play-outline.svg) no-repeat;
+      }
+    }
+  }
+
+  .app-download {
+    align-items: center;
+    display: flex;
+    height: 24.3125rem;
+    justify-content: space-evenly;
+    overflow: hidden;
+    width: 100%;
+    @media (max-width: 767px) {
+      height: unset;
+    }
+    @media (max-height: 450px) and (max-width: 850px) {
+      height: unset;
+    }
+  }
+
+  .app-download-text {
+    h3 {
+      color: $white;
+    }
+
+    span {
+      display: flex;
+      color: $white;
+      margin: 2.5rem 0;
+    }
+  }
+
+  .app-download-phone {
+    position: relative;
+    top: 20%;
+    transform: scale(0.64);
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-around;
+
+    a {
+      cursor: pointer;
+    }
+
+    img {
+      height: 3.1875rem;
+      @media (max-width: 767px) {
+        width: 80%;
+      }
+    }
+
+    a:first-child {
+      margin-right: 1rem;
+    }
+  }
+}

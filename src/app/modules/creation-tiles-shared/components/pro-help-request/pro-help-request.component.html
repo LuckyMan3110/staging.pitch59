@@ -1,0 +1,68 @@
+<div class="step-form-wrapper">
+  <div class="membership__form-wrapper" *ngIf="!sent">
+    <p class="pro-help-text" style="margin-top: 0">
+      Please enter your information below and a Pitch59 rep will contact
+      you to help match you with a videographer. You can also call us at
+      <a
+          style="color: #279abd; text-decoration: none"
+          href="tel:+18324124070"
+      >
+        (832) 412-4070</a
+      >.
+    </p>
+
+    <p></p>
+    <form [formGroup]="form">
+      <div class="form-row">
+        <div class="form-row-input">
+                    <span class="p-float-label">
+                        <input
+                            class="new-input-blue full-width float-input"
+                            autocomplete="tel"
+                            id="contactNumber"
+                            pInputText
+                            formControlName="contactNumber"
+                        />
+                        <label for="contactNumber" translate
+                        >Contact number</label
+                        >
+                    </span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-row-input">
+                    <span class="p-float-label">
+                        <input
+                            class="new-input-blue full-width float-input"
+                            autocomplete="email"
+                            id="email"
+                            pInputText
+                            formControlName="emailId"
+                        />
+                        <label for="email" translate>Contact email</label>
+                    </span>
+          <div
+              class="error-sign"
+              *ngIf="form.controls.emailId.errors?.pattern"
+              translate
+          >
+            err_invalid_emailId
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div
+            style="margin: 0.5rem auto"
+            class="button-simple shock-pink sm-35"
+            [ngClass]="{ disabled: !form.valid }"
+            (click)="submit()"
+        >
+          REQUEST A CALL
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="will-be-in-touch" *ngIf="sent">
+    <h1>Thanks! We'll be in touch.</h1>
+  </div>
+</div>

@@ -1,0 +1,132 @@
+@import '../../../../../styles/variables.scss';
+
+@mixin flex-centered() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.table-loader {
+  @include flex-centered();
+}
+
+.ep-body {
+  font-size: 14px;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.table-container {
+  min-height: 345px;
+
+  th,
+  td {
+    padding: 10px;
+    border: none;
+    color: $tableTextColor;
+    font-weight: 500;
+
+    img {
+      width: 23px;
+      height: 23px;
+    }
+  }
+
+  td {
+    position: relative;
+  }
+
+  .fit-content {
+    max-width: fit-content;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+  }
+
+  .controls {
+    display: flex;
+
+    img {
+      width: 22px;
+      height: 22px;
+      margin-right: 25px;
+    }
+  }
+
+  th {
+    background-color: transparent !important;
+    font-size: 15px;
+    white-space: nowrap;
+    text-align: left;
+
+    &:hover {
+      color: $tableTextColor;
+    }
+  }
+
+  .group-row {
+    border-bottom: 1px solid $bodyBgColor;
+    font-size: 0.8rem;
+  }
+
+  .emptymessage {
+    white-space: nowrap;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    color: $tableTextColor;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 45%;
+
+    p {
+      font-size: 1.1rem;
+    }
+  }
+
+  .invite-block {
+    flex-flow: nowrap;
+
+    input {
+      border-radius: 4px;
+      border: 1px solid $tableTextColor;
+      padding: 5px;
+      width: 78%;
+      min-width: 150px;
+      margin-right: 5px;
+
+      &:focus {
+        border: 1px solid $teamMainBorderColor;
+      }
+    }
+  }
+
+  .invite-button {
+    width: 25px;
+  }
+
+  .applicant-badge {
+    border: 2px solid $jobCardColor;
+    border-radius: 4px;
+    color: $jobCardColor;
+    width: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .new-applicant-badge {
+    border-radius: 4px;
+    background-color: $stateErrorTextColor;
+    color: $white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    position: absolute;
+    right: -50%;
+    padding: 3px;
+  }
+}

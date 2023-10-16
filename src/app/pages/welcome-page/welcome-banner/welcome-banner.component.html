@@ -1,0 +1,118 @@
+<section class="section pt-7 pb-0"  [ngClass]="{'top-down-gradient2': isMobile || (isTablet && isPortraitMode)}">
+    <div *ngIf="bannerConfig"
+         class="welcome-container main-banner grid align-items-center justify-content-center">
+        <div class="grid align-items-start justify-content-center no-margins"
+             [ngClass]="{'flex-column': isTablet && isPortraitMode}">
+            <div class="intro-block mb-5"
+                 [ngClass]="{'col-6': isDesktop || (isTablet && !isPortraitMode), 'col-12 mb-5 p-0': isMobile || (isTablet && isPortraitMode)}">
+                <h2 class="no-margins" *ngIf="isDesktop || (isTablet && !isPortraitMode)">
+                    <span *ngIf="!bannerConfig.isGradientLast"
+                          [ngClass]="{'business-title': bannerConfig.type === BannersTypesEnum.MainBanner || bannerConfig.type === BannersTypesEnum.BusinessBanner,
+                            'resume-title': bannerConfig.type === BannersTypesEnum.ResumeBanner}"
+                    >{{bannerConfig.gradientTitle}}</span>
+                    {{bannerConfig.whiteTitle}}
+                    <span *ngIf="bannerConfig.isGradientLast"
+                          [ngClass]="{'business-title': bannerConfig.type === BannersTypesEnum.MainBanner || bannerConfig.type === BannersTypesEnum.BusinessBanner,
+                          'resume-title': bannerConfig.type === BannersTypesEnum.ResumeBanner}"
+                    >{{bannerConfig.gradientTitle}}</span>{{bannerConfig.isGradientLast ? '.' : ''}}
+                </h2>
+                <h2 class="no-margins text-center" *ngIf="isMobile || (isTablet && isPortraitMode)">
+                    <span *ngIf="!bannerConfig.isMobileGradientLast"
+                          [ngClass]="{'business-title': bannerConfig.type === BannersTypesEnum.MainBanner || bannerConfig.type === BannersTypesEnum.BusinessBanner,
+                          'resume-title': bannerConfig.type === BannersTypesEnum.ResumeBanner}"
+                    >{{bannerConfig.mobileGradientTitle || bannerConfig.gradientTitle}}</span>
+                    {{bannerConfig.mobileWhiteTitle || bannerConfig.whiteTitle}}
+                    <span *ngIf="bannerConfig.isMobileGradientLast"
+                          [ngClass]="{'business-title': bannerConfig.type === BannersTypesEnum.MainBanner || bannerConfig.type === BannersTypesEnum.BusinessBanner,
+                          'resume-title': bannerConfig.type === BannersTypesEnum.ResumeBanner}"
+                    >{{bannerConfig.mobileGradientTitle || bannerConfig.gradientTitle}}</span>{{bannerConfig.isMobileGradientLast ? '.' : ''}}
+                </h2>
+
+                <p [ngClass]="{'ml-1 mr-1 text-base text-center': isMobile || (isTablet && isPortraitMode), 'w-10': isDesktop, 'mb-8': bannerConfig.type === BannersTypesEnum.MainBanner && !isMobile}">{{bannerConfig.subTitle}}</p>
+
+                <div class="grid align-items-center mb-20 no-margins" *ngIf="isDesktop || (isTablet && !isPortraitMode)"
+                     [ngClass]="{'justify-content-around': isMobile || (isTablet && isPortraitMode)}">
+                    <div class="no-padding" [ngClass]="{'col-5 mr-25': bannerConfig.type === BannersTypesEnum.ResumeBanner || bannerConfig.type === BannersTypesEnum.BusinessBanner, 'col-7': bannerConfig.type === BannersTypesEnum.MainBanner}">
+                        <button class="button-simple full-width no-padding lg-50-sm-font"
+                                [ngClass]="{'shock-pink': bannerConfig.type === BannersTypesEnum.MainBanner,
+                                    'resume-g6t-bg': bannerConfig.type === BannersTypesEnum.ResumeBanner,
+                                    'business-g6t-bg': bannerConfig.type === BannersTypesEnum.BusinessBanner}"
+                                (click)="createBusiness(bannerConfig.createBtnLink, false)">
+                            {{bannerConfig.createBtnText}}
+                        </button>
+                    </div>
+
+                    <div class="col-5 no-padding" *ngIf="bannerConfig.type !== BannersTypesEnum.MainBanner">
+                        <button class="button-simple full-width no-padding border-2 bg-transparent lg-50-sm-font"
+                                [ngClass]="{'gradient-border basic-g6t': bannerConfig.type === BannersTypesEnum.BusinessBanner}"
+                                (click)="setOutputAction(bannerConfig.secondaryLink, false)">
+                            {{bannerConfig.secondaryBtnText}}
+                        </button>
+                    </div>
+                </div>
+
+                <p [ngClass]="{'w-10': isDesktop}" *ngIf="(isDesktop || (isTablet && !isPortraitMode)) && bannerConfig.type === BannersTypesEnum.MainBanner">
+                    Click <span class="schedule-link underline cursor-pointer" (click)="showCalendar()">here</span> to schedule a demo.
+                </p>
+            </div>
+
+            <div class="flex flex-column align-items-center welcome-pc"
+                [ngClass]="{'col-6': isDesktop || (isTablet && !isPortraitMode), 'col-12 pl-4 pr-4': isMobile || (isTablet && isPortraitMode)}">
+                <img *ngIf="isDesktop || (isTablet && !isPortraitMode)" [ngClass]="{'full-width': (isMobile || (isTablet && isPortraitMode)) || bannerConfig.type === BannersTypesEnum.MainBanner || bannerConfig.type === BannersTypesEnum.BusinessBanner, 'col-6 m-auto': (isDesktop || (isTablet && !isPortraitMode)) && bannerConfig.type === BannersTypesEnum.ResumeBanner}" [src]="bannerConfig.imgBannerUrl" class="img-welcome" alt="carousel">
+                <div [ngClass]="{'video-welcome': isDesktop || (isTablet && !isPortraitMode)}" *ngIf="bannerConfig.type === BannersTypesEnum.MainBanner">
+                    <app-search-result-thumbnail
+                        #businessCard
+                        [businessDetails]="watchOurPitchBusiness"
+                        [scale]="(isMobile || (isTablet && isPortraitMode)) ? 0.9 : (isBigPC? 0.6 : innerWidth * 0.0004)"
+                        (isVideoLoaded)="setupCard()"
+                        (companyImages)="handlePitchCardTitleClick($event)">
+                    </app-search-result-thumbnail>
+                </div>
+                <div class="grid align-items-center w-full" *ngIf="isMobile || (isTablet && isPortraitMode)"
+                     [ngClass]="{'mt-6': bannerConfig.type === BannersTypesEnum.MainBanner, 'justify-content-around': isMobile || (isTablet && isPortraitMode)}">
+                    <div class="" [ngClass]="{'col-6': bannerConfig.type === BannersTypesEnum.ResumeBanner || bannerConfig.type === BannersTypesEnum.BusinessBanner, 'col-9': bannerConfig.type === BannersTypesEnum.MainBanner}">
+                        <button class="text-sm button-simple full-width no-padding font-bold"
+                                [ngClass]="{'shock-pink': bannerConfig.type === BannersTypesEnum.MainBanner,
+                                    'resume-g6t-bg': bannerConfig.type === BannersTypesEnum.ResumeBanner,
+                                    'business-g6t-bg': bannerConfig.type === BannersTypesEnum.BusinessBanner}"
+                                (click)='createBusiness(bannerConfig.createBtnLink, false)'>
+                            {{bannerConfig.createBtnText}}
+                        </button>
+                    </div>
+
+                    <div class="col-6" *ngIf="bannerConfig.type !== BannersTypesEnum.MainBanner">
+                        <button class="text-sm button-simple full-width no-padding border-2 bg-transparent font-bold"
+                                [ngClass]="{'gradient-border basic-g6t': bannerConfig.type === BannersTypesEnum.BusinessBanner}"
+                                (click)="setOutputAction(bannerConfig.secondaryLink, false)">
+                            {{bannerConfig.secondaryBtnText}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section"  [ngClass]="{'top-down-gradient3': isMobile || (isTablet && isPortraitMode)}">
+    <div class="welcome-container intro-block">
+        <p class="text-center ext-white mb-7" [ngClass]="{'text-base': isMobile, 'text-4xl': isDesktop}">
+            Join the
+            <span class="business-title line-height-1">thousands</span>
+            getting PitchCards</p>
+
+        <div class="grid justify-content-between align-content-center partners-list" [ngClass]="{'-ml-5 -mr-5': isDesktop, 'ml-2 mr-2': isMobile}">
+            <div class="grid justify-content-center align-content-center no-padding no-margins"
+            *ngFor="let partner of partnersListUrls">
+                <img [src]="partner.url" [alt]="partner.title" [ngClass]="{'img-highheight': partner.highheight}">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<app-pitchcard-modals-wrapper
+    [uniqueId]="uniqueId"
+></app-pitchcard-modals-wrapper>
+
+
+

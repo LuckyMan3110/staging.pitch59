@@ -1,0 +1,237 @@
+// Colors
+$white: #fff;
+$welcome-title: #151414;
+$welcome-hero-link: #25afb5;
+$cardPrice: #4d4d4d;
+$backgroundGray: #f2f2f2;
+$borderGray: #ccc;
+$bodyBgColor: #ddd;
+$pale-blue: #f5f8fa;
+$pitch-blue: #e1f0f4;
+$catskill-white: #e0eef0;
+$app-gradient: #074c7b;
+$smart-blue: #577b8e;
+$reviews: #eaf6f9;
+$mainContentBgColor: #eee;
+$secColor: #3a93bf;
+$topBarBgColor: #009688;
+$topBarItemHoverBgColor: #00877b;
+$linkColor: #25afb5;
+$headerEmailColor: #777;
+$topBarTextColor: $white;
+$signupbtn: #0b0817;
+$titleColor: #47b5b7;
+$borderColor: #dcdcdc;
+$NotFoundColor: #729caa;
+$tableRowHoverColor: #f3fbfb;
+$sidebarBgColor: #222d32;
+$sidebarMenuTextColor: #ddd;
+$sideBarHoverBgColor: #1c1f22;
+$sidebarMenuHoverTextColor: $white;
+$signInBgColor: #009688;
+$headerFontSize: 24px;
+$buttonDefaultTextColor: $white;
+$buttonDefaultBgColor: #02aab0;
+$pageHeaderBgColor: #ddd;
+$panelDivBgColor: $white;
+$footerBgColor: #fafafa;
+$footerMenuColor: #7d7d7d;
+$loginHeadingColor: #007a9b;
+$labelColor: #3f4349;
+$infoLabelColor: #3d4246;
+$headingColor: $labelColor;
+$hrColor: #bababa;
+$anchorColor: #1b7be3;
+
+//Status Color
+$draft: rgb(228, 226, 226);
+$pending: rgb(240, 241, 137);
+$active: rgb(121, 245, 131);
+$rejected: rgb(247, 86, 113);
+$paused: #e8ad01;
+
+// Forms
+
+$formFieldTopBottomMargin: 6px;
+$formFieldLeftRightMargin: 0;
+$inputFieldsBgColor: $white;
+$inputFieldBorderColor: #e7e7e7;
+$inputTextHeight: 30px;
+$countColor: #c0c2c4;
+
+$redShadeColor: #f04a49;
+
+// Pring NG
+
+$fontFamily: 'Lato', sans-serif;
+$fontSize: 14px;
+$borderRadius: 2px;
+$disabledOpacity: 0.35;
+
+// Header
+$headerBorderWidth: 1px;
+$headerBorderColor: $white;
+$headerBgColor: $white;
+$headerTextColor: #444;
+$headerFontWeight: bold;
+$headerIconTextColor: #444;
+
+// Content
+$contentBorderWidth: 1px;
+$contentBorderColor: #ddd;
+$contentBgColor: $white;
+$contentTextColor: #444;
+
+// Default State
+$stateDefaultBorderWidth: 1px;
+$stateDefaultBorderColor: #ddd;
+$stateDefaultBgColor: #f6f6f6;
+$stateDefaultTextColor: #25afb5;
+
+// Active State
+$stateActiveBorderColor: #ddd;
+$stateActiveBgColor: $white;
+$stateActiveTextColor: #25afb5;
+
+// Highlight State
+$stateHighlightBorderColor: #25afb5;
+$stateHighlightBgColor: #25afb5;
+$stateHighlightTextColor: $white;
+
+// Focus State
+$stateFocusBorderColor: #25afb5;
+$stateFocusBgColor: #25afb5;
+$stateFocusTextColor: $white;
+
+// Error State
+$stateErrorBorderColor: #ddd;
+$stateErrorBgColor: $white;
+$stateErrorTextColor: #ff3366;
+
+// Hover State
+$stateHoverBorderColor: #25afb5;
+$stateHoverBgColor: #25afb5;
+$stateHoverTextColor: $white;
+
+// Forms
+$inputBgColor: $white;
+$inputTextColor: #444;
+$invalidInputBorderColor: #ff3366;
+
+// Glow messages
+$growlMessageErrorColor: #f44336;
+$growlMessageSuccessColor: #4caf50;
+
+// Grid
+$gridHeaderTextColor: $white;
+$gridHeaderBgColor: $topBarBgColor;
+$gridHeaderBorderColor: $topBarBgColor;
+$gridBtnColorDanger: #d9534f;
+$gridBtnColorDangerFocus: #c9302c;
+$gridBtnColorSuccess: #5cb85c;
+$gridBtnColorSuccessFocus: #449d44;
+$loaderBgColor: transparent;
+
+// business
+
+$BgBackColor: #f9f9f9;
+$bgFileUpload: #9e9e9e;
+$InputSwitchOn: #39b54a;
+$InputSwitchOff: #34aa44;
+$myBusinessBorder: #adadbd;
+$mybusinessNewCustomer: #d45161;
+$mybusinessReview: #f5c023;
+$payNowbtn: #e54256;
+$toastBgColor: #ff3366;
+$black: #000;
+$starIconColor: #f5a623;
+$swiperOverlay: #2d3149;
+$cardBusinessName: #616161;
+$review: #ff9800;
+$smsColor: #007a9b;
+$resumeCardColor: #d52c2c;
+$serviceCardColor: #f7ce37;
+$jobCardColor: #28b256;
+
+// mainSection
+$bordersSection: #707070;
+$sectionShadow: 0px 4px 8px #00000080;
+$calendlyActive: #43a5ea;
+$calendlyActiveBg: #f0fbff;
+
+//Teams layout
+$textColor: #666363;
+$activeColor: #25afb5;
+$placeHolder: #c4c4c4;
+$logoBtnBgColor: #cecece;
+$teamMainDiscountColor: #1171b5;
+$teamMainBorderColor: #25aeb4;
+$profileItem: #646363;
+$tableTextColor: #a9a9a9;
+
+$containerWidth: 1280px;
+
+$promoCodeBadge: #b74aea;
+
+// Gradient colors
+
+$basicGradientColor: linear-gradient(
+                to right,
+                #4ab7b9,
+                #21939d,
+                #21939d,
+                #4ab7b9
+);
+$jobGradientColor: linear-gradient(
+                to right,
+                #25d56c,
+                #30b956,
+                #30b956,
+                #25d56c
+);
+$resumeGradientColor: linear-gradient(
+                to right,
+                #e23d49,
+                #cf2a32,
+                #cf2a32,
+                #e23d49
+);
+$nonprofitGradientColor: linear-gradient(
+                to right,
+                #fadd5b,
+                #f5c827,
+                #f5c827,
+                #fadd5b
+);
+
+$shockPinkGradientColor: linear-gradient(90deg, #f160d9 14%, #7630fb 100%);
+
+$jobGradient: linear-gradient(91.64deg, #1dff85 4.97%, #0b9128 105.09%);
+$resumeGradient: linear-gradient(91deg, #ef475f 5.86%, #d00d60 96.83%);
+$serviceGradient: linear-gradient(93.24deg, #ffe77e 5.05%, #f6c929 112.34%);
+$basicGradient: linear-gradient(90.81deg, #7cdee3 9.35%, #0f81d9 108.57%);
+$productGradient: linear-gradient(93.24deg, #a16df8 15.4%, #591fff 109.44%);
+
+$webkitWhiteMask: linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+$jobWebkitG6t: -webkit-linear-gradient(
+                91.64deg,
+                #1dff85 4.97%,
+                #0b9128 105.09%
+);
+$resumeWebkitG6t: -webkit-linear-gradient(91deg, #ef475f 5.86%, #d00d60 96.83%);
+$basicWebkitG6t: -webkit-linear-gradient(
+                90.81deg,
+                #7cdee3 9.35%,
+                #0f81d9 108.57%
+);
+$serviceWebkitG6t: -webkit-linear-gradient(
+                93.24deg,
+                #ffe77e 5.05%,
+                #f6c929 112.34%
+);
+$productWebkitG6t: -webkit-linear-gradient(
+                93.24deg,
+                #a16df8 15.4%,
+                #591fff 109.44%
+);

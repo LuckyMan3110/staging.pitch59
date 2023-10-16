@@ -1,0 +1,40 @@
+.bank-account-thumbnail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 8px;
+
+    img {
+        width: 80px;
+        padding-bottom: 8px;
+    }
+
+    .account-data {
+        font-size: 16px;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+
+        &-titles {
+            display: flex;
+            flex-direction: column;
+
+            span {
+                font-weight: bold;
+                line-height: 1.42;
+            }
+        }
+
+        &-values {
+            display: flex;
+            flex-direction: column;
+
+            span {
+                line-height: 1.42;
+                letter-spacing: 1px;
+            }
+        }
+    }
+}

@@ -1,0 +1,157 @@
+.sign-up-wrapper {
+  .signin-sub {
+    min-height: 84vh;
+
+    .dis-flex {
+      align-items: center;
+      display: flex;
+    }
+
+    .sign-up-box {
+      width: 100%;
+
+      .primary-btn {
+        margin-top: 20px;
+      }
+    }
+  }
+
+  .sign-up-box {
+    background-color: $white;
+    padding: 0 20px 20px;
+
+    .heading {
+      color: $loginHeadingColor;
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .para {
+      font-size: 16px;
+
+      &.para-margin {
+        margin: 20px 0 60px;
+      }
+    }
+
+    .logo img {
+      width: 100%;
+      max-width: 244px;
+    }
+
+    .primary-btn {
+      width: 100%;
+    }
+
+    .emailaddress {
+      color: $labelColor;
+      font-size: 16px;
+      font-weight: 500;
+      margin: 6px 0 40px;
+    }
+  }
+
+  .img-wrap {
+    background: url('/assets/images/login-bg.png') no-repeat;
+    background-size: cover;
+    height: 100%;
+  }
+
+  .link {
+    color: $anchorColor;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 0.1px;
+  }
+}
+
+.signup-box-wrap {
+  &.new-box {
+    padding-left: 22px;
+    padding-top: 53px;
+
+    .video-wrap {
+      position: relative;
+
+      .big-video {
+        left: 45%;
+        position: absolute;
+        top: 40%;
+      }
+
+      .video-overlay {
+        background: rgba(#000, 0.34);
+        height: 100%;
+        position: absolute;
+        width: 100%;
+      }
+    }
+
+    img {
+      width: 100%;
+    }
+
+    .heading {
+      color: #394143;
+      font-size: 24px;
+      font-weight: 500;
+      padding: 25px 0;
+    }
+
+    .para {
+      color: $labelColor;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+  }
+}
+
+@media (max-width: 1600px) {
+  .sign-up-wrapper {
+    .sign-up-box {
+      padding: 0 20px 20px;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .sign-up-wrapper {
+    .sign-up-box {
+      padding: 0 20px 20px;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .sign-up-wrapper {
+    .sign-up-box {
+      padding: 0 20px 20px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .sign-up-wrapper {
+    .signin-sub {
+      min-height: auto;
+    }
+
+    .displaynone {
+      display: none;
+    }
+  }
+
+  .signup-box-wrap {
+    &.new-box {
+      padding-left: 0;
+    }
+  }
+}
+
+@media (max-width: 410px) {
+  .sign-up-wrapper {
+    img {
+      width: 100%;
+    }
+  }
+}

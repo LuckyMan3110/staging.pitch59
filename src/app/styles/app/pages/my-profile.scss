@@ -1,0 +1,203 @@
+$profileItem: #646363;
+$additionalInfo: #c4c4c4;
+
+.profile-wrap {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: $white;
+  padding: 10px 10px 10px 20px;
+  border-radius: 0.5em;
+  border-right: 1px solid $borderGray;
+  color: $black;
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid $borderGray;
+    padding-bottom: 5px;
+
+    h3 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .welcome-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: $titleColor;
+      width: 100%;
+
+      .settings {
+        width: 25px;
+        height: 25px;
+        background-image: url('/assets/images/my-account-images/profile-sidebar-images/settings-sidebar.svg');
+        background-repeat: no-repeat;
+        background-size: initial;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      .add-new-pitchcard-mob {
+        justify-content: center;
+        align-items: center;
+        width: 20px;
+        height: 20px;
+        background: linear-gradient(
+                        91.23deg,
+                        #f160d9 14.2%,
+                        #7630fb 100%
+        );
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 4px;
+        color: white;
+        display: none;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .full-name {
+      color: $profileItem;
+      font-size: 1rem;
+    }
+
+    .email {
+      color: $additionalInfo;
+      font-size: 0.9rem;
+    }
+
+    .loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 34px;
+
+      > i {
+        font-size: 2em;
+      }
+    }
+  }
+
+  .body {
+    position: relative;
+    margin-top: 20px;
+
+    .menu-item {
+      margin-bottom: 15px;
+
+      .menu-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &.disable-on-mob {
+          justify-content: flex-start;
+
+          a {
+            pointer-events: none;
+          }
+
+          span.pi-desktop {
+            font-size: 1rem;
+            margin-left: 5px;
+          }
+        }
+      }
+
+      .add-new-pitchcard {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 20px;
+        height: 20px;
+        background: linear-gradient(
+                        91.23deg,
+                        #f160d9 14.2%,
+                        #7630fb 100%
+        );
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 4px;
+        color: white;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      text-transform: capitalize;
+      font-size: 1rem;
+      text-decoration: none;
+      color: $profileItem;
+      font-weight: 600;
+
+      &:hover {
+        color: $titleColor;
+        cursor: pointer;
+      }
+
+      .list-style {
+        margin-right: 10px;
+        width: 20px;
+      }
+
+      &.active {
+        color: $titleColor;
+      }
+
+      &.hide {
+        display: none;
+      }
+    }
+
+    .collapse-button {
+      position: absolute;
+      right: 7px;
+      bottom: 0;
+
+      i {
+        color: $borderGray;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .profile-wrap .body .menu-item .add-new-pitchcard {
+    display: none;
+  }
+  .profile-wrap .header .welcome-row .add-new-pitchcard-mob {
+    display: flex;
+    margin-right: 4px;
+  }
+  .profile-wrap .body {
+    margin-top: 10px;
+
+    .menu-item {
+      margin-bottom: 0;
+
+      a {
+        height: 29px;
+      }
+    }
+  }
+
+  .mb-15 {
+    margin-bottom: 15px !important;
+  }
+  .bottom-indent {
+    bottom: 7px !important;
+  }
+}

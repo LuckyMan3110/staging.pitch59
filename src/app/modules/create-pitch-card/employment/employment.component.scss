@@ -1,0 +1,123 @@
+:host {
+    width: 100%;
+}
+
+p {
+    margin: 0;
+}
+
+.step-form {
+    h1 {
+        margin-top: 0;
+
+        @media (max-width: 767px) {
+            display: none;
+        }
+    }
+}
+
+.layout-card {
+    padding: 10px;
+
+    h2:first {
+        margin-top: 0;
+    }
+}
+
+.auto-complete-section {
+    .p-autocomplete-multiple-container {
+        width: 100%;
+    }
+}
+
+.p-state-default {
+  border: 1px solid #ddd;
+  // background-color: #F6F6F6;
+  color: #e7ac28;
+}
+
+.for-dropdown {
+  display: inline-flex !important;
+  position: relative !important;
+  width: auto !important;
+  cursor: pointer !important;
+  border: 1px solid #ddd !important;
+}
+
+.uploaded-file-icon {
+    height: 32px;
+    margin: 0 0.5rem;
+}
+
+.resume-header {
+    margin-bottom: 0;
+}
+
+.pdf-block {
+    display: flex;
+    flex-direction: column;
+    .supported-formats {
+        margin: 0.5rem;
+    }
+}
+
+.pdf-block-name {
+    align-items: center;
+    display: flex;
+}
+
+.pi.pi-file-pdf {
+  color: #ff3366;
+  font-size: 2.4rem;
+}
+
+.pdf-filename {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.p-dialog-title,
+.p-dialog-titlebar {
+  font-size: 5rem;
+}
+
+.delete-image-button {
+    font-weight: 900;
+    cursor: pointer;
+}
+.p-dialog-content {
+    height: 100%;
+}
+
+.employment-dropdown-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 3rem;
+
+    @media screen and (max-width: 767px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.employment-dropdown-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.resume-dialog.p-dialog {
+    .p-dialog-content {
+        height: 100%;
+    }
+    .image-resume-preview {
+        display: flex;
+        justify-content: center;
+        overflow-y: auto;
+        img {
+            width: max-content;
+        }
+    }
+}
+
+.p-autocomplete-input-token {
+    width: 100%;
+}

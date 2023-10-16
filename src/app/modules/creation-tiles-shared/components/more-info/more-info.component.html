@@ -1,0 +1,370 @@
+<div class="step-form pricing-wrapper" *ngIf="pricingForm">
+  <h1 (click)="getPayload()">
+    {{ pitchcardType ? 'More Information' : 'Pricing/Hours' }}
+  </h1>
+  <form [formGroup]="pricingForm" class="layout-card pricing-from">
+    <app-business-hours
+        *ngIf="
+                pitchcardType !== pitchCardTypes.Resume &&
+                pitchcardType !== pitchCardTypes.Job &&
+                pitchcardType !== pitchCardTypes.EmployerPortal
+            "
+        [(workingHours)]="pricingForm.value.workingHours"
+        (formChange)="updateBusinessHoursForm($event)"
+    ></app-business-hours>
+    <div>
+      <h3
+          *ngIf="
+                    pitchcardType === pitchCardTypes.Basic ||
+                    pitchcardType === pitchCardTypes.Employee
+                "
+      >
+        {{
+        pitchcardType === pitchCardTypes.Employee
+            ? 'What services does your company provide?'
+            : 'What services do you provide?'
+        }}
+        *
+      </h3>
+      <h3
+          *ngIf="
+                    pitchcardType === pitchCardTypes.EmployerPortal ||
+                    pitchcardType === pitchCardTypes.Job
+                "
+      >
+        What industry are you in? *
+      </h3>
+      <span
+          class="p-float-label categories-input"
+          *ngIf="
+                    pitchcardType === pitchCardTypes.Basic ||
+                    pitchcardType === pitchCardTypes.Employee
+                "
+      >
+                <p-autoComplete
+                    #tags
+                    formControlName="businessTags"
+                    [suggestions]="tagsSuggestions"
+                    (completeMethod)="suggestTags($event)"
+                    (keypress)="applyUserTag($event)"
+                    (keyup.enter)="applyUserTag($event)"
+                    (onHide)="applyUserTag(null)"
+                    (onSelect)="clickOnTagItem($event)"
+                    (onFocus)="moveInputToTop($event)"
+                    (onShow)="updateHeight(tags)"
+                    (onBlur)="service.tileRequiredState = pricingForm.valid"
+                    [minLength]="3"
+                    placeholder="Category Tags"
+                    field="name"
+                    [multiple]="true"
+                >
+                    <ng-template let-selectedTag pTemplate="selectedItem">
+                        <span
+                            class="p-autocomplete-token-label"
+                            [ngStyle]="{
+                                backgroundColor:
+                                    (selectedTag.status === 1 ||
+                                        !selectedTag.id) &&
+                                    '#bab8b8'
+                            }"
+                        >
+                            {{ selectedTag.name }}
+                        </span>
+                    </ng-template>
+                    <ng-template let-tag pTemplate="item">
+                        <p-checkbox
+                            name="tagItem"
+                            [label]="tag.name"
+                            [value]="false"
+                            [binary]="true"
+                            (onChange)="clickOnTagItem($event, tag)"
+                        ></p-checkbox>
+                    </ng-template>
+                </p-autoComplete>
+                <div
+                    class="error-sign tag-error"
+                    *ngIf="
+                        pricingForm.controls.businessTags.errors &&
+                        pricingForm.controls.businessTags.touched
+                    "
+                >
+                    {{
+                  'err_required_subcaetgory_of_selected_categ' | translate
+                  }}
+                </div>
+                <div
+                    class="error-sign tag-error"
+                    *ngIf="showNotApprovedTagsMessage('businessTags')"
+                >
+                    Gray category tags will be submitted for approval.
+                </div>
+            </span>
+
+      <span
+          class="p-float-label categories-input"
+          *ngIf="
+                    pitchcardType === pitchCardTypes.Job ||
+                    pitchcardType === pitchCardTypes.EmployerPortal
+                "
+      >
+                <p-multiSelect
+                    styleClass="new-multiselect-gold sm"
+                    [options]="
+                        pitchcardType === pitchCardTypes.Employee
+                            ? tagsSuggestions
+                            : industrySuggestions
+                    "
+                    [filter]="false"
+                    [showHeader]="false"
+                    [showToggleAll]="false"
+                    (onChange)="service.tileRequiredState = pricingForm.valid"
+                    (onBlur)="
+                        updateFieldOnBlur(
+                            pitchcardType === pitchCardTypes.Employee
+                                ? 'businessTags'
+                                : 'industries'
+                        )
+                    "
+                    (onPanelHide)="
+                        updateFieldOnBlur(
+                            pitchcardType === pitchCardTypes.Employee
+                                ? 'businessTags'
+                                : 'industries'
+                        )
+                    "
+                    optionLabel="name"
+                    ariaFilterLabel="Select All"
+                    filterPlaceHolder="Select All"
+                    [formControlName]="
+                        pitchcardType === pitchCardTypes.Employee
+                            ? 'businessTags'
+                            : 'industries'
+                    "
+                    [defaultLabel]="
+                        pitchcardType !== pitchCardTypes.Employee
+                            ? 'Select your industry *'
+                            : 'Category Tags *'
+                    "
+                >
+                </p-multiSelect>
+
+                <div
+                    class="error-sign tag-error"
+                    *ngIf="
+                        pricingForm.controls.industries.errors &&
+                        pricingForm.controls.industries.touched
+                    "
+                >
+                    Please select at least one industry tag
+                </div>
+
+        <!--        <div class="error-sign tag-error"-->
+        <!--             *ngIf="pricingForm.controls.businessTags.errors && pricingForm.controls.businessTags.touched">-->
+        <!--          {{ 'err_required_subcaetgory_of_selected_categ' | translate }}-->
+        <!--        </div>-->
+            </span>
+    </div>
+    <h3>Your Links (Optional)</h3>
+    <div class="social-grid-block">
+      <div
+          class="social-wrapper"
+          *ngIf="pitchcardType === pitchCardTypes.Resume"
+      >
+        <img
+            src="/assets/images/website.svg"
+            class="calendar-icon"
+            alt="website"
+        />
+        <span class="p-float-label">
+                    <!--           (input)="formatSocialIdInput($event.target.value, 'website')"-->
+          <!--           (blur)="clearIfInvalid('website')"-->
+                    <input
+                        [ngClass]="{
+                            'ng-dirty': pricingForm.controls.websiteLink.errors
+                        }"
+                        class="new-input-blue float-input"
+                        id="websiteLink"
+                        type="text"
+                        pInputText
+                        appNoWhiteSpace
+                        formControlName="websiteLink"
+                    /><label for="websiteLink"
+        >Enter your website page link...</label
+        >
+                </span>
+      </div>
+      <div class="social-wrapper">
+        <img
+            src="/assets/images/schedule-outline.svg"
+            class="calendar-icon"
+            alt="calendar"
+        />
+        <span class="p-float-label">
+                    <!--          (input)="formatSocialIdInput($event.target.value, 'calendar')"-->
+          <!--          (blur)="clearIfInvalid('calendar')"-->
+                    <input
+                        [ngClass]="{
+                            'ng-dirty': pricingForm.controls.calendarLink.errors
+                        }"
+                        class="new-input-blue float-input"
+                        id="calendarLink"
+                        type="text"
+                        pInputText
+                        appNoWhiteSpace
+                        formControlName="calendarLink"
+                    /><label for="calendarLink"
+        >Enter your calendar page link...</label
+        >
+                </span>
+      </div>
+      <div class="social-wrapper">
+        <img
+            src="/assets/images/pitch-card-svg/facebook-icon.svg"
+            alt="facebook"
+        />
+        <span class="p-float-label">
+                    <!--          (input)="formatSocialIdInput($event.target.value, 'facebook')"-->
+          <!--          (blur)="clearIfInvalid('facebook')"-->
+                    <input
+                        [ngClass]="{
+                            'ng-dirty': pricingForm.controls.facebookLink.errors
+                        }"
+                        class="new-input-blue float-input"
+                        style="text-transform: lowercase"
+                        id="facebookLink"
+                        type="text"
+                        pInputText
+                        appNoWhiteSpace
+                        formControlName="facebookLink"
+                    /><label for="hours"
+        >Enter your Facebook page link...</label
+        >
+                </span>
+      </div>
+      <div class="social-wrapper">
+        <img
+            src="/assets/images/pitch-card-svg/twitter-icon.svg"
+            alt="twitter"
+        />
+        <span class="p-float-label">
+                    <!--          (input)="formatSocialIdInput($event.target.value, 'twitter')"-->
+          <!--          (blur)="clearIfInvalid('twitter')"-->
+                    <input
+                        [ngClass]="{
+                            'ng-dirty': pricingForm.controls.twitterLink.errors
+                        }"
+                        class="new-input-blue float-input"
+                        style="text-transform: lowercase"
+                        id="twitterLink"
+                        type="text"
+                        pInputText
+                        appNoWhiteSpace
+                        formControlName="twitterLink"
+                    /><label for="hours">Enter your Twitter page link...</label>
+                </span>
+      </div>
+      <div class="social-wrapper">
+        <img
+            src="/assets/images/pitch-card-svg/instagram-icon.svg"
+            alt="instagram"
+        />
+        <span class="p-float-label">
+                    <!--          (input)="formatSocialIdInput($event.target.value, 'instagram')"-->
+          <!--          (blur)="clearIfInvalid('instagram')"-->
+                    <input
+                        [ngClass]="{
+                            'ng-dirty':
+                                pricingForm.controls.instagramLink.errors
+                        }"
+                        class="new-input-blue float-input"
+                        style="text-transform: lowercase"
+                        id="instagramLink"
+                        type="text"
+                        pInputText
+                        appNoWhiteSpace
+                        formControlName="instagramLink"
+                    /><label for="hours"
+        >Enter your Instagram page link...</label
+        >
+                </span>
+      </div>
+      <div class="social-wrapper">
+        <img
+            src="/assets/images/pitch-card-svg/linkedin-icon.svg"
+            alt="linkedin"
+        />
+        <span class="p-float-label">
+                    <!--          (input)="formatSocialIdInput($event.target.value, 'linkedin')"-->
+          <!--          (blur)="clearIfInvalid('linkedin')"-->
+                    <input
+                        [ngClass]="{
+                            'ng-dirty': pricingForm.controls.linkedinLink.errors
+                        }"
+                        class="new-input-blue float-input"
+                        style="text-transform: lowercase"
+                        id="linkedinLink"
+                        type="text"
+                        pInputText
+                        appNoWhiteSpace
+                        formControlName="linkedinLink"
+                    /><label for="hours"
+        >Enter your LinkedIn page link...</label
+        >
+                </span>
+      </div>
+      <div
+          class="social-wrapper"
+          *ngIf="pitchcardType !== pitchCardTypes.Resume"
+      >
+        <img
+            src="/assets/images/pitch-card-svg/pinterest-icon.svg"
+            alt="pinterest"
+        />
+        <span class="p-float-label">
+                    <!--          (input)="formatSocialIdInput($event.target.value, 'pinterest')"-->
+          <!--          (blur)="clearIfInvalid('pinterest')"-->
+                    <input
+                        [ngClass]="{
+                            'ng-dirty':
+                                pricingForm.controls.pinterestLink.errors
+                        }"
+                        class="new-input-blue float-input"
+                        style="text-transform: lowercase"
+                        id="pinterestLink"
+                        type="text"
+                        pInputText
+                        appNoWhiteSpace
+                        formControlName="pinterestLink"
+                    /><label for="hours"
+        >Enter your Pinterest page link...</label
+        >
+                </span>
+      </div>
+    </div>
+    <div class="form-control">
+      <label for="description">
+        <h3 class="mb-2">
+          {{
+          pitchcardType === pitchCardTypes.Job ||
+          pitchcardType === pitchCardTypes.EmployerPortal
+              ? 'Organization Information (Optional)'
+              : pitchcardType === pitchCardTypes.Resume ||
+              pitchcardType === pitchCardTypes.Employee
+                  ? 'Your Bio'
+                  : 'Your Information (Optional)'
+          }}
+        </h3>
+      </label>
+
+      <p-editor
+          formControlName="description"
+          class="w-12"
+          #editor
+          [styleClass]="'pitch-editor'"
+          [placeholder]="descriptionPlaceholder"
+          (onTextChange)="updateFieldOnType($event)"
+      >
+      </p-editor>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,702 @@
+.add-business-form {
+  .primary-btn,
+  .secondary-btn {
+    &.full-width {
+      width: 100%;
+    }
+  }
+
+  &.step-two-form {
+    .sub-para {
+      a {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .video-title {
+    color: $titleColor;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .right-margin-30 {
+    margin-right: 30px;
+  }
+
+  .align-inline-info-icon {
+    position: relative;
+
+    p-multiselect {
+      width: 100%;
+    }
+
+    .info-circle {
+      cursor: pointer;
+      position: absolute;
+      right: -23px;
+      top: 16px;
+
+      .fa {
+        color: $titleColor;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .category-note-text {
+    font-size: 10px;
+    margin-top: 5px;
+  }
+
+  .alias-warn-text {
+    font-size: 10px;
+    margin-top: 5px;
+    color: #ff0000;
+  }
+
+  .count {
+    color: $countColor;
+    float: right;
+    font-size: 12px;
+    margin: 0;
+  }
+
+  .box-wrap {
+    background-color: $white;
+    border: solid 1px $inputFieldBorderColor;
+    border-radius: 4px;
+    box-shadow: none;
+
+    .label {
+      color: $labelColor;
+      font-size: 14px;
+    }
+
+    .para {
+      font-size: 16px;
+    }
+
+    .doller {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .rules-text {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .img-thumb {
+      border: solid 1px $myBusinessBorder;
+      border-radius: 4px;
+      height: 150px;
+      position: relative;
+
+      &.cover-image-upload {
+        width: 100%;
+      }
+
+      &.logo-business {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
+
+      &.img-size {
+        height: 89px;
+        width: 119px;
+
+        .business-details-logo {
+          .image-file-uploader {
+            height: 120px;
+            width: 100%;
+          }
+        }
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+
+        &.border50 {
+          border-radius: 4px;
+        }
+      }
+
+      .business-logo {
+        height: auto;
+        max-height: 100%;
+        max-width: 100%;
+        position: absolute;
+        width: auto;
+      }
+
+      &.file-upload {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    .num {
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    .usd-text {
+      color: #bababa;
+    }
+
+    .bold-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .sub-txt-para {
+      color: #7d7d7d;
+    }
+
+    .paragraph {
+      line-height: 1.5;
+      padding-left: 15px;
+      padding-top: 0;
+    }
+
+    .sub-head {
+      color: $titleColor;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .link-text {
+      display: inline-block;
+      color: #3f4349;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 10px 0;
+      text-decoration: underline;
+    }
+
+    .delete-video-trash {
+      margin-left: 10px;
+
+      .fa {
+        color: $titleColor;
+      }
+    }
+
+    .sub-para {
+      color: #b2b2b1;
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0;
+
+      a {
+        color: $titleColor;
+      }
+    }
+
+    .overlay-camera {
+      align-items: center;
+      background: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      opacity: 1;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      &.bg-transparent {
+        background: transparent;
+      }
+
+      .add-logo {
+        color: $white;
+        font-weight: 600;
+        left: 0;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: 41%;
+
+        .fa-camera {
+          color: $white;
+          font-size: 28px;
+        }
+
+        &.remove-text {
+          font-size: 16px;
+          top: 31%;
+        }
+
+        .remove-para {
+          font-size: 16px;
+          font-weight: normal;
+          text-decoration: underline;
+        }
+      }
+
+      .fa-trash {
+        color: $white;
+        font-size: 13px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    }
+  }
+
+  .text {
+    cursor: pointer;
+    font-size: 13px;
+
+    &.big-font {
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  }
+
+  .text-save {
+    color: $titleColor;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 10px;
+  }
+
+  .text-para {
+    color: $hrColor;
+    font-size: 13px;
+  }
+
+  .title {
+    color: $labelColor;
+    font-size: 26px;
+    font-weight: 500;
+  }
+
+  .payment-input {
+    position: relative;
+
+    input {
+      background-color: #fff2cc;
+    }
+
+    label {
+      position: absolute;
+      right: 12px;
+      top: 16px;
+    }
+  }
+
+  .upload-video-sec {
+    .p-button {
+      &.p-state-default {
+        background: transparent;
+        border: 0;
+        color: $white;
+        font-size: 26px;
+        z-index: 9999999;
+      }
+    }
+
+    p-fileupload {
+      .p-button-icon-left {
+        z-index: -1;
+      }
+
+      .p-fileupload-buttonbar {
+        background: transparent;
+        border: 0;
+      }
+    }
+  }
+
+  .company-image {
+    .img-thumb {
+      height: 200px;
+
+      img {
+        height: 100%;
+      }
+
+      .overlay-camera {
+        display: none;
+      }
+
+      &:hover {
+        .overlay-camera {
+          display: flex;
+        }
+      }
+
+      &.mi-responsive-image {
+        border: 0;
+        height: 150px;
+        max-height: 150px;
+
+        img {
+          border: solid 1px $myBusinessBorder;
+          border-radius: 4px;
+          height: auto;
+          max-height: 100%;
+          max-width: 100%;
+          width: auto;
+        }
+      }
+    }
+
+    .upload-btn-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .upload-btn {
+        background: transparent;
+        border: 0;
+        color: $hrColor;
+        font-size: 26px;
+        z-index: 999;
+      }
+    }
+
+    p-fileupload {
+      z-index: 999;
+
+      .p-button {
+        &.p-state-default {
+          background: transparent;
+          border: 0;
+          color: $hrColor;
+          font-size: 26px;
+          z-index: 999;
+        }
+      }
+
+      .p-button-icon-left {
+        z-index: -1;
+      }
+    }
+  }
+
+  .div-wrap {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    padding-right: 25px;
+  }
+
+  .card-details {
+    border: 1px solid $inputFieldBorderColor;
+    border-left: 0;
+    border-right: 0;
+    display: flow-root;
+    padding: 24px 0;
+
+    .card-img {
+      float: right;
+      width: 50px;
+    }
+
+    .card-number {
+      color: $labelColor;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+  }
+
+  .add-card-text {
+    color: $titleColor;
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-decoration: underline;
+
+    .new-card-main {
+      margin: 0;
+    }
+
+    .add-card-div {
+      text-decoration: underline;
+
+      .add-card-btn {
+        background: transparent;
+        border: 0;
+        color: $titleColor;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 0;
+
+        .p-button-text {
+          padding: 0;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .edit-form-info {
+    .name {
+      color: #bababa;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .val {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  .payment-steps {
+    margin-bottom: 25px;
+
+    .head {
+      font-size: 15px;
+      margin-bottom: 6px;
+      text-transform: capitalize;
+    }
+
+    .para {
+      font-size: 13px;
+    }
+
+    .error-required {
+      margin-left: 7px;
+    }
+
+    .inline-element {
+      display: flex;
+      align-items: center;
+
+      .title {
+        font-size: 18px;
+        margin-right: 5px;
+      }
+    }
+
+    .pl-25 {
+      padding-left: 25px;
+      line-height: 18px;
+    }
+  }
+}
+
+p-slider {
+  .p-dialog-header {
+    background-color: #25afb5;
+  }
+
+  .p-state-default {
+    background-color: #25afb5;
+  }
+}
+
+.business-detail {
+  p-fileupload {
+    z-index: 999;
+
+    .p-button {
+      &.p-state-default {
+        background: transparent;
+        border: 0;
+        z-index: 9999;
+      }
+    }
+
+    .p-fileupload-buttonbar {
+      background: transparent;
+      border: 0;
+    }
+
+    .p-button-icon-left {
+      display: none;
+    }
+  }
+
+  .img-uploader {
+    .image-file-uploader {
+      cursor: pointer;
+      left: 30%;
+      position: absolute;
+      top: 45%;
+    }
+  }
+
+  .fa-camera {
+    cursor: pointer;
+  }
+
+  .mi-multiselect {
+    .p-multiselect-panel {
+      .p-checkbox-box {
+        &.p-state-active {
+          color: #fff;
+          border: 1px solid #fff;
+        }
+      }
+    }
+  }
+}
+
+.upload-file {
+  .p-fileupload-buttonbar {
+    background: transparent;
+    border: 0;
+  }
+
+  .p-button {
+    &.p-state-default {
+      background: transparent;
+      border: 0;
+    }
+  }
+
+  .p-button-icon-left {
+    display: none;
+  }
+}
+
+.videowrapper {
+  clear: both;
+  float: none;
+  height: 240px;
+  margin-top: 15px;
+  padding-bottom: 54.25%;
+  position: relative;
+  width: 100%;
+
+  iframe {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.business-upload-video {
+  .add-business-form {
+    .box-wrap {
+      box-shadow: none;
+      border: 0;
+      padding: 0;
+    }
+  }
+
+  .video-upload {
+    .img-thumb {
+      position: relative;
+    }
+
+    .overlay-camera {
+      align-items: center;
+      background: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      opacity: 1;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      &.bg-transparent {
+        background: transparent;
+      }
+
+      .add-logo {
+        color: $white;
+        font-weight: 600;
+        left: 0;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: 41%;
+
+        .fa-camera {
+          color: $white;
+          font-size: 28px;
+        }
+
+        &.remove-text {
+          font-size: 16px;
+          top: 31%;
+        }
+
+        .remove-para {
+          font-size: 16px;
+          font-weight: normal;
+          text-decoration: underline;
+        }
+      }
+
+      .fa-trash {
+        color: $white;
+        font-size: 13px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    }
+  }
+
+  .videowrapper {
+    margin-top: 0;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .add-business-form {
+    .title {
+      font-size: 18px;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .add-business-form {
+    .box-wrap {
+      padding: 0;
+
+      .img-thumb {
+        &.cover-image-upload {
+          width: 273px;
+        }
+      }
+    }
+
+    .heading {
+      font-size: 24px;
+    }
+
+    .card-details {
+      .card-number {
+        font-size: 13px;
+      }
+    }
+
+    .p-rating {
+      a {
+        font-size: 21px;
+      }
+    }
+
+    .video-title {
+      font-size: 19px;
+    }
+
+    .add-card-text {
+      .add-card-div {
+        .add-card-btn {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

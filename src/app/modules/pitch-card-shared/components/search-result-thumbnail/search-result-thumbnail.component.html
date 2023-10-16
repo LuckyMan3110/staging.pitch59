@@ -1,0 +1,1147 @@
+<div
+    [ngStyle]="{ pointerEvents: disabled ? 'none' : 'all' }"
+    class="box-wrap search-result-thumbnail"
+    *ngIf="businessDetails || comingSoon || demo"
+>
+  <!--   (click)="onTitleClick('playVideo')"-->
+  <div
+      class="col-12 video-thumbnail sub-head"
+      (click)="!isMobile ? runVideo($event) : null"
+      (touchstart)="runVideoMobile($event)"
+      [ngClass]="{
+            warning: demo && !businessDetails?.videoCoverImageThumbnailUrl
+        }"
+  >
+    <img
+        (load)="calcCover()"
+        rel="preload"
+        #coverImage
+        *ngIf="
+                !comingSoon &&
+                !(!businessDetails?.videoCoverImageThumbnailUrl && demo)
+            "
+        [ngClass]="{ absolute: !disabled }"
+        [ngStyle]="{ 'object-fit': isCoverLandscape ? 'cover' : 'contain' }"
+        [src]="
+                businessDetails?.videoCoverImageThumbnailUrl || videoThumbSrc
+            "
+        alt="videoThumbSrc"
+    />
+    <div
+        *ngIf="comingSoon && !demo"
+        class="coming-soon {{ businessDetails?.businessType }}"
+    >
+      PitchCard not available
+    </div>
+    <div
+        class="demo-placeholder absolute"
+        *ngIf="!businessDetails?.videoCoverImageThumbnailUrl && demo"
+    >
+      <img
+          src="assets/images/pitch-card-svg/photos-demo.svg"
+          alt="photos-demo"
+      />
+    </div>
+    <!--    <video class="video {{businessDetails?.isMirrorVideo ? 'video-rotated' : ''}}" [ngStyle]="{'display': playVideo ? 'block' : 'none'}" disablePictureInPicture-->
+    <!--      style="height:100%; width:100%" #videoPlayer (timeupdate)="onTimeUpdate($event)" preload="metadata" playsinline (canplay)='showPlayer()'-->
+    <!--      [id]="'videoPlayer'+ index" webkit-playsinline="true"></video>-->
+    <div
+        class="video"
+        *ngIf="initVideo"
+        [ngClass]="{ 'opacity-0': !playVideo && isDesktop }"
+    >
+      <app-video-js-player
+          #videoPlayer
+          [autoplay]="true"
+          [muted]="mutedVideo"
+          [isVideoMirrored]="businessDetails?.isMirrorVideo"
+          [muxVideoId]="businessDetails.videoFileUrl"
+          [allowFullScreenOnRotate]="false"
+          (timeUpdate)="onTimeUpdate($event)"
+          (uploadError)="handleUploadVideoError()"
+      >
+      </app-video-js-player>
+    </div>
+    <span
+        class="sprite big-video-svg {{ businessDetails?.businessType }}"
+        *ngIf="!initVideo"
+    ></span>
+
+    <span
+        class="countdown-timer"
+        id="countdown-timer"
+        *ngIf="videoDuration && countdownTimer"
+    >
+            :{{ countdownTimer < 10 ? '0' + countdownTimer : countdownTimer }}
+        </span>
+  </div>
+
+  <div
+      class="col-12 text-center"
+      [ngClass]="{
+            'thumb-logo': businessDetails?.businessType !== PitchCardType.Job,
+            'thumb-logo-job':
+                businessDetails?.businessType === PitchCardType.Job
+        }"
+      *ngIf="
+            (!!businessDetails?.businessLogoThumbnailUrl &&
+                businessDetails?.businessType === PitchCardType.Basic) ||
+            (!!businessDetails?.businessLogoThumbnailUrl &&
+                businessDetails?.businessType === PitchCardType.Job)
+        "
+  >
+    <img
+        [src]="businessDetails?.businessLogoThumbnailUrl"
+        alt="businessLogoThumbnailUrl"
+    />
+  </div>
+
+  <div
+      class="col-12 text-center {{ businessDetails?.businessType }}"
+      [ngClass]="{
+            'thumb-logo': businessDetails?.businessType !== PitchCardType.Job,
+            'thumb-logo-job':
+                businessDetails?.businessType === PitchCardType.Job,
+            warning: demo
+        }"
+      *ngIf="
+            !businessDetails?.businessLogoThumbnailUrl &&
+            (businessDetails?.businessType === PitchCardType.Basic ||
+                businessDetails?.businessType === PitchCardType.Job)
+        "
+      [ngStyle]="{ visibility: comingSoon ? 'hidden' : '' }"
+  >
+    <h2>Your logo</h2>
+  </div>
+
+  <div
+      *ngIf="
+            businessDetails?.businessType === PitchCardType.Basic ||
+            businessDetails?.businessType === PitchCardType.Job
+        "
+      class="col-12 cards-names-wrapper {{ businessDetails?.businessType }}"
+      #cardBusinessName
+      [ngStyle]="{ visibility: comingSoon ? 'hidden' : '' }"
+  >
+        <span
+            class="business-title text-ellipsis w-12"
+            *ngIf="businessDetails?.businessType !== PitchCardType.Job"
+        >
+            <span
+                [ngClass]="{ warning: demo && !businessDetails?.businessName }"
+            >
+                {{ businessDetails?.businessName || 'Business Name' }}
+            </span>
+        </span>
+    <span
+        class="text-ellipsis w-12"
+        [class]="
+                businessDetails?.title && !businessDetails?.isHideTitle
+                    ? 'business-name'
+                    : 'business-title'
+            "
+        *ngIf="
+                !businessDetails?.isHideTitle &&
+                businessDetails?.businessType !== PitchCardType.Job
+            "
+        [ngClass]="{
+                warning:
+                    demo &&
+                    !businessDetails?.title &&
+                    businessDetails?.businessType !== PitchCardType.Basic
+            }"
+    >
+            {{
+      businessDetails?.title
+          ? businessDetails?.title
+          : demo
+              ? 'Your Name'
+              : ''
+      }}
+        </span>
+
+    <span
+        *ngIf="businessDetails?.businessType === PitchCardType.Job"
+        class="business-name text-ellipsis w-12"
+        [ngClass]="{ warning: demo && !businessDetails?.businessName }"
+    >
+            {{ businessDetails?.businessName || 'Organization' }}
+        </span>
+  </div>
+
+  <div
+      class="service-card-info"
+      *ngIf="
+            businessDetails?.businessType === 'service' ||
+            businessDetails?.businessType === 'nonprofit' ||
+            businessDetails?.businessType === PitchCardType.Employee
+        "
+      [ngStyle]="{ visibility: comingSoon ? 'hidden' : '' }"
+  >
+    <div class="logo-block">
+      <div
+          class="col-12 text-center thumb-logo"
+          *ngIf="!!businessDetails?.businessLogoThumbnailUrl"
+      >
+        <img [src]="businessDetails?.businessLogoThumbnailUrl" alt=""/>
+      </div>
+      <div
+          class="col-12 text-center thumb-logo {{
+                    businessDetails?.businessType
+                }}"
+          *ngIf="!businessDetails?.businessLogoThumbnailUrl"
+          [ngClass]="{ warning: demo }"
+      >
+        <h2>Your logo</h2>
+      </div>
+    </div>
+    <div
+        class="person-info-block"
+        *ngIf="businessDetails?.businessType !== PitchCardType.Job"
+    >
+            <span
+                class="business-name text-ellipsis w-12"
+                [ngClass]="{
+                    warning: demo && !businessDetails?.businessName,
+                    'inline-flex': nameTwo
+                }"
+                *ngIf="businessDetails?.businessType === PitchCardType.Service"
+            >
+                <span
+                    [ngStyle]="{ width: nameTwo ? '50%' : '100%' }"
+                    [ngClass]="{ 'text-ellipsis': nameTwo }"
+                >
+                    {{ nameOne ? nameOne : 'Name' }}
+                </span>
+                <span
+                    class="w-6 text-center border-left-1 text-ellipsis"
+                    *ngIf="nameTwo"
+                >{{ nameTwo }}</span
+                >
+            </span>
+      <span
+          *ngIf="businessDetails?.businessType === PitchCardType.Employee"
+          class="business-name text-ellipsis w-12"
+          [ngClass]="{ warning: demo && !businessDetails?.title }"
+      >
+                <span>{{ businessDetails?.title || 'Your Name' }}</span>
+            </span>
+      <span
+          class="title text-center text-ellipsis w-12"
+          *ngIf="
+                    !businessDetails?.isHideTitle &&
+                    businessDetails?.businessType === PitchCardType.Service
+                "
+      >{{
+        businessDetails?.title
+            ? businessDetails?.title
+            : demo
+                ? 'Title'
+                : ''
+        }}</span
+      >
+      <span
+          class="title text-center text-ellipsis w-12"
+          *ngIf="
+                    !businessDetails?.isHideTitle &&
+                    businessDetails?.businessType === PitchCardType.Employee
+                "
+          [ngClass]="{ warning: demo && !businessDetails?.businessName }"
+      >{{
+        businessDetails?.businessName
+            ? businessDetails?.businessName
+            : demo
+                ? 'Business Title'
+                : ''
+        }}</span
+      >
+    </div>
+  </div>
+
+  <div
+      class="resume-card-info"
+      *ngIf="businessDetails?.businessType === PitchCardType.Resume"
+      [ngStyle]="{
+            visibility: comingSoon ? 'hidden' : '',
+            display:
+                (businessDetails?.businessType !== PitchCardType.Resume &&
+                    businessDetails?.businessType === 'service') ||
+                businessDetails?.businessType === 'nonprofit'
+                    ? 'none'
+                    : ''
+        }"
+      [ngClass]="{ firefoxBlur: blur }"
+  >
+    <div class="resume-block">
+      <div
+          class="resume-btn"
+          [ngClass]="{
+                    warning: demo && !businessDetails?.resumeFileUrl,
+                    unavailable: !businessDetails?.resumeFileUrl && !demo
+                }"
+          (click)="
+                    demo && !businessDetails?.resumeFileUrl
+                        ? null
+                        : onTitleClick('resumeFileDialog')
+                "
+      >
+        <img
+            *ngIf="demo && !businessDetails?.resumeFileUrl"
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="assets/images/pitch-card-svg/resume/pricing-demo.svg"
+            alt="pricing-demo"
+        />
+        <img
+            *ngIf="(demo && businessDetails?.resumeFileUrl) || !demo"
+            class="gs-icon {{ businessDetails?.businessType }}"
+            [src]="
+                        !businessDetails?.resumeFileUrl && !demo
+                            ? 'assets/images/pitch-card-svg/resume/unavailable-resume.svg'
+                            : 'assets/images/pitch-card-svg/resume/pricing-icon.svg'
+                    "
+            alt="pricing-demo"
+        />
+
+        <span
+            class="white-space-nowrap"
+            [ngClass]="{
+                        warning: demo && !businessDetails?.resumeFileUrl
+                    }"
+        >
+                    {{
+          !demo && !businessDetails?.resumeFileUrl
+              ? 'Resume Unavailable'
+              : 'resume'
+          }}
+                </span>
+      </div>
+    </div>
+    <div class="person-info-block">
+            <span
+                class="business-name text-ellipsis text-center w-12"
+                [ngClass]="{ warning: demo && !businessDetails?.businessName }"
+            >
+                <span>{{
+                  nameOne || businessDetails?.businessName || 'Full Name'
+                  }}</span>
+                <span *ngIf="nameTwo">|</span>
+                <span *ngIf="nameTwo">{{ nameTwo }}</span>
+            </span>
+    </div>
+  </div>
+
+  <div
+      class="job-card-info pointer"
+      *ngIf="businessDetails?.businessType === PitchCardType.Job"
+      (click)="onTitleClick('jobDetailsDialog')"
+      [ngStyle]="{
+            visibility: comingSoon ? 'hidden' : '',
+            display:
+                businessDetails?.businessType !== PitchCardType.Job
+                    ? 'none'
+                    : ''
+        }"
+  >
+    <div class="job-block grid align-items-baseline no-margins">
+      <div
+          class="position text-ellipsis no-padding"
+          style="padding: 0 3px"
+          *ngIf="businessDetails?.positions"
+          [pTooltip]="businessDetails?.positions[0]?.name"
+          [tooltipPosition]="'top'"
+          [tooltipDisabled]="
+                    businessDetails?.positions[0]?.name.length < 20
+                "
+      >
+                <span
+                    [ngClass]="{ warning: demo && !businessDetails?.positions }"
+                >
+                    {{
+                  businessDetails.positions[0]?.name
+                      ? businessDetails.positions[0]?.name
+                      : businessDetails.positions[0] || 'Position'
+                  }}
+                </span>
+      </div>
+    </div>
+
+    <div class="job-block grid align-items-baseline no-margins">
+      <div class="key text-right no-padding">Type</div>
+
+      <div class="value no-padding text-ellipsis">
+                <span *ngIf="workTypeList">
+                    <span>{{ workTypeList }}</span>
+                </span>
+        <span
+            [ngClass]="{ warning: demo && !businessDetails?.workTypes }"
+            *ngIf="!businessDetails?.workTypes?.length"
+        >Full-Time</span
+        >
+      </div>
+    </div>
+
+    <div class="job-block grid align-items-baseline no-margins">
+      <div class="key text-right no-padding">Compensation</div>
+
+      <div
+          class="value no-padding text-ellipsis"
+          [pTooltip]="
+                    compensationDescription ? compensationDescription : ''
+                "
+          [tooltipPosition]="'top'"
+          [tooltipDisabled]="
+                    !compensationDescription ||
+                    compensationDescription.length <= 32
+                "
+      >
+                <span [ngClass]="{ warning: demo && !compensationDescription }">
+                    {{ compensationDescription || '' }}
+                </span>
+      </div>
+    </div>
+
+    <div class="job-block grid align-items-baseline no-margins">
+      <div class="key text-right no-padding">Location</div>
+
+      <div class="value no-padding text-ellipsis">
+                <span
+                    [ngClass]="{ warning: demo && !locationAddress }"
+                    *ngIf="!businessDetails?.isRemote"
+                >
+                    {{
+                  locationAddress || 'txt_default_job_location'
+                      | translate
+                  }}
+                </span>
+
+        <span *ngIf="businessDetails?.isRemote" translate
+        >txt_position_remote</span
+        >
+      </div>
+    </div>
+
+    <div class="job-block-info">
+      <img
+          src="assets/images/pitch-card-svg/job/more-info.svg"
+          alt="job-more-info"
+      />
+    </div>
+  </div>
+
+  <div
+      *ngIf="businessDetails?.businessType !== PitchCardType.Job"
+      class="col-12 review-wrap no-padding"
+      [ngClass]="{
+            resumeMargin:
+                businessDetails?.businessType === PitchCardType.Resume ||
+                businessDetails?.businessType === PitchCardType.Service ||
+                businessDetails?.businessType === PitchCardType.Employee,
+            firefoxBlur: blur
+        }"
+  >
+    <div
+        style="cursor: pointer"
+        class="video-review {{ businessDetails?.businessType }}"
+        (click)="onTitleClick('watchVideoRevews')"
+    >
+      <div
+          class="col-12 p-0 text-center head {{
+                    businessDetails?.businessType
+                }} width-full"
+          translate
+      >
+        <img
+            class="card-icon"
+            *ngIf="
+                        businessDetails?.businessType === PitchCardType.Basic ||
+                        businessDetails?.businessType === PitchCardType.Employee
+                    "
+            src="/assets/images/pitch-card-svg/play-solid.svg"
+            alt="play-solid"
+        />
+        <img
+            class="card-icon"
+            *ngIf="
+                        businessDetails?.businessType === PitchCardType.Resume
+                    "
+            src="/assets/images/pitch-card-svg/resume/play-solid.svg"
+            alt="play-solid"
+        />
+        <img
+            class="card-icon"
+            *ngIf="
+                        businessDetails?.businessType ===
+                            PitchCardType.Service ||
+                        businessDetails?.businessType === 'nonprofit'
+                    "
+            src="/assets/images/pitch-card-svg/service/play-solid.svg"
+            alt="play-solid"
+        />
+        <span
+        >video
+          {{
+          businessDetails?.businessType === PitchCardType.Resume
+              ? 'references'
+              : 'testimonials'
+          }}</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <div
+      class="col-12 text-center no-padding"
+      #contacts
+      [ngClass]="{ firefoxBlur: blur }"
+  >
+    <div class="contact-menu-container">
+      <div class="contact-menu">
+        <ng-template #contactMenu>
+          <ul>
+            <li *ngIf="businessDetails?.contactNumber">
+              <div>
+                <img
+                    src="/assets/images/pitch-card-svg/call-outline.svg"
+                    class="contact-menu-icon"
+                    alt="call-outline"
+                />
+              </div>
+              <a
+                  [attr.href]="
+                                    'tel:' + businessDetails?.contactNumber
+                                "
+                  (click)="addCallsAnalytics()"
+              >
+                <span class="cm-title">Call</span><br/>
+                <span class="cm-value">{{
+                  businessDetails?.contactNumber
+                      | phone : businessDetails?.contactNumber
+                  }}</span>
+              </a>
+            </li>
+            <li *ngIf="businessDetails?.email">
+              <div>
+                <img
+                    src="/assets/images/pitch-card-svg/email-outline.svg"
+                    alt="email-outline"
+                    class="contact-menu-icon"
+                />
+              </div>
+              <a
+                  href="mailto:{{ businessDetails?.email }}"
+                  (click)="addEmailAnalytics()"
+                  class="text-ellipsis relative"
+              >
+                <span class="cm-title">Email</span><br/>
+                <span
+                    class="cm-value"
+                    style="padding-left: 5px"
+                >{{ businessDetails?.email }}</span
+                >
+              </a>
+            </li>
+            <li
+                *ngIf="
+                                businessDetails?.address &&
+                                businessDetails?.city !==
+                                    AppSettings.DEFAULT_CITY_ID &&
+                                businessDetails?.state !==
+                                    AppSettings.DEFAULT_STATE_ID
+                            "
+            >
+              <div>
+                <img
+                    src="/assets/images/pitch-card-svg/directionpin-outline.svg"
+                    alt="direction-pin"
+                    class="contact-menu-icon"
+                />
+              </div>
+              <a
+                  [attr.href]="googleMapLink"
+                  target="_blank"
+                  (click)="addLocationAnalytics()"
+              >
+                <span class="cm-title">Directions</span><br/>
+                <span class="cm-value">{{
+                  formattedAddress
+                  }}</span>
+              </a>
+            </li>
+            <li (click)="onTitleClick('contact')">
+              <div>
+                <img
+                    src="/assets/images/pitch-card-svg/referral-outline.svg"
+                    alt="referral-outline"
+                    class="contact-menu-icon"
+                />
+              </div>
+              <div>
+                <span class="cm-title">Contact Me</span><br/>
+                <span class="cm-value"
+                >Request contact from
+                  {{
+                  businessDetails?.businessType ===
+                  PitchCardType.Resume
+                      ? 'this person'
+                      : businessDetails?.businessType ===
+                      PitchCardType.Service
+                          ? 'nonprofit'
+                          : 'company'
+                  }}
+                                </span>
+              </div>
+            </li>
+            <li *ngIf="businessDetails?.calendarLink">
+              <div>
+                <img
+                    src="/assets/images/pitch-card-svg/schedule-outline.svg"
+                    class="contact-menu-icon"
+                />
+              </div>
+              <div
+                  (click)="
+                                    showCalendar(businessDetails?.calendarLink)
+                                "
+              >
+                <span class="cm-title">Schedule</span><br/>
+                <span class="cm-value"
+                >Set up an appointment</span
+                >
+              </div>
+            </li>
+            <li
+                class="cm-title-video-review"
+                *ngIf="businessDetails?.videoReviewCount === 0"
+                (click)="onTitleClick('leaveareview')"
+            >
+              <div>
+                <img
+                    src="/assets/images/pitch-card-svg/review-outline.svg"
+                    class="contact-menu-icon"
+                    alt="review-outline"
+                />
+              </div>
+              <div>
+                                <span class="cm-title"
+                                >Leave a Video Testimonials</span
+                                >
+              </div>
+            </li>
+          </ul>
+        </ng-template>
+
+        <ng-template [ngTemplateOutlet]="contactMenu"></ng-template>
+      </div>
+    </div>
+    <div
+        *ngIf="businessDetails?.businessType !== PitchCardType.Job"
+        class="sec-btn gradient-button {{
+                businessDetails?.businessType
+            }} btn-shadow contact-menu-button"
+        (click)="
+                !isMobile ? toggleContactMenu($event) : openBottomContactMenu()
+            "
+        translate
+    >
+      label_contact
+    </div>
+    <div
+        *ngIf="businessDetails?.businessType === PitchCardType.Job"
+        class="sec-btn gradient-button {{
+                businessDetails?.businessType
+            }} btn-shadow contact-menu-button"
+        (click)="
+                onTitleClick(
+                    businessDetails?.showRequirements
+                        ? 'showJobRequirementsDialog'
+                        : 'applyJobNowDialog'
+                )
+            "
+        translate
+    >
+      label_apply_now
+    </div>
+
+    <div class="contact-menu-container">
+      <div class="contact-menu">
+        <ng-template [ngTemplateOutlet]="contactMenu"></ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-share-container" [ngClass]="{ firefoxBlur: blur }">
+    <div
+        class="gs-save {{ businessDetails?.businessType }} flex-vertical"
+        (click)="toggleAsFavorite()"
+    >
+      <div
+          class="icon-wrap"
+          *ngIf="
+                    businessDetails?.businessType === PitchCardType.Basic ||
+                    businessDetails?.businessType === PitchCardType.Employee
+                "
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="/assets/images/pitch-card-svg/add-user.svg"
+            alt="add-user"
+        />
+      </div>
+
+      <div
+          class="icon-wrap"
+          *ngIf="businessDetails?.businessType === PitchCardType.Resume"
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="/assets/images/pitch-card-svg/resume/add-user.svg"
+            alt="add-user"
+        />
+      </div>
+
+      <div
+          class="icon-wrap"
+          *ngIf="
+                    businessDetails?.businessType === 'service' ||
+                    businessDetails?.businessType === 'nonprofit'
+                "
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="/assets/images/pitch-card-svg/service/add-user.svg"
+            alt="add-user"
+        />
+      </div>
+
+      <div
+          class="icon-wrap"
+          *ngIf="this.businessDetails?.businessType === PitchCardType.Job"
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="/assets/images/pitch-card-svg/job/add-user.svg"
+            alt="add-user"
+        />
+      </div>
+
+      <span translate *ngIf="!businessDetails?.isFavoriteBusiness"
+      >label_save_As_favorite</span
+      >
+      <span translate *ngIf="businessDetails?.isFavoriteBusiness"
+      >label_remove_As_favorite</span
+      >
+      <a
+          class="grid justify-content-start p-0 m-0 contracts-vcf"
+          style="visibility: hidden"
+          [href]="vCardUrl"
+          [download]="
+                    vCard?.name?.firstNames
+                        ? vCard.name.firstNames + '.vcf'
+                        : 'vCard.vcf'
+                "
+      ></a>
+    </div>
+    <div
+        class="gs-photos {{ businessDetails?.businessType }} flex-vertical"
+        (click)="
+                onTitleClick(
+                    this.businessDetails?.businessType === PitchCardType.Job
+                        ? 'watchVideoRevews'
+                        : 'moreInfoDialog'
+                )
+            "
+        translate
+    >
+      <div
+          class="icon-wrap"
+          *ngIf="
+                    businessDetails?.businessType === PitchCardType.Basic ||
+                    businessDetails?.businessType === PitchCardType.Employee
+                "
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="assets/images/pitch-card-svg/more-info.svg"
+            alt="more-info"
+        />
+      </div>
+
+      <div
+          class="icon-wrap"
+          *ngIf="businessDetails?.businessType === PitchCardType.Resume"
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="assets/images/pitch-card-svg/resume/more-info.svg"
+            alt="more-info"
+        />
+      </div>
+
+      <div
+          class="icon-wrap"
+          *ngIf="
+                    businessDetails?.businessType === 'service' ||
+                    businessDetails?.businessType === 'nonprofit'
+                "
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="assets/images/pitch-card-svg/service/more-info.svg"
+            alt="more-info"
+        />
+      </div>
+
+      <div
+          class="icon-wrap"
+          *ngIf="this.businessDetails?.businessType === PitchCardType.Job"
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="assets/images/pitch-card-svg/job/employer-reviews.svg"
+            alt="employer-reviews"
+        />
+      </div>
+
+      <span>{{
+        this.businessDetails?.businessType === PitchCardType.Job
+            ? 'TESTIMONIALS'
+            : 'more info'
+        }}</span>
+    </div>
+
+    <div
+        *ngIf="this.businessDetails?.businessType !== PitchCardType.Job"
+        class="gs-pricing {{ businessDetails?.businessType }} flex-vertical"
+        (click)="onTitleClick('companyImgDialog')"
+        translate
+    >
+      <div
+          class="icon-wrap"
+          *ngIf="
+                    demo &&
+                    !businessDetails?.employeePictureFileIds &&
+                    businessDetails?.businessType
+                "
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            [src]="
+                        'assets/images/pitch-card-svg/' +
+                        (businessDetails?.businessType ===
+                            PitchCardType.Basic ||
+                        businessDetails?.businessType === PitchCardType.Employee
+                            ? ''
+                            : businessDetails?.businessType) +
+                        '/attachments.svg'
+                    "
+            alt="photos-demo"
+        />
+      </div>
+
+      <div
+          class="icon-wrap"
+          *ngIf="
+                    (businessDetails?.employeePictureFileIds || !demo) &&
+                    (businessDetails?.businessType === PitchCardType.Basic ||
+                        businessDetails?.businessType ===
+                            PitchCardType.Employee)
+                "
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="assets/images/pitch-card-svg/attachments.svg"
+            alt="photos-outline"
+        />
+      </div>
+
+      <div
+          class="icon-wrap"
+          *ngIf="
+                    ((demo && businessDetails?.employeePictureFileIds) ||
+                        !demo) &&
+                    businessDetails?.businessType === PitchCardType.Resume
+                "
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="assets/images/pitch-card-svg/resume/attachments.svg"
+            alt="photos-outline"
+        />
+      </div>
+
+      <div
+          class="icon-wrap"
+          *ngIf="
+                    (((demo && businessDetails?.employeePictureFileIds) ||
+                        !demo) &&
+                        businessDetails?.businessType ===
+                            PitchCardType.Service) ||
+                    businessDetails?.businessType === 'nonprofit'
+                "
+      >
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="assets/images/pitch-card-svg/service/attachments.svg"
+            alt="photos-outline"
+        />
+      </div>
+
+      label_company_images
+    </div>
+
+    <div
+        *ngIf="businessDetails?.businessType === PitchCardType.Job"
+        class="gs-pricing {{
+                businessDetails?.businessType
+            }} flex-vertical contact-menu-button"
+        translate
+        (click)="
+                !isMobile
+                    ? toggleContactMenu($event, contacts)
+                    : openBottomContactMenu()
+            "
+    >
+      <div class="icon-wrap">
+        <img
+            class="gs-icon {{ businessDetails?.businessType }}"
+            src="assets/images/pitch-card-svg/job/contact-outline.svg"
+            alt="contact-outline"
+        />
+      </div>
+      label_contact
+    </div>
+
+    <div
+        *ngIf="service.isAllCompleted; else notCompleted"
+        [ngStyle]="{
+                pointerEvents: !disabled || withShare ? 'all' : 'none'
+            }"
+        (click)="onTitleClick('share')"
+        class="share-button {{ businessDetails?.businessType }} btn-shadow "
+        translate
+    >
+      label_share
+    </div>
+    <ng-template #notCompleted>
+      <div
+          [ngStyle]="{
+                    backgroundImage: 'linear-gradient(#C4C4C4, #C4C4C4)',
+                    boxShadow: 'none'
+                }"
+          class="share-button {{
+                    businessDetails?.businessType
+                }} btn-shadow "
+          translate
+      >
+        label_share
+      </div>
+    </ng-template>
+  </div>
+  <app-ep-restrict
+      [scale]="scale"
+      [isShowBlur]="blur"
+      [isShowRestrict]="isShowRestrict"
+      (submitClick)="onTitleClick('contactMe')"
+  ></app-ep-restrict>
+</div>
+
+<div class="bottom-sidebar" *ngIf="isMobile">
+  <app-sidebar
+      [(visible)]="isMobileContactMenuOpen"
+      [appendTo]="'body'"
+      [dismissible]="true"
+      [position]="'bottom'"
+      [showCloseIcon]="false"
+      [baseZIndex]="10"
+      [style]="{
+            height: 'auto',
+            borderRadius: '.5em',
+            background: 'transparent'
+        }"
+  >
+    <div class="mob-contact-menu">
+      <ul>
+        <li
+            *ngIf="businessDetails?.contactNumber"
+            class="grid justify-content-start flex-nowrap"
+        >
+          <div class="col-1 contact-icon">
+            <img
+                src="assets/images/contact-menu-svg/phoneicon.svg"
+                alt="Phone"
+            />
+          </div>
+
+          <div class="col-10 text-center">
+            <div class="font-medium text-xl">Call</div>
+            <a
+                [attr.href]="
+                                'tel:' + businessDetails?.contactNumber
+                            "
+                (click)="addCallsAnalytics()"
+            >
+                            <span class="text-base link">{{
+                              businessDetails?.contactNumber
+                                  | phone : businessDetails?.contactNumber
+                              }}</span>
+            </a>
+          </div>
+        </li>
+
+        <li
+            *ngIf="businessDetails?.email"
+            class="grid justify-content-start"
+        >
+          <div class="col-1 contact-icon">
+            <img
+                src="assets/images/contact-menu-svg/emailicon.svg"
+                alt="Email"
+            />
+          </div>
+
+          <div class="col-10 text-center">
+            <div class="font-medium text-xl">Email</div>
+            <a
+                href="mailto:{{ businessDetails?.email }}"
+                (click)="addEmailAnalytics()"
+            >
+                            <span class="contact-icon-title">{{
+                              businessDetails?.email
+                              }}</span>
+            </a>
+          </div>
+        </li>
+
+        <li
+            *ngIf="
+                        businessDetails?.address &&
+                        businessDetails?.city !== AppSettings.DEFAULT_CITY_ID &&
+                        businessDetails?.state !== AppSettings.DEFAULT_STATE_ID
+                    "
+            class="grid justify-content-start"
+        >
+          <div class="col-1 contact-icon">
+            <img
+                src="assets/images/contact-menu-svg/directions.svg"
+                alt="Location"
+            />
+          </div>
+
+          <div class="col-10 text-center">
+            <div class="font-medium text-xl">Location</div>
+            <a
+                [attr.href]="googleMapLink"
+                target="_blank"
+                (click)="addLocationAnalytics()"
+            >
+                            <span class="contact-icon-title">{{
+                              formattedAddress
+                              }}</span>
+            </a>
+          </div>
+        </li>
+
+        <li
+            (click)="
+                        isMobileContactMenuOpen = false; onTitleClick('contact')
+                    "
+            class="grid justify-content-start"
+        >
+          <div class="col-1 contact-icon">
+            <img
+                src="assets/images/contact-menu-svg/callbacks.svg"
+                alt="Callback"
+            />
+          </div>
+
+          <div class="col-10 text-center">
+                        <span class="font-medium text-xl">Contact Me</span
+                        ><br/>
+          </div>
+        </li>
+
+        <li
+            *ngIf="businessDetails?.calendarLink"
+            class="grid justify-content-start"
+        >
+          <div class="col-1 contact-icon">
+            <img
+                src="assets/images/contact-menu-svg/scheduleicon.svg"
+                alt="Schedule"
+            />
+          </div>
+
+          <div
+              (click)="showCalendar(businessDetails?.calendarLink)"
+              class="col-10 text-center"
+          >
+            <span class="font-medium text-xl">Schedule</span><br/>
+          </div>
+        </li>
+
+        <li
+            *ngIf="
+                        vCard &&
+                        isMobile &&
+                        businessDetails?.businessType !== PitchCardType.Job
+                    "
+            id="downloadButtonNormal"
+        >
+          <a
+              class="grid justify-content-start p-0 m-0"
+              [href]="vCardUrl"
+              [download]="
+                            vCard?.name?.firstNames
+                                ? vCard.name.firstNames + '.vcf'
+                                : 'vCard.vcf'
+                        "
+          >
+            <div class="col-1 contact-icon">
+              <img
+                  src="assets/images/contact-menu-svg/add-contact.svg"
+                  alt="Add to contact"
+              />
+            </div>
+
+            <div class="col-10 text-center">
+                            <span class="font-medium text-xl">
+                                Add to Contacts
+                            </span>
+            </div>
+          </a>
+        </li>
+
+        <li
+            class="cm-title-video-review grid justify-content-start"
+            *ngIf="businessDetails?.videoReviewCount === 0"
+            (click)="
+                        onTitleClick('leaveareview');
+                        isMobileContactMenuOpen = false
+                    "
+        >
+          <div class="col-1 contact-icon">
+            <img
+                src="assets/images/contact-menu-svg/uploadicon.svg"
+                alt="Upload"
+            />
+          </div>
+
+          <div class="col-10 text-center">
+                        <span class="font-medium text-xl"
+                        >Leave a Video Testimonials</span
+                        >
+          </div>
+        </li>
+
+        <li
+            class="grid justify-content-center bg-white mt-2 mb-3"
+            (click)="isMobileContactMenuOpen = false"
+        >
+          <div class="col-12 text-center">
+            <span class="font-medium text-xl">Сancel</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </app-sidebar>
+</div>

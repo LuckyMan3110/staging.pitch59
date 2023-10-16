@@ -1,0 +1,74 @@
+<div class="step-form advertising-area" *ngIf="form">
+  <h1>Advertising Radius</h1>
+  <p style="font-size: 1rem">
+    {{
+    pitchcardType === 'resume'
+        ? 'Enter the area where you’d like your PitchCard to be found.'
+        : 'For the Pitch59 search engine, what radius do you want to advertise to?'
+    }}
+  </p>
+  <form [formGroup]="form" class="layout-card contact-details">
+    <div class="adv-inputs">
+      <div style="flex: 8">
+                <span class="p-float-label">
+                    <input
+                        class="new-input-blue float-input"
+                        id="address"
+                        tabindex="0"
+                        autcomplete="street-address"
+                        type="text"
+                        pInputText
+                        formControlName="location"
+                        appSearchLocation
+                        (setAddress)="updateMarker($event)"
+                        (blur)="service.tileRequiredState = form.valid"
+                        appNoWhiteSpace
+                        placeholder=""
+                    />
+                    <label for="address">{{
+                      pitchcardType === 'resume'
+                          ? 'Enter your city or zip code'
+                          : 'Enter center of your area'
+                      }}</label>
+                </span>
+        <div class="form-errors" *ngIf="form.controls.latitude.errors">
+          <div *ngIf="form.controls.latitude.errors.required">
+            Please, start typings and choose address from list of
+            suggestions.
+          </div>
+        </div>
+      </div>
+      <span style="flex: 1"></span>
+      <span class="p-float-label" style="flex: 4">
+                <input
+                    tabindex="1"
+                    class="new-input-blue float-input"
+                    id="radius"
+                    type="text"
+                    pInputText
+                    formControlName="radius"
+                    (blur)="service.tileRequiredState = form.valid"
+                    (input)="onRadiusChange()"
+                    appNoWhiteSpace
+                />
+                <label for="radius">{{
+                  !isMobile ? 'Enter advertising radius *' : 'Enter radius *'
+                  }}</label>
+            </span>
+    </div>
+        <div class="col-12 form-field">
+            <div class="form-label">
+                <!-- <label for="location" translate>label_drag_map_location</label> -->
+            </div>
+          <div class="map-wrap">
+            <p-gmap
+                [options]="options"
+                [overlays]="overlays"
+                [style]="{ width: '100%', height: '340px' }"
+                (onMapClick)="handleMapClick($event)"
+                (onMapReady)="setMap($event)"
+            ></p-gmap>
+          </div>
+        </div>
+    </form>
+</div>

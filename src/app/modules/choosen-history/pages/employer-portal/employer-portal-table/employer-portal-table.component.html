@@ -1,0 +1,329 @@
+<div class="ep-body" #tableWrap>
+  <p-table
+      #dt
+      class="table-container"
+      [value]="pitchCardsList"
+      [(selection)]="selectedPC"
+      [loading]="loading"
+      [paginator]="!!pitchCardsList?.length"
+      [responsive]="true"
+      [resizableColumns]="true"
+      (onLazyLoad)="loadBusinessesLazy($event)"
+      styleClass="users-table"
+      [rowsPerPageOptions]="[25, 50, 100]"
+      [globalFilterFields]="[
+            'businessType',
+            'position',
+            'created',
+            'updated',
+            'active',
+            'applicants'
+        ]"
+      [lazy]="true"
+      [rows]="rows"
+      [totalRecords]="totalRecords"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>
+          <p-tableHeaderCheckbox
+              (click)="emitSelectedBusinesses()"
+          ></p-tableHeaderCheckbox>
+        </th>
+        <th
+            *ngFor="let col of columns"
+            [ngStyle]="{
+                        width: col.fixWidth,
+                        display: col.hide ? 'none' : 'table-cell'
+                    }"
+            pSortableColumn="{{ col.field }}"
+            pResizableColumn
+        >
+          <div class="grid flex-column no-margins">
+                        <span
+                            class="text-ellipsis"
+                            (click)="sortOrder = !sortOrder"
+                        >{{ col.header }}
+                          <p-sortIcon
+                              *ngIf="col.sort"
+                              [field]="col.field"
+                          ></p-sortIcon>
+                        </span>
+          </div>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="loadingbody">
+      <div class="p-datatable-loading-overlay p-component-overlay">
+        <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+      </div>
+    </ng-template>
+
+    <ng-template
+        pTemplate="body"
+        let-business
+        class="table-body"
+        let-rowIndex="rowIndex"
+    >
+      <tr class="table-row">
+        <td>
+          <p-tableCheckbox
+              [value]="business"
+              (click)="emitSelectedBusinesses()"
+          ></p-tableCheckbox>
+        </td>
+
+        <td>
+          <div>{{ rowIndex < 9 ? '0' : '' }}{{ rowIndex + 1 }}</div>
+        </td>
+
+        <td *ngIf="pitchCardTypes.Job !== business.businessType">
+          {{ business?.updatedAt | date : 'MM/dd/yy' }}
+        </td>
+
+        <td *ngIf="pitchCardTypes.Job === business.businessType">
+                    <span
+                        class="link text-ellipsis"
+                        [ngClass]="{
+                            'green-job':
+                                business.status === businessStatuses.Active,
+                            pink: business.status !== businessStatuses.Active
+                        }"
+                        (click)="navigateToEditBusiness(business)"
+                    >
+                        {{
+                      business?.positions?.length
+                          ? business.positions[0].name
+                          : 'Enter Details'
+                      }}
+                    </span>
+        </td>
+
+        <td
+            *ngIf="business.businessType !== pitchCardTypes.Job"
+            style="padding-left: 0"
+        >
+          <div
+              class="grid justify-content-between align-items-center no-margins invite-block"
+          >
+            <input
+                [id]="business.id"
+                type="text"
+                class="new-input-box text-ellipsis xs"
+                [ngClass]="{
+                                'no-borders green pointer': business.emailUser
+                            }"
+                [value]="
+                                business.emailUser ? business.emailUser : ''
+                            "
+                pInputText
+                [required]="true"
+                (input)="clearInput($event, business)"
+                (click)="enableInput($event, business.id)"
+            />
+
+            <div
+                class="invite-button"
+                [id]="'invite-' + business.id"
+                [ngStyle]="{
+                                display: !business?.emailUser ? 'block' : 'none'
+                            }"
+            >
+              <button
+                  class="button-simple shock-pink sm-25 full-width full-rounded"
+                  [disabled]="
+                                    !getInputValidationStatus(business.id)
+                                "
+                  (click)="
+                                    sendInviteByEmail(
+                                        $event,
+                                        business.id,
+                                        business.emailUser
+                                    )
+                                "
+              >
+                <span class="pi pi-arrow-right"></span>
+              </button>
+            </div>
+          </div>
+        </td>
+
+        <td
+            *ngIf="business.businessType !== pitchCardTypes.Job"
+            class="darkgray fit-content"
+        >
+          <input
+              type="text"
+              class="new-input-box text-ellipsis no-borders xs"
+              pInputText
+              disabled
+              [value]="
+                            business.fullNameUser ? business.fullNameUser : '-'
+                        "
+          />
+        </td>
+
+        <td *ngIf="business.businessType === pitchCardTypes.Job">
+          {{ business?.createdAt | date : 'MM/dd/yy' }}
+        </td>
+
+        <td *ngIf="pitchCardTypes.Job === business.businessType">
+          <div class="grid justify-content-start no-margins">
+            <p-inputSwitch
+                [ngModel]="
+                                business.accountStatus &&
+                                business.status === businessStatuses.Active
+                            "
+                styleClass="scale-08"
+                (onChange)="
+                                setCompanyStatus($event.checked, business.id)
+                            "
+            >
+            </p-inputSwitch>
+          </div>
+        </td>
+        <td *ngIf="pitchCardTypes.Job === business.businessType">
+          {{ business?.updatedAt | date : 'MM/dd/yy' }}
+        </td>
+        <td *ngIf="pitchCardTypes.Job === business.businessType">
+          <div
+              class="applicant-badge"
+              [ngClass]="{ pointer: business.applicant > 0 }"
+              (click)="
+                            business.applicant > 0
+                                ? handleApplicantModal(business)
+                                : null
+                        "
+          >
+            <span>{{ business.applicant }}</span>
+
+            <div
+                *ngIf="business.newApplicant"
+                class="new-applicant-badge pointer"
+                [ngClass]="{ pointer: business.applicant > 0 }"
+                (click)="
+                                business.applicant > 0
+                                    ? handleApplicantModal(business)
+                                    : null
+                            "
+            >
+              <span>NEW</span>
+            </div>
+          </div>
+        </td>
+
+        <td *ngIf="business.businessType !== pitchCardTypes.Job">
+                    <span
+                        class="uppercase"
+                        [ngClass]="{
+                            green: business.status === businessStatuses.Active,
+                            pink: business.status === businessStatuses.Invited,
+                            gold: business.status === businessStatuses.InProcess
+                        }"
+                    >
+                        {{
+                      business.status
+                          ? (businessStatuses[business.status]
+                              | splitCamelCase)
+                          : ''
+                      }}
+                    </span>
+        </td>
+
+        <td>
+          <div
+              class="applicant-badge pointer"
+              [ngClass]="{
+                            'bd-nonprofit nonprofit':
+                                business.businessType ===
+                                pitchCardTypes.Service,
+                            'bd-green green':
+                                business.businessType ===
+                                    pitchCardTypes.Basic ||
+                                business.businessType ===
+                                    pitchCardTypes.Employee
+                        }"
+              (click)="handleTestimonialsModal(business)"
+          >
+            <span>{{ business?.videoReviewCount }}</span>
+
+            <div
+                *ngIf="business?.newReviews"
+                class="new-applicant-badge pointer"
+                [ngClass]="{
+                                pointer: business.videoReviewCount > 0
+                            }"
+                (click)="
+                                business.videoReviewCount > 0
+                                    ? handleTestimonialsModal(business)
+                                    : null
+                            "
+            >
+              <span>NEW</span>
+            </div>
+          </div>
+        </td>
+
+        <td>
+          <div
+              class="grid justify-content-end no-margins"
+              style="flex-wrap: nowrap"
+          >
+            <div *ngFor="let action of rowsActions">
+              <div
+                  *ngIf="!action.hide"
+                  class="mr-2"
+                  [ngClass]="{
+                                    pointer:
+                                        setImageState(action, business) !==
+                                        'disable.svg',
+                                    'disable-events':
+                                        setImageState(action, business) ===
+                                            'disable.svg' &&
+                                        business.businessType ===
+                                            pitchCardTypes.Job
+                                }"
+              >
+                <img
+                    [src]="
+                                        action.src +
+                                        setImageState(action, business)
+                                    "
+                    alt="{{ action.title }}"
+                    pTooltip="{{
+                                        setImageState(action, business) ===
+                                        'disable.svg'
+                                            ? 'Required Accept Invitation'
+                                            : action.title
+                                    }}"
+                    tooltipPosition="top"
+                    [tooltipDisabled]="
+                                        setImageState(action, business) ===
+                                        'disable.svg'
+                                    "
+                    (click)="
+                                        setImageState(action, business) !==
+                                        'disable.svg'
+                                            ? handleBusinessActions(
+                                                  $event,
+                                                  business,
+                                                  action.iconId
+                                              )
+                                            : null
+                                    "
+                />
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-business>
+      <div class="emptymessage">
+        <p>Select “Add PitchCards” to get started</p>
+      </div>
+    </ng-template>
+  </p-table>
+</div>

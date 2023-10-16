@@ -1,0 +1,336 @@
+<div #recorderWrapper class="recorder-wrapper">
+  <div class="actions">
+    <div class="top-actions">
+      <div class="top-selects">
+        <p-button
+            (click)="toggleQuestions()"
+            label="PITCH TOPICS"
+            icon="{{
+                        isQuestions ? 'pi pi-caret-up' : 'pi pi-caret-down'
+                    }}"
+            iconPos="right"
+        >
+        </p-button>
+        <p-button
+            (click)="toggleTeleprompter()"
+            label="TELEPROMPTER"
+            icon="{{
+                        isTeleprompter ? 'pi pi-caret-up' : 'pi pi-caret-down'
+                    }}"
+            iconPos="right"
+        >
+        </p-button>
+        <div class="text-area">
+          <div
+              [class.showQuestions]="isQuestions"
+              class="questions-list"
+          >
+            <p
+                style="
+                                text-decoration: underline;
+                                margin-bottom: 1rem;
+                            "
+            >
+              Pitch Topics
+            </p>
+            <ul *ngIf="pitchcardType === 'service'">
+              <li>
+                <p contenteditable="true">Name</p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  What you do (very basic)
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">Background</p>
+              </li>
+              <li>
+                <p contenteditable="true">Family</p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  Unique Hobbies/Interests
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  What sets you apart
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  Your cause or mission
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">Call to action</p>
+              </li>
+            </ul>
+            <ul
+                *ngIf="
+                                pitchcardType === 'basic' ||
+                                pitchcardType === 'employee'
+                            "
+            >
+              <li>
+                <p contenteditable="true">Name</p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  What you do (very basic)
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">Background</p>
+              </li>
+              <li>
+                <p contenteditable="true">Family</p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  Unique Hobbies/Interests
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  What sets you apart
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  Customer concerns with your industry
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  How you resolve those concerns
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">Call to action</p>
+              </li>
+            </ul>
+            <ul *ngIf="pitchcardType === 'resume'">
+              <li>
+                <p contenteditable="true">Name</p>
+              </li>
+              <li>
+                <p contenteditable="true">Background</p>
+              </li>
+              <li>
+                <p contenteditable="true">Family</p>
+              </li>
+              <li>
+                <p contenteditable="true">Hobbies/Interests</p>
+              </li>
+              <li>
+                <p contenteditable="true">Passions</p>
+              </li>
+              <li>
+                <p contenteditable="true">Skills/Talents</p>
+              </li>
+              <li>
+                <p contenteditable="true">Motivations</p>
+              </li>
+              <li>
+                <p contenteditable="true">I’m looking for...</p>
+              </li>
+            </ul>
+            <ul *ngIf="pitchcardType === 'job'">
+              <li>
+                <p contenteditable="true">Company name</p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  What you do (very basic)
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">Position details</p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  What sets you apart
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  Company culture/atmosphere
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  Your cause or mission
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">Call to action</p>
+              </li>
+            </ul>
+            <ul *ngIf="pitchcardType === 'employerPortal'">
+              <li>
+                <p contenteditable="true">Company name</p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  What you do (very basic)
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  Company culture/atmosphere
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  What sets you apart
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">Company goals</p>
+              </li>
+              <li>
+                <p contenteditable="true">
+                  Your cause or mission
+                </p>
+              </li>
+              <li>
+                <p contenteditable="true">Call to action</p>
+              </li>
+            </ul>
+          </div>
+          <div
+              [class.showTeleprompter]="isTeleprompter"
+              class="teleptompter"
+          >
+                        <textarea
+                            placeholder="Enter your pitch"
+                            #textarea
+                        ></textarea>
+          </div>
+        </div>
+      </div>
+      <div [class.les-time-left]="isTenSecondsLeft" class="top-timer">
+        <countdown
+            #countdown
+            (event)="countdownTimer($event)"
+            [config]="{
+                        leftTime: countdownTopLeftTime,
+                        demand: true,
+                        format: 'ss',
+                        notify: [10]
+                    }"
+        ></countdown>
+      </div>
+    </div>
+    <div [class.hide-bacground]="isRecording" class="bottom-actions">
+            <span
+                *ngIf="!isRecorded"
+                (click)="closeRecorder()"
+                class="close-btn"
+            >Cancel</span
+            >
+      <button
+          [disabled]="isActiveCoundown"
+          (click)="isRecording ? stopRecording() : startBeforeRecord()"
+          [ngClass]="{
+                    isRecording: isRecording,
+                    isRecorded: isRecorded,
+                    countDownActive: isActiveCoundown
+                }"
+          class="record-btn bg-darkgray"
+      >
+        <span *ngIf="isRecorded && !isMobile">RETAKE</span>
+        <span *ngIf="isRecorded && isMobile">Retake</span>
+      </button>
+      <button
+          [disabled]="isActiveCoundown"
+          *ngIf="isRecorded"
+          (click)="togglePlayer()"
+          class="play-btn"
+      >
+        <i
+            *ngIf="!isPlaying"
+            class="pi pi-play icon"
+            style="color: #25afb5; margin-left: 2px"
+        ></i>
+        <i
+            *ngIf="isPlaying"
+            class="pi pi-pause icon"
+            style="color: #25afb5"
+        ></i>
+      </button>
+      <button
+          *ngIf="isRecorded"
+          (click)="saveVideoToServer() && (isSlowScroll = !isSlowScroll)"
+          [disabled]="isActiveCoundown"
+          class="save-btn button-simple shock-pink"
+      >
+        <span *ngIf="!isMobile">SAVE & NEXT</span>
+        <span *ngIf="isMobile">Use Video</span>
+      </button>
+      <div *ngIf="isTeleprompter" class="text-area-scroll-actions">
+        <button
+            [disabled]="!isSlowScroll"
+            [class.active]="!isSlowScroll"
+            (click)="
+                        toggleScrollSpeed() && (isSlowScroll = !isSlowScroll)
+                    "
+            class="scroll-action"
+        >
+          Autoscroll
+        </button>
+        <button
+            [disabled]="isSlowScroll"
+            (click)="toggleScrollSpeed()"
+            [class.active]="isSlowScroll"
+            class="scroll-action"
+        >
+          Slow
+        </button>
+      </div>
+    </div>
+  </div>
+  <video *ngIf="isRecorded" playsinline #videoRecordedElement></video>
+  <video [muted]="true" playsinline [autoplay]="true" #videoElement></video>
+  <div [class.showCountdown]="isActiveCoundown" class="count-down-to-start">
+    {{ timerCountdown }}
+  </div>
+  <div
+      *ngIf="!isRecorded && !isRecording"
+      id="userMessage"
+      class="user-message-rotate"
+  >
+    <div class="rotate-icon"></div>
+  </div>
+  <div *ngIf="userFullName" class="user-name">
+    {{ userFullName }}
+  </div>
+  <p-dialog
+      [closable]="false"
+      header="Oops!"
+      [(visible)]="isModalError"
+      [style]="{ width: '50%', maxWidth: '300px' }"
+      [baseZIndex]="10000"
+  >
+    <p class="p-m-0">{{ this.modalErrorText }}</p>
+    <div class="footer">
+      <p-button
+          [style]="{ minWidth: '70px', fontSize: '12px' }"
+          *ngIf="isPermissionDenied"
+          (click)="initCamera()"
+          label="Try again"
+          styleClass="p-button-text"
+      >
+      </p-button>
+      <p-button
+          [style]="{ minWidth: '70px', fontSize: '12px' }"
+          *ngIf="isNotSupportedBrowser || isPermissionDenied"
+          (click)="closeRecorder()"
+          label="Exit"
+      >
+      </p-button>
+    </div>
+  </p-dialog>
+</div>
